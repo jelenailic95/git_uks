@@ -3,8 +3,8 @@ version: '3'
 services:
   db:
     image: postgres
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
+#    volumes:
+#      - ./pgdata:/var/lib/postgresql/data
     ports:
       - "8001:5432"
   web:

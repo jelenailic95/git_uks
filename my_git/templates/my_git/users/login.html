@@ -1,0 +1,25 @@
+{% extends "my_git/home.html" %}
+{% load crispy_forms_tags %}
+{%  block content %}
+    <div class="content-section">
+             <form method="post">
+                 {% csrf_token %}
+                 <fieldset class="form-group">
+                     <legend class="border-bottom mb-4">
+                         Login
+                     </legend>
+                     {{ form.as_p }}
+                 </fieldset>
+                 <br>
+                 <div class="form-group">
+                     <button class="btn btn-success" type="submit">Login</button>
+                 </div>
+             </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                New to My Git?
+                <a class="ml-2" href="{% url 'register' %}">Create account</a>
+            </small>
+        </div>
+    </div>
+{% endblock content %}

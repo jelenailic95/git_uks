@@ -1,0 +1,10 @@
+{% if messages %}
+    {% for message in messages %}
+      <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
+            {{ message|safe }}
+        </div>
+    {% endfor %}
+{% endif %}
+{% block content %}
+    <h1>Welcome</h1>
+{% endblock content %}
