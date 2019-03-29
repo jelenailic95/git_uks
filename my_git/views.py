@@ -6,6 +6,9 @@ from django.contrib import messages
 from my_git.forms import UserRegisterForm
 
 
+def welcome(request):
+    return render(request, 'my_git/welcome.html')
+
 def home(request):
     return render(request, 'my_git/home.html')
 

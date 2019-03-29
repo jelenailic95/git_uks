@@ -1,26 +1,35 @@
-{% extends "my_git/home.html" %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 {% load crispy_forms_tags %}
 {%  block content %}
     <div class="content-section">
+        <div style="padding: 1% 0 0 0;" class="jumbotron" align="center">
+          <h3> Create an account</h3>
+          <hr style="margin-top: 1%">
+        </div>
+
+            <div style="margin-top: 5%;width: 55%;margin-left: 25%;">
              <form method="post">
                  {% csrf_token %}
                  <fieldset class="form-group">
                      <legend class="border-bottom mb-4">
-                         Create an account
+                         Insert your data
                      </legend>
                      {{ form.as_p }}
-{#                     {{ form|crispy }} #}
+                    {#   {{ form|crispy }} #}
                  </fieldset>
                  <br>
                  <div class="form-group">
-                     <button class="btn btn-success" type="submit">Sign Up</button>
+                     <button class="btn btn-success" type="submit" style="margin-left:35%">Sign Up</button>
                  </div>
              </form>
-        <div class="border-top pt-3">
-            <small class="text-muted">
-                Already have an account?
-                <a class="ml-2" href="{% url 'login' %}">Login</a>
-            </small>
+
+            <div class="border-top pt-3">
+                <small class="text-muted">
+                    Already have an account?
+                    <a class="ml-2" href="{% url 'login' %}">Login</a>
+                </small>
+            </div>
         </div>
     </div>
+
 {% endblock content %}
