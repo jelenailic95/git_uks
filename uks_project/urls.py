@@ -15,7 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from my_git import views as my_git_views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', my_git_views.home, name='home'),
+    path('home/', my_git_views.home, name='home'),
+    path('login/', my_git_views.login, name='login'),
+    path('logout/', auth_views.LoginView.as_view(template_name='my_git/users/logout.html'), name='logout'),
+    path('register/', my_git_views.register, name='register')
 ]

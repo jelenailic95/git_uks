@@ -1,0 +1,10 @@
+{% extends "my_git/home.html" %}
+{%  block content %}
+    <h3>You have been logged out successfully.</h3>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Login here ->
+            <a href="{% url 'login' %}">Login</a>
+        </small>
+    </div>
+{% endblock content %}
