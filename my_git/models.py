@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 
 
@@ -14,7 +15,7 @@ class Project(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)   # cascade ili null
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)  # cascade ili null
     contributors = models.ManyToManyField(User, related_name='contributors')
 
 
@@ -37,7 +38,7 @@ class Task(models.Model):
     title = models.CharField(max_length=100)
     open = models.BooleanField()
     milestone = models.ForeignKey(Milestone, on_delete=models.CASCADE)
-    user = models.ForeignKey(User,  on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class Issue(models.Model):
