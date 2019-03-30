@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', my_git_views.welcome, name='welcome'),
     path('home/', my_git_views.home, name='home'),
+    # todo: change auth_views to my_git_views.login
     path('login/', auth_views.LoginView.as_view(template_name='my_git/users/login.html'), name='login'),
     path('logout/', auth_views.LoginView.as_view(template_name='my_git/users/logout.html'), name='logout'),
     path('register/', my_git_views.register, name='register')

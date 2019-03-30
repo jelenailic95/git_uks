@@ -6,8 +6,8 @@ from django.contrib.auth.forms import UserCreationForm
 class UserRegisterForm(UserCreationForm):
     username = forms.EmailField()
     email = forms.EmailField()
-    password1 = forms.CharField(label="Password")
-    password2 = forms.CharField(label="Confirm password")
+    password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
+    password2 = forms.CharField(label="Confirm password", widget=forms.PasswordInput)
 
     # nested namespace for config
     class Meta:
