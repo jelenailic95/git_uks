@@ -1,0 +1,31 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>My Git</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/welcome.css' %}">
+</head>
+    <body>
+        <div>
+            <div id="content-div">
+                <div class="jumbotron">
+                    <h6 class="display-4">
+
+                        <strong>My Git</strong>
+                        <img alt="My Git" src="../../static/my_git/images/logo.png"/>
+                    </h6>
+                    <hr class="my-4">
+                    <p class="lead">
+                        <a href="/login" class="btn btn-default">Login</a>
+                        <a href="/register" class="btn btn-default" id="btn-signup">Sign Up</a>
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    </body>
+</html>
