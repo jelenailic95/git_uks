@@ -6,26 +6,38 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 
 from my_git.constants import HttpMethod
-from my_git.forms import UserRegisterForm
+from my_git.forms import UserRegisterForm, LoginForm
 from my_git.models import User
+
+
+def welcome(request):
+    return render(request, 'my_git/welcome.html')
 
 
 def home(request):
     return render(request, 'my_git/home.html')
 
 
+# todo: create login function
 def login(request):
-    if request.method == HttpMethod.POST:
-        form = UserCreationForm(request.POST)
-        print('POST')
-        result = User.objects.get(username=form.cleand_data['username'], password=form.cleand_data['password'])
-        if result is None:
-            messages.error(request, 'Bad credentials, try to login again!')
-    return render(request, 'my_git/users/login.html')
+    print(request.method)
+    if request.method == HttpMethod.POST.name:
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            try:
+                result = User.objects.get(email=form.cleaned_data['email'], password=form.cleaned_data['password'])
+                print(result)
+                return redirect('home')
+            except User.DoesNotExist:
+                messages.error(request, 'Bad credentials, try to login now!')
+                return redirect('login')
+    else:
+        form = LoginForm()
+    return render(request, 'my_git/users/login.html', {'form': form})
 
 
 def register(request):
-    if request.method == HttpMethod.POST:
+    if request.method == HttpMethod.POST.name:
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             obj = User()

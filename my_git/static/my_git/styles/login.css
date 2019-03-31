@@ -1,0 +1,26 @@
+.jumbotron {
+    padding: 1% 0 0 0;
+    text-align: center;
+}
+
+hr {
+    margin-top: 1%;
+}
+
+#form-div {
+    margin-top: 5%;
+    width: 55%;
+    margin-left: 25%;
+}
+
+form {
+     margin-left: 25%;
+}
+
+#submit-btn {
+    margin-left:30%;
+}
+
+.pt-3 {
+    margin-left: 37%;
+}

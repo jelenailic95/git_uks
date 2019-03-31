@@ -6,9 +6,9 @@ from django.db import models
 
 class User(models.Model):
     id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=30, default='')
-    email = models.EmailField(default=1, max_length=30)
-    password = models.CharField(max_length=30, default='')
+    username = models.CharField(max_length=100)
+    email = models.EmailField(default=1)
+    password = models.CharField(max_length=30)
 
 
 class Project(models.Model):

@@ -1,0 +1,32 @@
+body {
+    background-image: url('../../my_git/images/planet.jpeg');
+    height: 100%
+}
+#content-div {
+    text-align: center;
+    padding-top: 12%;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.jumbotron {
+    background-color: rgba(238,238,238,.6) ;
+}
+
+.display-4 {
+     text-align: center;
+    margin-bottom: 20px;
+}
+
+img {
+    height: 60px;
+}
+
+a {
+    background: whitesmoke;
+    color: black;
+}
+
+#btn-signup {
+    margin-left: 8%;
+}
