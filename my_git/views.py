@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib import messages
+
+from my_git.constants import HttpMethod
 from my_git.forms import UserRegisterForm, LoginForm
 from my_git.models import User
 from my_git.constants import HttpMethod
@@ -16,6 +19,8 @@ def home(request):
     return render(request, 'my_git/home.html')
 
 
+
+# todo: create login function
 def login(request):
     print(request.method)
     if request.method == HttpMethod.POST.name:
