@@ -21,3 +21,13 @@ class LoginForm(forms.Form):
 
     class Meta:
         fields = ['email', 'password']
+
+
+class UserUpdateProfileForm(forms.ModelForm):
+    username = forms.CharField(required=False)
+    email = forms.EmailField(required=False)
+    password = forms.CharField(required=False, widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']

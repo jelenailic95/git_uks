@@ -25,9 +25,10 @@ urlpatterns = [
     path('home/', my_git_views.home, name='home'),
     # todo: change auth_views to my_git_views.login
     path('login/', my_git_views.login, name='login'),
-    path('logout/', auth_views.LoginView.as_view(template_name='my_git/users/logout.html'), name='logout'),
     path('register/', my_git_views.register, name='register'),
-    path('profile/', my_git_views.get_user_profile, name='profile_preview')
+    path('profile/', my_git_views.get_user_profile, name='profile_preview'),
+    path('profile/edit', my_git_views.update_user_profile, name='profile_update')
+
 ]
 
 urlpatterns += staticfiles_urlpatterns()

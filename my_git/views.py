@@ -6,12 +6,13 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 
 from my_git.constants import HttpMethod
-from my_git.forms import UserRegisterForm, LoginForm
+from my_git.forms import UserRegisterForm, LoginForm, UserUpdateProfileForm
 from my_git.models import User
 from my_git.constants import HttpMethod
 
 
 def welcome(request):
+    # del request.session['user']
     return render(request, 'my_git/welcome.html')
 
 
@@ -32,7 +33,7 @@ def login(request):
                 request.session['user'] = result.username
                 return redirect('home')
             except User.DoesNotExist:
-                messages.error(request, 'Bad credentials, try to login now!')
+                messages.error(request, 'Bad credentials, try again!')
                 return redirect('login')
     else:
         form = LoginForm()
@@ -56,7 +57,41 @@ def register(request):
 
 
 def get_user_profile(request):
+    # request.user
     username = User.objects.get(username=request.session['user'])
     logged_user = User.objects.get(username=username)
 
-    return render(request, 'my_git/users/user_profile.html', {"user":logged_user})
+    return render(request, 'my_git/users/user_profile.html', {"user": logged_user})
+
+
+def update_user_profile(request):
+    username = User.objects.get(username=request.session['user'])
+    logged_user = User.objects.get(username=username)
+
+    if request.method == 'POST':
+        form = UserUpdateProfileForm(request.POST)
+        if form.is_valid():
+            logged_user.username = form.cleaned_data['username']
+            request.session['user'] = logged_user.username
+
+            # if password is changed set the new one
+            if form.cleaned_data['password'] != "":
+                logged_user.password = form.cleaned_data['password']
+
+            logged_user.email =  form.cleaned_data['email']
+            logged_user.save()
+
+            messages.success(request, 'Your profile has been successfully saved!')
+            return  render(request, 'my_git/users/user_profile.html', {"user": logged_user})
+    else:
+        form = UserUpdateProfileForm()
+
+    # fill the form with the user data
+    form.initial['username'] = logged_user.username
+    form.initial['email'] = logged_user.email
+
+    context = {
+        'form': form
+    }
+
+    return render(request, 'my_git/users/update_user_profile.html', context)

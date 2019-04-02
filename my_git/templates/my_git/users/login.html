@@ -2,51 +2,64 @@
 {% load static %}
 
 {% if messages %}
-    {% if message.tags != 'success' %}
-      <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
-            {{ message|safe }}
-        </div>
-    {% endif %}
+    {% for message in messages %}
+        {% if message.tags != 'success' %}
+            <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endif %}
+    {% endfor %}
 {% endif %}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8"/>
-        <title>My Git</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/login.css' %}">
-    </head>
+<head>
+    <meta charset="utf-8"/>
+    <title>My Git</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/login.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
 
-    <body>
-        {%  block content %}
-                <div class="content-section">
-                    <div class="jumbotron">
-                      <h3> Login</h3>
-                      <hr>
-                    </div>
+<body>
+{% block content %}
+    <div class="content-section">
+        <div class="jumbotron">
+            <h3> Login</h3>
+            <hr>
+        </div>
 
-                    <div id="form-div">
-                        <hr>
-                        <form method="post">
-                        {% csrf_token %}
-                        <fieldset class="form-group">
-                            {{ form.as_p }}
-                        </fieldset>
-                        <br>
-                        <div class="form-group">
-                            <button class="btn btn-success" id="submit-btn" type="submit">Login</button>
-                        </div>
-                        </form>
-
-                        <hr>
-                        <div class="pt-3">
-                            <small class="text-muted">
-                                New to My Git?
-                                <a class="ml-2" href="{% url 'register' %}">Create account</a>
-                            </small>
+        <div id="form-div">
+            <hr>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group" id="group_{{ field.name }}">
+                        <label for="id_{{ field.name }}" class="control-label">{{ field.label }}</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                            </div>
+                            {{ field }}
                         </div>
                     </div>
+                {% endfor %}
+                <br>
+                <div class="form-group">
+                    <button class="btn btn-success" id="submit-btn" type="submit" style="margin-left: 13%">Login
+                    </button>
                 </div>
-        {% endblock content %}
-    </body>
+            </form>
+
+            <hr>
+            <div style="margin-left: 28%">
+                <small class="text-muted">
+                    New to My Git?
+                    <a class="ml-2" href="{% url 'register' %}">Create account</a>
+                </small>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+</body>
 </html>
