@@ -10,6 +10,9 @@ class User(models.Model):
     email = models.EmailField(default=1)
     password = models.CharField(max_length=30)
 
+    def __str__(self):
+        return "{}".format(self.username)
+
 
 class Project(models.Model):
     id = models.AutoField(primary_key=True)

@@ -1,6 +1,13 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
+{% if messages %}
+    {% if message.tags != 'success' %}
+      <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
+            {{ message|safe }}
+        </div>
+    {% endif %}
+{% endif %}
 <!DOCTYPE html>
 <html lang="en">
     <head>

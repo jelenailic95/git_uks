@@ -19,8 +19,6 @@ def home(request):
     return render(request, 'my_git/home.html')
 
 
-
-# todo: create login function
 def login(request):
     print(request.method)
     if request.method == HttpMethod.POST.name:
@@ -29,6 +27,9 @@ def login(request):
             try:
                 result = User.objects.get(email=form.cleaned_data['email'], password=form.cleaned_data['password'])
                 print(result)
+
+                # set logged user
+                request.session['user'] = result.username
                 return redirect('home')
             except User.DoesNotExist:
                 messages.error(request, 'Bad credentials, try to login now!')
@@ -52,3 +53,10 @@ def register(request):
     else:
         form = UserRegisterForm()
     return render(request, 'my_git/users/register.html', {'form': form})
+
+
+def get_user_profile(request):
+    username = User.objects.get(username=request.session['user'])
+    logged_user = User.objects.get(username=username)
+
+    return render(request, 'my_git/users/user_profile.html', {"user":logged_user})
