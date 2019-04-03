@@ -1,0 +1,46 @@
+{% load static %}
+<html lang="en">
+<header>
+    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/issues_header.css' %}">
+</header>
+<body>
+
+<div class="container container-padding">
+    <div class="container">
+        <div class="row">
+            <div class="input-group col-lg-12">
+                <div class="input-group-btn search-panel">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span id="search_concept">Filter by</span> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#contains">Contains</a></li>
+                        <li><a href="#its_equal">It's equal</a></li>
+                        <li><a href="#greather_than">Greather than ></a></li>
+                        <li><a href="#less_than">Less than < </a></li>
+                        <li class="divider"></li>
+                        <li><a href="#all">Anything</a></li>
+                    </ul>
+                </div>
+                <input type="hidden" name="search_param" value="all" id="search_param">
+                <input type="text" class="form-control col-sm-3" name="x" placeholder="Search term...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button"><i class="fas fa-search"></i></button>
+                </span>
+                <span class="labels-btn">
+                    <button class="btn btn-outline-dark" type="button"><i class="fas fa-tag"></i>Labels</button>
+                </span>
+
+                <span class="milestones-btn">
+                    <button class="btn btn-outline-dark" type="button"><i class="fas fa-sign"></i>Milestones</button>
+                </span>
+
+                <span class="new-issue-btn col" >
+                    <a href="{% url 'new-issue' %}"><button class="btn btn-success float-right" type="button" >New issue</button></a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

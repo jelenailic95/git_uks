@@ -1,0 +1,14 @@
+
+
+#tableTitle {
+    display: inline;
+}
+
+.spanLabels {
+    float:right;
+    display:block;
+}
+.title-labels {
+    position: relative;
+    display: inline-block;
+}
