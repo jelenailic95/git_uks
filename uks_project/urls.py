@@ -27,9 +27,11 @@ urlpatterns = [
     path('login/', my_git_views.login, name='login'),
     path('register/', my_git_views.register, name='register'),
     path('profile/', my_git_views.get_user_profile, name='profile_preview'),
-    path('profile/edit', my_git_views.update_user_profile, name='profile_update')
+    path('profile/edit', my_git_views.update_user_profile, name='profile_update'),
     path('issues/', my_git_views.issues_view, name='issues'),
-    path('issues/new', my_git_views.new_issue, name='new-issue')
+    path('issues/new', my_git_views.new_issue, name='new-issue'),
+    path('repositories/', my_git_views.get_repositories, name='repositories'),
+
 ]
 
 urlpatterns += staticfiles_urlpatterns()

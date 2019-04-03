@@ -1,6 +1,6 @@
 from django.db import models
 
-
+from datetime import datetime
 # Create your models here.
 
 
@@ -14,12 +14,19 @@ class User(models.Model):
         return "{}".format(self.username)
 
 
-class Project(models.Model):
+class Repository(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)  # cascade ili null
     contributors = models.ManyToManyField(User, related_name='contributors')
+    TYPE_OPTION = (
+        ('public', 'public'),
+        ('private', 'private'))
+    type = models.CharField(choices=TYPE_OPTION, max_length=6, default='public')
+    creation_date = models.DateTimeField(default=datetime.now)
+    language = models.CharField(default='', max_length=150)
+
 
 
 class Milestone(models.Model):
@@ -27,7 +34,7 @@ class Milestone(models.Model):
     title = models.CharField(max_length=100)
     due_date = models.DateField()
     open = models.BooleanField()
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
 
 
 class Label(models.Model):

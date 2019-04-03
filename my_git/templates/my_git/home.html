@@ -39,7 +39,7 @@
                 <a class="nav-link" href="{% url 'home' %}">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Projects</a>
+                <a class="nav-link" href="{% url 'repositories' %}">Repositories</a>
             </li>
             <li class="nav-item {{ issues_view }}">
                 <a class="nav-link" href="{% url 'issues' %}">Issues</a>
@@ -53,8 +53,9 @@
                     My Profile
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{% url 'profile_preview' %}">Profile</a>
-                    <a class="dropdown-item" href="{% url 'welcome' %}">Logout</a>
+                    <a class="dropdown-item" href="{% url 'profile_preview' %}">Your profile</a>
+                    <a class="dropdown-item" href="{% url 'repositories' %}">Your repositories</a>
+                    <a class="dropdown-item" href="{% url 'welcome' %}">Log out</a>
                 </div>
             </li>
         </ul>
@@ -62,11 +63,10 @@
 </nav>
 
 <script>
-$(document).ready(function(){
-  $('[data-toggle="tooltip"]').tooltip();
-});
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 </script>
-</body>
 
 {% block  content %}
 

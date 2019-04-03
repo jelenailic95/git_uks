@@ -7,7 +7,7 @@ from django.contrib import messages
 import logging
 from my_git.constants import HttpMethod
 from my_git.forms import UserRegisterForm, LoginForm, UserUpdateProfileForm
-from my_git.models import User, Issue, Label
+from my_git.models import User, Issue, Label, Repository
 
 
 def welcome(request):
@@ -78,11 +78,11 @@ def update_user_profile(request):
             if form.cleaned_data['password'] != "":
                 logged_user.password = form.cleaned_data['password']
 
-            logged_user.email =  form.cleaned_data['email']
+            logged_user.email = form.cleaned_data['email']
             logged_user.save()
 
             messages.success(request, 'Your profile has been successfully saved!')
-            return  render(request, 'my_git/users/user_profile.html', {"user": logged_user})
+            return render(request, 'my_git/users/user_profile.html', {"user": logged_user})
     else:
         form = UserUpdateProfileForm()
 
@@ -99,7 +99,6 @@ def update_user_profile(request):
 
 def issues_view(request):
     issues = Issue.objects.all()
-    print(issues[0].open)
     context = {
         "issues_view": "active",
         "num_of_open": 0,
@@ -117,3 +116,25 @@ def new_issue(request):
         pass
     context = {'user': request.user}
     return render(request, 'my_git/issues/new_issue.html', context)
+
+
+def get_repositories(request):
+    username = User.objects.get(username=request.session['user'])
+    logged_user = User.objects.get(username=username)
+
+    repositories = Repository.objects.all()
+
+    context = {
+        "user": logged_user,
+        "repositories": repositories
+    }
+
+    # obj = Repository()
+    # obj.name = "Repo1"
+    # obj.description = "Repository1 desc"
+    # obj.owner = logged_user
+    # obj.language = "Java"
+    # obj.save()
+
+
+    return render(request, 'my_git/repositories/repositories.html', context)

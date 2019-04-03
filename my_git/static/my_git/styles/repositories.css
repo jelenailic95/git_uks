@@ -1,0 +1,45 @@
+body {
+    margin: 0;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #f1f1f1;
+    margin-left: 10%;
+    margin-right: 5%;
+}
+
+table {
+    margin-left: 10%;
+}
+
+img {
+    float: left;
+}
+
+.topnav a {
+    float: left;
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    border-bottom: 3px solid transparent;
+}
+
+.topnav a:hover {
+    border-bottom: 3px solid red;
+}
+
+.topnav a.active {
+    border-bottom: 3px solid red;
+}
+
+#btn-star {
+    width: 70px;
+}
+
+#btn-info{
+    width: 30px;
+}
