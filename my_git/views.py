@@ -136,5 +136,15 @@ def get_repositories(request):
     # obj.language = "Java"
     # obj.save()
 
-
     return render(request, 'my_git/repositories/repositories.html', context)
+
+
+def get_repository(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+
+    context = {
+        "repository": repository,
+        "owner": repository.owner
+    }
+
+    return render(request, 'my_git/repositories/repository_preview.html', context)
