@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 import logging
 from my_git.constants import HttpMethod
-from my_git.forms import UserRegisterForm, LoginForm, UserUpdateProfileForm
+from my_git.forms import UserRegisterForm, LoginForm, UserUpdateProfileForm, CreateRepositoryForm, DeleteNewForm
 from my_git.models import User, Issue, Label, Repository
 
 
@@ -148,3 +148,47 @@ def get_repository(request, repo_name):
     }
 
     return render(request, 'my_git/repositories/repository_preview.html', context)
+
+
+def create_repository(request):
+    username = User.objects.get(username=request.session['user'])
+    logged_user = User.objects.get(username=username)
+
+    if request.method == 'POST':
+        form = CreateRepositoryForm(request.POST)
+        if form.is_valid():
+            obj = Repository()
+            obj.name = form.cleaned_data['repository_name']
+            obj.description = form.cleaned_data['description']
+            obj.type = form.cleaned_data['type']
+            obj.owner = logged_user
+            obj.save()
+            messages.success(request, 'Repository is successfully created!')
+            return redirect('repositories')
+    else:
+        form = CreateRepositoryForm()
+
+    context = {
+        'owner': username,
+        'form': form
+    }
+
+    return render(request, 'my_git/repositories/create_repository.html', context)
+
+
+def get_repository_settings(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+
+    context = {
+        "repository": repository,
+        "owner": repository.owner
+    }
+
+    if request.method == 'POST':
+        form = DeleteNewForm(request.POST)
+        if form.is_valid:
+            repository.delete()
+            messages.success(request, 'Repository is successfully deleted!')
+            return redirect('repositories')
+
+    return render(request, 'my_git/repositories/repository_settings.html', context)

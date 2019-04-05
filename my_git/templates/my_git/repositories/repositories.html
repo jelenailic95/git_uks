@@ -6,6 +6,12 @@
     <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/repositories.css' %}">
 
     <br>
+
+    <button class="btn btn-success" style="margin-left:2%; margin-bottom: 1%"
+            onclick="location.href='{% url 'create_repository' %}'">
+        <i class="fa fa-book"></i> New
+    </button><br>
+
     <img alt="User photo" src="../../../static/my_git/images/default_user.png"
          class="img-circle" style="height:100px;"/>
 

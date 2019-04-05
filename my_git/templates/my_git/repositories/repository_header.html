@@ -1,0 +1,35 @@
+{% extends "my_git/home.html" %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/repositories.css' %}">
+    <br>
+    <h5 style="margin-left: 10%; border-left:5px solid #6f42c1"> &nbsp;
+        {{ owner }} / <b>{{ repository.name }} </b> <i>{{ repository.type }}</i></h5>
+    <br><br>
+    <img alt="User photo" src="../../../static/my_git/images/default_user.png"
+         class="img-circle" style="height:100px;"/>
+
+    <div class="topnav">
+        <a class="active" href="#"><i class="fa fa-code"></i> Code</a>
+        <a href="#"><i class="fa fa-exclamation-circle"></i> Issues</a>
+        <a href="#"><i class="fa fa-question"></i> Pull requests</a>
+        <a href="#"><i class="fa fa-book"></i> Wiki</a>
+        <a href="#"><i class="fa fa-chart-bar"></i> Insights</a>
+        <a href="{{ repository.name }}/settings"><i class="fa fa-cog"></i> Settings</a>
+    </div>
+
+       <script type="text/javascript">
+        $(document).ready(function () {
+            $('a').on('click', function () {
+                var clicked = $(this);
+                $('a').each(function () {
+                    if ($(this).hasClass('active')) {
+                        $(this).removeClass('active');
+                    }
+                });
+                $(this).addClass('active');
+            });
+        });
+    </script>
+{% endblock %}

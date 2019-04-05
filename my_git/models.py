@@ -23,7 +23,7 @@ class Repository(models.Model):
     TYPE_OPTION = (
         ('public', 'public'),
         ('private', 'private'))
-    type = models.CharField(choices=TYPE_OPTION, max_length=6, default='public')
+    type = models.CharField(choices=TYPE_OPTION, max_length=7, default='public')
     creation_date = models.DateTimeField(default=datetime.now)
     language = models.CharField(default='', max_length=150)
 

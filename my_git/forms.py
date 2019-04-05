@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
-from my_git.models import Label
+from my_git.models import Label, Repository
 
 
 class UserRegisterForm(UserCreationForm):
@@ -35,3 +35,19 @@ class UserUpdateProfileForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
+
+
+class CreateRepositoryForm(forms.ModelForm):
+    repository_name = forms.CharField()
+    description = forms.CharField(required=False)
+    type = forms.CharField()
+
+    class Meta:
+        model = Repository
+        fields = ['repository_name', 'description', 'type']
+
+
+class DeleteNewForm(forms.ModelForm):
+    class Meta:
+        model = Repository
+        fields = []
