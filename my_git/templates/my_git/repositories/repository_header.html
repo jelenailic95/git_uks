@@ -3,6 +3,7 @@
 
 {% block content %}
     <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/repositories.css' %}">
+
     <br>
     <h5 style="margin-left: 10%; border-left:5px solid #6f42c1"> &nbsp;
         {{ owner }} / <b>{{ repository.name }} </b> <i>{{ repository.type }}</i></h5>
@@ -19,7 +20,7 @@
         <a href="{{ repository.name }}/settings"><i class="fa fa-cog"></i> Settings</a>
     </div>
 
-       <script type="text/javascript">
+    <script type="text/javascript">
         $(document).ready(function () {
             $('a').on('click', function () {
                 var clicked = $(this);

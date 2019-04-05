@@ -4,9 +4,15 @@
 
 {% block content %}
     <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/repositories.css' %}">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
     <br>
-
     <button class="btn btn-success" style="margin-left:2%; margin-bottom: 1%"
             onclick="location.href='{% url 'create_repository' %}'">
         <i class="fa fa-book"></i> New

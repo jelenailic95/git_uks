@@ -47,7 +47,15 @@ class CreateRepositoryForm(forms.ModelForm):
         fields = ['repository_name', 'description', 'type']
 
 
-class DeleteNewForm(forms.ModelForm):
+class DeleteForm(forms.ModelForm):
     class Meta:
         model = Repository
         fields = []
+
+
+class UpdateNameForm(forms.ModelForm):
+    repository_name = forms.CharField(label='')
+
+    class Meta:
+        model = Repository
+        fields = ['repository_name']
