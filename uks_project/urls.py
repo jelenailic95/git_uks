@@ -34,7 +34,6 @@ urlpatterns = [
     path('repositories/<str:repo_name>', my_git_views.get_repository, name='repository_preview'),
     path('repositories/<str:repo_name>/settings', my_git_views.get_repository_settings, name='repository_settings'),
     path('new/', my_git_views.create_repository, name='create_repository'),
-
 ]
 
 urlpatterns += staticfiles_urlpatterns()

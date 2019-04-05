@@ -53,9 +53,10 @@ class DeleteForm(forms.ModelForm):
         fields = []
 
 
-class UpdateNameForm(forms.ModelForm):
-    repository_name = forms.CharField(label='')
+class InputFieldForm(forms.ModelForm):
+    value = forms.CharField(label='')
 
     class Meta:
         model = Repository
-        fields = ['repository_name']
+        fields = ['value']
+

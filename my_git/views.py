@@ -129,6 +129,7 @@ def get_repositories(request):
         "repositories": repositories
     }
 
+
     # obj = Repository()
     # obj.name = "Repo1"
     # obj.description = "Repository1 desc"
@@ -181,14 +182,14 @@ def get_repository_settings(request, repo_name):
 
     # rename repository
     if request.method == 'POST' and 'btn-rename' in request.POST:
-        form = UpdateNameForm(request.POST)
+        form = InputFieldForm(request.POST)
         if form.is_valid():
-            repository.name = form.cleaned_data['repository_name']
+            repository.name = form.cleaned_data['value']
             repository.save()
             messages.success(request, 'Repository is successfully renamed.')
             return redirect('repositories')
     else:
-        form = UpdateNameForm()
+        form = InputFieldForm()
 
     # delete repository
     if request.method == 'POST' and 'btn-delete' in request.POST:
@@ -198,7 +199,7 @@ def get_repository_settings(request, repo_name):
             messages.success(request, 'Repository is successfully deleted!')
             return redirect('repositories')
 
-    form.initial['repository_name'] = repository.name
+    form.initial['value'] = repository.name
 
     context = {
         "repository": repository,
