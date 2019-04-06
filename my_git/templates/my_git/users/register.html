@@ -1,47 +1,54 @@
-
 {% load crispy_forms_tags %}
 {% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8"/>
-        <title>My Git</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/login.css' %}">
-    </head>
-    <body>
-        {%  block content %}
-        <div class="content-section">
-            <div class="jumbotron">
-              <h3> Create an account</h3>
-              <hr>
-            </div>
+<head>
+    <meta charset="utf-8"/>
+    <title>My Git</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/login.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-                <div id="form-div">
-                 <form method="post">
-                     {% csrf_token %}
-                     <fieldset class="form-group">
-                         <legend class="border-bottom mb-4">
-                             Insert your data
-                         </legend>
-                         {{ form.as_p }}
-                        {#   {{ form|crispy }} #}
-                     </fieldset>
-                     <br>
-                     <div class="form-group">
-                         <button class="btn btn-success" type="submit" style="margin-left:35%">Sign Up</button>
-                     </div>
-                 </form>
+</head>
+<body>
+{% block content %}
+    <div class="content-section">
+        <div class="jumbotron">
+            <h3> Create an account</h3>
+            <hr>
+        </div>
 
-                <div class="border-top pt-3">
-                    <small class="text-muted">
-                        Already have an account?
-                        <a class="ml-2" href="{% url 'login' %}">Login</a>
-                    </small>
-                </div>
+        <div id="form-div">
+            <hr>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group" id="group_{{ field.name }}">
+                        <label for="id_{{ field.name }}" class="control-label">{{ field.label }}</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                            </div>
+                            {{ field }}
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <br>
+                <button class="btn btn-success" type="submit" style="margin-left: 13%">Sign Up</button>
+            </form>
+
+            <br><hr>
+            <div style="margin-left: 30%">
+                <small class="text-muted">
+                    Already have an account?
+                    <a class="ml-2" href="{% url 'login' %}">Login</a>
+                </small>
             </div>
         </div>
-    {% endblock content %}
-    </body>
+    </div>
+{% endblock content %}
+</body>
 </html>

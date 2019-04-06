@@ -1,15 +1,9 @@
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
-            {{ message|safe }}
-        </div>
-    {% endfor %}
-{% endif %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="../../static/my_git/styles/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -45,7 +39,7 @@
                 <a class="nav-link" href="{% url 'home' %}">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Projects</a>
+                <a class="nav-link" href="{% url 'repositories' %}">Repositories</a>
             </li>
             <li class="nav-item {{ issues_view }}">
                 <a class="nav-link" href="{% url 'issues' %}">Issues</a>
@@ -54,13 +48,14 @@
                 <a class="nav-link" href="">Explore</a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="{% url 'profile_preview' %}" id="navbarDropdownMenuLink"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     My Profile
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="#">Profile</a>
-                    <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                    <a class="dropdown-item" href="{% url 'profile_preview' %}">Your profile</a>
+                    <a class="dropdown-item" href="{% url 'repositories' %}">Your repositories</a>
+                    <a class="dropdown-item" href="{% url 'welcome' %}">Log out</a>
                 </div>
             </li>
         </ul>
@@ -68,9 +63,13 @@
 </nav>
 
 <script>
-$(document).ready(function(){
-  $('[data-toggle="tooltip"]').tooltip();
-});
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 </script>
+
+{% block  content %}
+
+{% endblock content %}
 </body>
 </html>
