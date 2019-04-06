@@ -7,7 +7,7 @@ from django.contrib import messages
 import logging
 from my_git.constants import HttpMethod
 from my_git.forms import UserRegisterForm, LoginForm
-from my_git.models import User, Issue, Label
+from my_git.models import User, Issue, Label, Milestone
 
 
 def welcome(request):
@@ -54,12 +54,15 @@ def register(request):
 
 def issues_view(request):
     issues = Issue.objects.all()
-    print(issues[0].open)
+    milestones = Milestone.objects.all()
+    labels = Label.objects.all()
     context = {
         "issues_view": "active",
         "num_of_open": 0,
         "num_of_closed": 0,
-        'issues': issues
+        "issues": issues,
+        "labels" : labels,
+        "milestones" : milestones
     }
     return render(request, 'my_git/issues/issues.html', context)
 

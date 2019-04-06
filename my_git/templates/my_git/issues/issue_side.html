@@ -6,7 +6,11 @@
 <hr>
 <div class="form-group">
     <label id="labels" for="labelsInput"><em style="color: #6c757d;font-weight: bold">Labels</em></label>
-    <input type="text" id="labelsInput" class="form-control">
+    <select id="selectLabels" class="form-control">
+        {{% for label in labels %}
+            <option value="{{ label.name }}">{{ label.name }}</option>
+        {% endfor %}
+    </select>
 </div>
 <hr>
 <div class="form-group">
