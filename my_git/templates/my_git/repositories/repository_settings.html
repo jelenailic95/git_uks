@@ -1,0 +1,31 @@
+{% load static %}
+
+
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/repositories.css' %}">
+    <div>
+        {% include 'my_git/repositories/repository_header.html' %}
+    </div>
+
+    <br>
+    <div style="margin-left: 10%">
+        <p>Repository name</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form_update }}
+            <button name="btn-rename" class="btn btn-outline-secondary" type="submit">Rename</button>
+        </form>
+
+        <p><b>Danger Zone</b></p>
+        <div id="danger-zone">
+            <p>Once you delete a repository, there is no going back. Please be certain.
+            </p>
+            <form method="post">
+                {% csrf_token %}
+                {{ form }}
+                <button name="btn-delete" class="btn btn-danger" type="submit">Delete Repository</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

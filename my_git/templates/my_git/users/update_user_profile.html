@@ -8,28 +8,28 @@
     <div class="card bg-light mb-3" style="max-width: 22rem; margin-left: 50px;">
         <div class="card-body">
             <form method="post">
-         {% csrf_token %}
-         <fieldset class="form-group">
-             <legend class="border-bottom mb-4">
-                 Edit profile
-             </legend>
-             {% for field in form %}
-                <div class="form-group" id="group_{{ field.name }}">
-                    <label for="id_{{ field.name }}" class="control-label">{{ field.label }}</label>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">
+                        Edit profile
+                    </legend>
+                    {% for field in form %}
+                        <div class="form-group" id="group_{{ field.name }}">
+                            <label for="id_{{ field.name }}" class="control-label">{{ field.label }}</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                                </div>
+                                {{ field }}
+                            </div>
                         </div>
-                        {{ field }}
-                    </div>
+                    {% endfor %}
+                </fieldset>
+                <br>
+                <div class="form-group">
+                    <button class="btn btn-success" type="submit" style="margin-left:35%; width: 70px;">Save</button>
                 </div>
-            {% endfor %}
-         </fieldset>
-         <br>
-         <div class="form-group">
-             <button class="btn btn-success" type="submit" style="margin-left:35%; width: 70px;">Save</button>
-         </div>
-     </form>
+            </form>
         </div>
     </div>
 {% endblock content %}

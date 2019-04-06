@@ -4,21 +4,36 @@
 
 {% block content %}
     <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/repositories.css' %}">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
     <br>
+    <button class="btn btn-success" style="margin-left:2%; margin-bottom: 1%"
+            onclick="location.href='{% url 'create_repository' %}'">
+        <i class="fa fa-book"></i> New
+    </button><br>
+
     <img alt="User photo" src="../../../static/my_git/images/default_user.png"
          class="img-circle" style="height:100px;"/>
 
     <div class="topnav">
-        <a class="active" href="#">Repositories</a>
         <a href="#">Overview</a>
+        <a class="active" href="#">Repositories</a>
         <a href="#">Projects</a>
-        <button id="search-btn" style="margin-top:10px;float: right;" class="btn btn-default" type="button">
-            <i class="fas fa-search"></i>
-        </button>
-        <input style="margin-top:12px;float: right; margin-right: 7px" type="text" name="x"
-               placeholder="Search term...">
+        <form>
+            <button id="search-btn" style="margin-top:10px;float: right;" class="btn btn-default">
+                <i class="fas fa-search"></i>
+            </button>
+            <input style="margin-top:12px;float: right; margin-right: 7px" type="text" name="x"
+                   placeholder="Find a repository...">
+        </form>
     </div>
+
     <table class="table table-hover">
         <thead>
         <tr>
@@ -44,7 +59,10 @@
 
                 <td>{{ repository.language }}</td>
                 <td>
-                    <button class="btn btn-outline-dark btn-sm" id="btn-info"><i class="fa fa-info"></i></button>
+                    <button class="btn btn-outline-dark btn-sm" id="btn-info"
+                            onclick="location.href='{% url 'repository_preview' repository.name %}'">
+                        <i class="fa fa-info"></i>
+                    </button>
                 </td>
                 <td>
                     <button class="btn btn-primary btn-sm" id="btn-star"><i class="fa fa-star"></i>&nbsp;Star</button>
