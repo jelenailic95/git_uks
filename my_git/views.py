@@ -124,18 +124,17 @@ def get_repositories(request):
 
     repositories = Repository.objects.all()
 
+    # filter repositories by name
+    if request.method == 'GET' and 'repo_name' in request.GET:
+        name = request.GET.get('repo_name', '')
+
+        # filter by case insensitive repository name
+        repositories = Repository.objects.filter(name__icontains=name)
+
     context = {
         "user": logged_user,
         "repositories": repositories
     }
-
-
-    # obj = Repository()
-    # obj.name = "Repo1"
-    # obj.description = "Repository1 desc"
-    # obj.owner = logged_user
-    # obj.language = "Java"
-    # obj.save()
 
     return render(request, 'my_git/repositories/repositories.html', context)
 
