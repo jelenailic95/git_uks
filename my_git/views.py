@@ -122,14 +122,19 @@ def get_repositories(request):
     username = User.objects.get(username=request.session['user'])
     logged_user = User.objects.get(username=username)
 
-    repositories = Repository.objects.all()
+    repositories = Repository.objects.all().order_by('-creation_date')
 
     # filter repositories by name
     if request.method == 'GET' and 'repo_name' in request.GET:
         name = request.GET.get('repo_name', '')
 
         # filter by case insensitive repository name
-        repositories = Repository.objects.filter(name__icontains=name)
+        repositories = Repository.objects.filter(name__icontains=name).order_by('-creation_date')
+
+    if request.method == 'POST':
+        repository = Repository.objects.get(id=request.POST.get('repo_id'))
+        repository.star = request.POST.get('repo_star')
+        repository.save()
 
     context = {
         "user": logged_user,
@@ -137,6 +142,24 @@ def get_repositories(request):
     }
 
     return render(request, 'my_git/repositories/repositories.html', context)
+
+
+def get_stars(request):
+    repositories = Repository.objects.filter(star=True).order_by('-creation_date')
+
+    # filter repositories by name
+    if request.method == 'GET' and 'repo_name' in request.GET:
+        name = request.GET.get('repo_name', '')
+
+        # filter by case insensitive repository name
+        repositories = repositories.filter(name__icontains=name).order_by('-creation_date')
+
+    if request.method == 'POST':
+        repository = Repository.objects.get(id=request.POST.get('repo_id'))
+        repository.star = request.POST.get('repo_star')
+        repository.save()
+
+    return render(request, 'my_git/stars.html', {'repositories': repositories})
 
 
 def get_repository(request, repo_name):

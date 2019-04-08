@@ -1,76 +1,66 @@
-{% extends "my_git/home.html" %}
 {% load static %}
 
-
 {% block content %}
-    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/repositories.css' %}">
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <br>
-    <button class="btn btn-success" style="margin-left:2%; margin-bottom: 1%"
-            onclick="location.href='{% url 'create_repository' %}'">
-        <i class="fa fa-book"></i> New
-    </button><br>
-
-    <img alt="User photo" src="../../../static/my_git/images/default_user.png"
-         class="img-circle" style="height:100px;"/>
-
-    <div class="topnav">
-        <a href="#">Overview</a>
-        <a class="active" href="#">Repositories</a>
-        <a href="#">Projects</a>
-        <form>
-            <button id="search-btn" style="margin-top:10px;float: right;" class="btn btn-default">
-                <i class="fas fa-search"></i>
-            </button>
-            <input style="margin-top:12px;float: right; margin-right: 7px" type="text" name="repo_name"
-                   placeholder="Find a repository...">
-        </form>
+    <div>
+        {% include 'my_git/users/profile_header.html' %}
     </div>
 
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th><i class="fa fa-tag"></i></th>
-            <th><i class="fa fa-calendar-alt"></i></th>
-            <th><i class="fa fa-users"></i> / <i class="fa fa-user-secret"></i></th>
-            <th><i class="fa fa-code"></i></th>
-            <th></th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody style="margin-right: 20px">
-        {% for repository in repositories %}
+    {% if repositories|length == 0 %}
+        <br>
+        <h4 style="margin-left: 10%">There are no repositories</h4>
+    {% else %}
+        <table class="table table-hover">
+            <thead>
             <tr>
-                <td>{{ repository.name }}</td>
-                <td>{{ repository.creation_date | date:"d  M  Y" }}</td>
-
-                {% if repository.type == "public" %}
-                    <td><i class="fa fa-users"></i> {{ repository.type }}</td>
-                {% else %}
-                    <td><i class="fa fa-user-secret"></i> private</td>
-                {% endif %}
-
-                <td>{{ repository.language }}</td>
-                <td>
-                    <button class="btn btn-outline-dark btn-sm" id="btn-info"
-                            onclick="location.href='{% url 'repository_preview' repository.name %}'">
-                        <i class="fa fa-info"></i>
-                    </button>
-                </td>
-                <td>
-                    <button class="btn btn-primary btn-sm" id="btn-star"><i class="fa fa-star"></i>&nbsp;Star</button>
-                </td>
+                <th><i class="fa fa-tag"></i></th>
+                <th><i class="fa fa-calendar-alt"></i></th>
+                <th><i class="fa fa-users"></i> / <i class="fa fa-user-secret"></i></th>
+                <th><i class="fa fa-code"></i></th>
+                <th></th>
+                <th></th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody style="margin-right: 20px">
 
+            {% for repository in repositories %}
+                <tr>
+                    <td>{{ repository.name }}</td>
+                    <td>{{ repository.creation_date | date:"d  M  Y" }}</td>
+
+                    {% if repository.type == "public" %}
+                        <td><i class="fa fa-users"></i> {{ repository.type }}</td>
+                    {% else %}
+                        <td><i class="fa fa-user-secret"></i> private</td>
+                    {% endif %}
+
+                    <td>{{ repository.language }}</td>
+                    <td>
+                        <button class="btn btn-outline-dark btn-sm" id="btn-info"
+                                onclick="location.href='{% url 'repository_preview' repository.name %}'">
+                            <i class="fa fa-info"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="repo_id" value={{ repository.id }}>
+                            {% if repository.star == False %}
+                                <button style="width: 75px" class="btn btn-primary btn-sm" type="submit" id="btn-star"
+                                        name="repo_star"
+                                        value=True><i class="fa fa-star"></i>&nbsp;Star
+                                </button>
+                            {% else %}
+                                <button style="width: 75px" class="btn btn-primary btn-sm" type="submit" id="btn-star"
+                                        name="repo_star"
+                                        value=False><i class="fa fa-star"></i>&nbsp;Unstar
+                                </button>
+                            {% endif %}
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 
 {% endblock content %}

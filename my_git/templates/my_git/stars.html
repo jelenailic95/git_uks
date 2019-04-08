@@ -1,0 +1,9 @@
+{% load static %}
+
+{% block content %}
+    <div>
+        {% include 'my_git/repositories/repositories.html' with repositories=repositories %}
+    </div>
+
+    <br>
+{% endblock %}
