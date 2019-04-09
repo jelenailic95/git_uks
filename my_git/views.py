@@ -21,13 +21,11 @@ def home(request):
 
 
 def login(request):
-    print(request.method)
     if request.method == HttpMethod.POST.name:
         form = LoginForm(request.POST)
         if form.is_valid():
             try:
                 result = User.objects.get(email=form.cleaned_data['email'], password=form.cleaned_data['password'])
-                print(result)
 
                 # set logged user
                 request.session['user'] = result.username
@@ -58,15 +56,13 @@ def register(request):
 
 def get_user_profile(request):
     # request.user
-    username = User.objects.get(username=request.session['user'])
-    logged_user = User.objects.get(username=username)
+    logged_user = get_logged_user(request.session['user'])
 
     return render(request, 'my_git/users/user_profile.html', {"user": logged_user})
 
 
 def update_user_profile(request):
-    username = User.objects.get(username=request.session['user'])
-    logged_user = User.objects.get(username=username)
+    logged_user = get_logged_user(request.session['user'])
 
     if request.method == 'POST':
         form = UserUpdateProfileForm(request.POST)
@@ -119,8 +115,7 @@ def new_issue(request):
 
 
 def get_repositories(request):
-    username = User.objects.get(username=request.session['user'])
-    logged_user = User.objects.get(username=username)
+    logged_user = get_logged_user(request.session['user'])
 
     repositories = Repository.objects.all().order_by('-creation_date')
 
@@ -174,8 +169,7 @@ def get_repository(request, repo_name):
 
 
 def create_repository(request):
-    username = User.objects.get(username=request.session['user'])
-    logged_user = User.objects.get(username=username)
+    logged_user = get_logged_user(request.session['user'])
 
     if request.method == 'POST':
         form = CreateRepositoryForm(request.POST)
@@ -192,7 +186,7 @@ def create_repository(request):
         form = CreateRepositoryForm()
 
     context = {
-        'owner': username,
+        'owner': logged_user.username,
         'form': form
     }
 
@@ -230,3 +224,8 @@ def get_repository_settings(request, repo_name):
     }
 
     return render(request, 'my_git/repositories/repository_settings.html', context)
+
+
+def get_logged_user(username):
+    logged_user = User.objects.get(username=username)
+    return logged_user
