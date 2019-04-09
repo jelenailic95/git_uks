@@ -21,13 +21,11 @@ def home(request):
 
 
 def login(request):
-    print(request.method)
     if request.method == HttpMethod.POST.name:
         form = LoginForm(request.POST)
         if form.is_valid():
             try:
                 result = User.objects.get(email=form.cleaned_data['email'], password=form.cleaned_data['password'])
-                print(result)
 
                 # set logged user
                 request.session['user'] = result.username
@@ -58,15 +56,13 @@ def register(request):
 
 def get_user_profile(request):
     # request.user
-    username = User.objects.get(username=request.session['user'])
-    logged_user = User.objects.get(username=username)
+    logged_user = get_logged_user(request.session['user'])
 
     return render(request, 'my_git/users/user_profile.html', {"user": logged_user})
 
 
 def update_user_profile(request):
-    username = User.objects.get(username=request.session['user'])
-    logged_user = User.objects.get(username=username)
+    logged_user = get_logged_user(request.session['user'])
 
     if request.method == 'POST':
         form = UserUpdateProfileForm(request.POST)
@@ -143,20 +139,23 @@ def new_issue(request, repo_name):
         'milestones': milestones}
     return render(request, 'my_git/issues/new_issue.html', context)
 
-'''
-def issue_view(request, repo_name, id):
-    current_issue = Issue.objects.get(id=id)
-    context = {
-        'issue': current_issue
-    }
-    return render(request, 'my_git/issues/issue_view.html', context)
-'''
 
 def get_repositories(request):
-    username = User.objects.get(username=request.session['user'])
-    logged_user = User.objects.get(username=username)
+    logged_user = get_logged_user(request.session['user'])
 
-    repositories = Repository.objects.all()
+    repositories = Repository.objects.all().order_by('-creation_date')
+
+    # filter repositories by name
+    if request.method == 'GET' and 'repo_name' in request.GET:
+        name = request.GET.get('repo_name', '')
+
+        # filter by case insensitive repository name
+        repositories = Repository.objects.filter(name__icontains=name).order_by('-creation_date')
+
+    if request.method == 'POST':
+        repository = Repository.objects.get(id=request.POST.get('repo_id'))
+        repository.star = request.POST.get('repo_star')
+        repository.save()
 
     context = {
         "user": logged_user,
@@ -164,6 +163,24 @@ def get_repositories(request):
     }
 
     return render(request, 'my_git/repositories/repositories.html', context)
+
+
+def get_stars(request):
+    repositories = Repository.objects.filter(star=True).order_by('-creation_date')
+
+    # filter repositories by name
+    if request.method == 'GET' and 'repo_name' in request.GET:
+        name = request.GET.get('repo_name', '')
+
+        # filter by case insensitive repository name
+        repositories = repositories.filter(name__icontains=name).order_by('-creation_date')
+
+    if request.method == 'POST':
+        repository = Repository.objects.get(id=request.POST.get('repo_id'))
+        repository.star = request.POST.get('repo_star')
+        repository.save()
+
+    return render(request, 'my_git/stars.html', {'repositories': repositories})
 
 
 def get_repository(request, repo_name):
@@ -179,8 +196,7 @@ def get_repository(request, repo_name):
 
 
 def create_repository(request):
-    username = User.objects.get(username=request.session['user'])
-    logged_user = User.objects.get(username=username)
+    logged_user = get_logged_user(request.session['user'])
 
     if request.method == 'POST':
         form = CreateRepositoryForm(request.POST)
@@ -197,7 +213,7 @@ def create_repository(request):
         form = CreateRepositoryForm()
 
     context = {
-        'owner': username,
+        'owner': logged_user.username,
         'form': form
     }
 
@@ -236,3 +252,8 @@ def get_repository_settings(request, repo_name):
     }
 
     return render(request, 'my_git/repositories/repository_settings.html', context)
+
+
+def get_logged_user(username):
+    logged_user = User.objects.get(username=username)
+    return logged_user

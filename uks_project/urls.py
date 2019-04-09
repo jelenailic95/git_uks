@@ -37,6 +37,8 @@ urlpatterns = [
     #path('repositories/<str:repo_name>/issues/<str:id>', my_git_views.issue_view, name='issue_view'),
     path('repositories/<str:repo_name>/issues/new', my_git_views.new_issue, name='new-issue'),
     path('new/', my_git_views.create_repository, name='create_repository'),
+    path('stars/', my_git_views.get_stars, name='stars'),
+
 ]
 
 urlpatterns += staticfiles_urlpatterns()
