@@ -1,9 +1,17 @@
-.container-padding {
-    padding-top: 5em;
+
+.my-row {
+    margin-top: 5%;
+    margin-left: 10%;
+    margin-right: 4%;
 }
 
+.all-issues {
+    max-width: 85%;
+    margin-top: 2%;
+    margin-left: 2%;
+    margin-right: 1%;
+}
 .labels-btn {
-    padding-left: 2em;
 }
 
 .milestones-btn {

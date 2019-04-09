@@ -97,7 +97,9 @@ def update_user_profile(request):
     return render(request, 'my_git/users/update_user_profile.html', context)
 
 
-def issues_view(request):
+def issues_view(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+
     issues = Issue.objects.all()
     milestones = Milestone.objects.all()
     labels = Label.objects.all()
@@ -106,21 +108,49 @@ def issues_view(request):
         "num_of_open": 0,
         "num_of_closed": 0,
         "issues": issues,
-        "labels" : labels,
-        "milestones" : milestones
+        "labels": labels,
+        "milestones": milestones,
+        "repository": repository,
+        "owner": repository.owner
     }
     return render(request, 'my_git/issues/issues.html', context)
 
 
-def new_issue(request):
+def new_issue(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
     labels = Label.objects.all()
+    milestones = Milestone.objects.all()
+    username = User.objects.get(username=request.session['user'])
+
     if request.method == HttpMethod.POST.name:
+        assignee_form = request.POST.getlist('assignee')
+        labels_form = request.POST.getlist('labels')
+        title_form = request.POST.get('titleInput')
+        content_form = request.POST.get('contentInput')
+        milestone_form = request.POST.get('milestone')
+        Issue.save_new_issue(title=title_form, content=content_form, milestone=milestone_form,
+                             labels=labels_form,
+                             logged_user=username, assignees=assignee_form)
         pass
     else:
         pass
-    context = {'user': request.user}
+    context = {
+        'user': username,
+        'repository': repository,
+        'owner': repository.owner,
+        'contributors': repository.contributors.all(),
+        'labels': labels,
+        'milestones': milestones}
     return render(request, 'my_git/issues/new_issue.html', context)
 
+'''
+def issue_view(request, repo_name, id):
+    current_issue = Issue.objects.get(id=id)
+    context = {
+        'issue': current_issue
+    }
+    return render(request, 'my_git/issues/issue_view.html', context)
+'''
 
 def get_repositories(request):
     username = User.objects.get(username=request.session['user'])
@@ -133,14 +163,6 @@ def get_repositories(request):
         "repositories": repositories
     }
 
-
-    # obj = Repository()
-    # obj.name = "Repo1"
-    # obj.description = "Repository1 desc"
-    # obj.owner = logged_user
-    # obj.language = "Java"
-    # obj.save()
-
     return render(request, 'my_git/repositories/repositories.html', context)
 
 
@@ -149,7 +171,8 @@ def get_repository(request, repo_name):
 
     context = {
         "repository": repository,
-        "owner": repository.owner
+        "owner": repository.owner,
+        "repository_view": "active"
     }
 
     return render(request, 'my_git/repositories/repository_preview.html', context)
@@ -208,7 +231,8 @@ def get_repository_settings(request, repo_name):
     context = {
         "repository": repository,
         "owner": repository.owner,
-        "form_update": form
+        "form_update": form,
+        "repository_settings_view": "active"
     }
 
     return render(request, 'my_git/repositories/repository_settings.html', context)

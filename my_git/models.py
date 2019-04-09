@@ -1,6 +1,8 @@
 from django.db import models
 
 from datetime import datetime
+
+
 # Create your models here.
 
 
@@ -27,6 +29,8 @@ class Repository(models.Model):
     creation_date = models.DateTimeField(default=datetime.now)
     language = models.CharField(default='', max_length=150)
 
+    def __str__(self):
+        return "{}".format(self.name)
 
 
 class Milestone(models.Model):
@@ -36,11 +40,17 @@ class Milestone(models.Model):
     open = models.BooleanField()
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return "{}".format(self.title)
+
 
 class Label(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     color = models.CharField(max_length=15)
+
+    def __str__(self):
+        return "{}".format(self.name)
 
 
 class Task(models.Model):
@@ -50,6 +60,9 @@ class Task(models.Model):
     milestone = models.ForeignKey(Milestone, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return "{}".format(self.title)
+
 
 class Issue(models.Model):
     id = models.AutoField(primary_key=True)
@@ -57,9 +70,28 @@ class Issue(models.Model):
     content = models.CharField(max_length=400)
     date = models.DateTimeField()
     open = models.BooleanField()
-    milestone = models.ForeignKey(Milestone, on_delete=models.CASCADE)
+    milestone = models.ForeignKey(Milestone, on_delete=models.CASCADE, blank=True)
     label = models.ManyToManyField(Label)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    assignees = models.ManyToManyField(User, related_name='assignee')
+
+    def __str__(self):
+        return "{}".format(self.title)
+
+    def save_new_issue(title, content, milestone, labels, logged_user, assignees):
+        issue = Issue()
+        issue.date = datetime.now()
+        issue.open = True
+        issue.title = title
+        issue.content = content
+        issue.milestone = Milestone.objects.get(title=milestone)
+        issue.user = User.objects.get(username=logged_user)
+        issue.save()
+        for label in labels:
+            issue.label.add(Label.objects.get(name=label))
+        for un in assignees:
+            issue.assignees.add(User.objects.get(username=un))
+        issue.save()
 
 
 class Comment(models.Model):

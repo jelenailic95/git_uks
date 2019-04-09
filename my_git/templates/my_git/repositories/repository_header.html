@@ -12,12 +12,12 @@
          class="img-circle" style="height:100px;"/>
 
     <div class="topnav">
-        <a class="active" href="#"><i class="fa fa-code"></i> Code</a>
-        <a href="#"><i class="fa fa-exclamation-circle"></i> Issues</a>
+        <a href="/repositories/{{ repository.name }}" class="{{ repository_view }}"><i class="fa fa-code"></i> Code</a>
+        <a href="/repositories/{{ repository.name }}/issues" class="{{ issues_view }}"><i class="fa fa-exclamation-circle"></i> Issues</a>
         <a href="#"><i class="fa fa-question"></i> Pull requests</a>
         <a href="#"><i class="fa fa-book"></i> Wiki</a>
         <a href="#"><i class="fa fa-chart-bar"></i> Insights</a>
-        <a href="{{ repository.name }}/settings"><i class="fa fa-cog"></i> Settings</a>
+        <a href="/repositories/{{ repository.name }}/settings" class="{{ repository_settings_view }}"><i class="fa fa-cog"></i> Settings</a>
     </div>
 
     <script type="text/javascript">
