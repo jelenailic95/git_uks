@@ -159,7 +159,8 @@ def get_repositories(request):
 
     context = {
         "user": logged_user,
-        "repositories": repositories
+        "repositories": repositories,
+        "repositories_view": "active"
     }
 
     return render(request, 'my_git/repositories/repositories.html', context)
@@ -180,7 +181,12 @@ def get_stars(request):
         repository.star = request.POST.get('repo_star')
         repository.save()
 
-    return render(request, 'my_git/stars.html', {'repositories': repositories})
+    context = {
+        'repositories': repositories,
+        'stars_view': 'active'
+    }
+
+    return render(request, 'my_git/stars.html', context)
 
 
 def get_repository(request, repo_name):

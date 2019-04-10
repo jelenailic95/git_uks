@@ -19,18 +19,4 @@
         <a href="#"><i class="fa fa-chart-bar"></i> Insights</a>
         <a href="/repositories/{{ repository.name }}/settings" class="{{ repository_settings_view }}"><i class="fa fa-cog"></i> Settings</a>
     </div>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('a').on('click', function () {
-                var clicked = $(this);
-                $('a').each(function () {
-                    if ($(this).hasClass('active')) {
-                        $(this).removeClass('active');
-                    }
-                });
-                $(this).addClass('active');
-            });
-        });
-    </script>
 {% endblock %}
