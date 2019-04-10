@@ -4,6 +4,8 @@ from datetime import datetime
 
 
 # Create your models here.
+def upload_location(instance, filename):
+    return "%s/%s" % (instance.id, filename)
 
 
 class User(models.Model):
@@ -11,6 +13,7 @@ class User(models.Model):
     username = models.CharField(default='', max_length=100)
     email = models.EmailField(default=1)
     password = models.CharField(max_length=30)
+    image = models.ImageField(upload_to=upload_location, null=True, blank=True, default='')
 
     def __str__(self):
         return "{}".format(self.username)

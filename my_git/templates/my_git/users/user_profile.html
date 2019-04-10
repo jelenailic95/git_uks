@@ -1,5 +1,4 @@
 {% extends "my_git/home.html" %}
-
 {% block content %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -12,11 +11,17 @@
     {% endif %}
 
     <br>
-    <div class="card bg-light mb-3" style="max-width: 22rem; margin-left: 50px;">
+    <div class="card bg-light mb-3" style="max-width: 28%; margin-left: 30%;">
         <div class="card-header">
-            <img alt="User photo" src="../../../static/my_git/images/default_user.png"
-                 class="img-circle" style="height:100px;"/>
-            <button class="btn btn-info" style="margin-left: 10rem; margin-bottom: 100px"
+            {% if user.image == "" %}
+                <img alt="User photo" src="../../../static/my_git/images/default_user.png"
+                     class="rounded-circle" style="height:100px; width:100px"/>
+            {% else %}
+                <img alt="User photo" src="../../../../media/{{ user.image }}"
+                     class="rounded-circle" style="height:100px; width:100px"/>
+            {% endif %}
+
+            <button class="btn btn-info" style="margin-left: 47%; margin-bottom: 100px"
                     onclick="location.href='{% url 'profile_update' %}'">
                 <i class="fa fa-edit"></i></button>
         </div>

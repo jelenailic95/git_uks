@@ -22,15 +22,17 @@
 
         <div id="form-div">
             <hr>
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% for field in form %}
                     <div class="form-group" id="group_{{ field.name }}">
                         <label for="id_{{ field.name }}" class="control-label">{{ field.label }}</label>
                         <div class="input-group mb-3">
+                            {% if field.name != 'image' %}
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
                             </div>
+                            {% endif %}
                             {{ field }}
                         </div>
                     </div>

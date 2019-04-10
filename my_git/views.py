@@ -40,12 +40,18 @@ def login(request):
 
 def register(request):
     if request.method == HttpMethod.POST.name:
-        form = UserRegisterForm(request.POST)
+        form = UserRegisterForm(request.POST, request.FILES)
         if form.is_valid():
             obj = User()
             obj.username = form.cleaned_data['username']
             obj.password = form.cleaned_data['password1']
             obj.email = form.cleaned_data['email']
+            print(request.FILES)
+            if 'image' in request.FILES:
+                obj.image = request.FILES['image']
+                print(obj.image)
+                print(request.FILES['image'])
+
             obj.save()
             messages.success(request, 'Account successfully created! Log in now!')
             return redirect('login')
@@ -63,9 +69,8 @@ def get_user_profile(request):
 
 def update_user_profile(request):
     logged_user = get_logged_user(request.session['user'])
-
-    if request.method == 'POST':
-        form = UserUpdateProfileForm(request.POST)
+    if request.method == 'POST' and 'username' in request.POST:
+        form = UserUpdateProfileForm(request.POST, request.FILES)
         if form.is_valid():
             logged_user.username = form.cleaned_data['username']
             request.session['user'] = logged_user.username
@@ -75,6 +80,10 @@ def update_user_profile(request):
                 logged_user.password = form.cleaned_data['password']
 
             logged_user.email = form.cleaned_data['email']
+
+            if 'image' in request.FILES:
+                logged_user.image = request.FILES['image']
+
             logged_user.save()
 
             messages.success(request, 'Your profile has been successfully saved!')
