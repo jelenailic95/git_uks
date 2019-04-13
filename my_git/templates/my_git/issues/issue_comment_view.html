@@ -1,0 +1,17 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/issue_comment.css' %}">
+
+<div class="comment_view_block">
+    <div class="comment_view_header inline-div">
+        {% if issue.author is not null %}
+            <p class="username-info">{{ issue.author.username }}</p>
+        {% else %}
+            <p class="username-info">{{ issue.user.username }}</p>
+        {% endif %}
+        <p> commented at {{ issue.date | date:'j F Y G:i'  }}</p>
+    </div>
+    <div class="comment_view_body">
+        {{ issue.content }}
+    </div>
+
+</div>

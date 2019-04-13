@@ -7,7 +7,7 @@ from django.contrib import messages
 import logging
 from my_git.constants import HttpMethod
 from my_git.forms import *
-from my_git.models import User, Issue, Label, Repository, Milestone
+from my_git.models import User, Issue, Label, Repository, Milestone, Comment
 
 
 def welcome(request):
@@ -95,14 +95,13 @@ def update_user_profile(request):
 
 def issues_view(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
-
-    issues = Issue.objects.all()
-    milestones = Milestone.objects.all()
+    issues = Issue.find_issues_by_repository(repo=repository.id)
+    milestones = Milestone.find_milestones_by_repository(repo=repository.id)
     labels = Label.objects.all()
     context = {
         "issues_view": "active",
-        "num_of_open": 0,
-        "num_of_closed": 0,
+        "num_of_open": issues.filter(open=True).count(),
+        "num_of_closed": issues.filter(open=False).count(),
         "issues": issues,
         "labels": labels,
         "milestones": milestones,
@@ -115,8 +114,22 @@ def issues_view(request, repo_name):
 def new_issue(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
     labels = Label.objects.all()
-    milestones = Milestone.objects.all()
+    try:
+        milestones = Milestone.objects.filter(repository_id=repository.id)
+    except Milestone.DoesNotExist:
+        milestones = None
+
     username = User.objects.get(username=request.session['user'])
+
+    context = {
+        'user': username,
+        'repository': repository,
+        'owner': repository.owner,
+        'contributors': repository.contributors.all(),
+        'labels': labels,
+        'milestones': milestones,
+        "issues_view": "active",
+    }
 
     if request.method == HttpMethod.POST.name:
         assignee_form = request.POST.getlist('assignee')
@@ -126,18 +139,40 @@ def new_issue(request, repo_name):
         milestone_form = request.POST.get('milestone')
         Issue.save_new_issue(title=title_form, content=content_form, milestone=milestone_form,
                              labels=labels_form,
-                             logged_user=username, assignees=assignee_form)
-        pass
+                             logged_user=username, assignees=assignee_form, repository=repository)
+        return redirect('issues', repo_name=repository)
     else:
-        pass
+        return render(request, 'my_git/issues/new_issue.html', context)
+
+
+def issue_view(request, repo_name, id):
+    logged_user = get_logged_user(request.session['user'])
+    repository = Repository.objects.get(name=repo_name)
+    issue = Issue.objects.get(id=id)
+    comments = Comment.find_comments_by_issue_id(issue_id=issue.id)
     context = {
-        'user': username,
+        'issue': issue,
         'repository': repository,
-        'owner': repository.owner,
-        'contributors': repository.contributors.all(),
-        'labels': labels,
-        'milestones': milestones}
-    return render(request, 'my_git/issues/new_issue.html', context)
+        "issues_view": "active",
+        "comments": comments,
+        "owner": repository.owner
+
+    }
+
+    if request.method == HttpMethod.POST.name:
+        close_button = request.POST.get('closeBtn')
+        reopen_button = request.POST.get('reopenBtn')
+        if close_button:
+            issue.open = False
+            issue.save()
+        elif reopen_button:
+            issue.open = True
+            issue.save()
+        else:
+            comment_for_save = request.POST.get('comment')
+            Comment.save_comment(comment_for_save, logged_user, issue)
+
+    return render(request, 'my_git/issues/issue_view.html', context)
 
 
 def get_repositories(request):
