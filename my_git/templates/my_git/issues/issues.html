@@ -8,10 +8,10 @@
     <div>
         {% include 'my_git/repositories/repository_header.html' %}
     </div>
-    <form method="post" id="form">
         <div>
             {% include 'my_git/issues/issues_header.html' with repository=repository %}
         </div>
+    <form method="post" id="form">
 
         <div class="all-issues">
             {% csrf_token %}

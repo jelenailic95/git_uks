@@ -98,10 +98,13 @@ def issues_view(request, repo_name):
     issues = Issue.find_issues_by_repository(repo=repository.id)
     milestones = Milestone.find_milestones_by_repository(repo=repository.id)
     labels = Label.objects.all()
+    print(request.GET.get('query'))
     if request.GET.get('open'):
         issues = issues.filter(open=True)
     elif request.GET.get('closed'):
         issues = issues.filter(open=False)
+    elif request.GET.get('query'):
+        issues = issues.filter(title__contains=request.GET.get('query'))
     context = {
         "issues_view": "active",
         "num_of_open": issues.filter(open=True).count(),
@@ -111,7 +114,6 @@ def issues_view(request, repo_name):
         "milestones": milestones,
         "repository": repository,
         "owner": repository.owner,
-        "have_params": len(request.GET) > 0
     }
 
     if request.method == HttpMethod.POST.name:
