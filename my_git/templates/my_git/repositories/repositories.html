@@ -9,7 +9,7 @@
         <br>
         <h4 style="margin-left: 10%">There are no repositories</h4>
     {% else %}
-        <table class="table table-hover">
+        <table class="table table-hover" style="width: 85%">
             <thead>
             <tr>
                 <th><i class="fa fa-tag"></i></th>
@@ -20,7 +20,7 @@
                 <th></th>
             </tr>
             </thead>
-            <tbody style="margin-right: 20px">
+            <tbody>
 
             {% for repository in repositories %}
                 <tr>
@@ -45,7 +45,7 @@
                             {% csrf_token %}
                             <input type="hidden" name="repo_id" value={{ repository.id }}>
                             {% if repository.star == False %}
-                                <button style="width: 75px" class="btn btn-primary btn-sm" type="submit" id="btn-star"
+                                <button style="width: 75px;margin-left: 50%" class="btn btn-primary btn-sm" type="submit" id="btn-star"
                                         name="repo_star"
                                         value=True><i class="fa fa-star"></i>&nbsp;Star
                                 </button>

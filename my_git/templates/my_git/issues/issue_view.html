@@ -1,0 +1,68 @@
+{% load static %}
+
+
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/repositories.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/issue_view.css' %}">
+
+    <div>
+        {% include 'my_git/repositories/repository_header.html' %}
+    </div>
+    <form method="post">
+
+        <div class="row">
+            <div class="issue_div">
+                <h2>{{ issue.title }}</h2>
+                <div class="inline-div" style="margin-top: 1%">
+                    {% if issue.open %}
+                        <span class="open-issue fas fa-exclamation-circle inline">  Open</span>
+                    {% else %}
+                        <span class="close-issue far fa-check-circle inline">  Close</span>
+                    {% endif %}
+                    <p class="username-info">{{ issue.user.username }}</p>
+                    <p> opened issue at {{ issue.date | date }}</p>
+                    <p> · {{ comments.count }} comment(s)</p>
+                </div>
+                <hr style="border: 1px #E6EBF1 solid; width:93em">
+                <div style="margin-top: 2%">
+                    {% include 'my_git/issues/issue_comment_view.html' with issue=issue %}
+                </div>
+                {% for comment in comments %}
+                    <div style="margin-top: 2%">
+                        {% include 'my_git/issues/issue_comment_view.html' with issue=comment %}
+                    </div>
+
+                {% endfor %}
+                <div style="width: 60%;margin-top: 5%">
+                    <hr>
+                </div>
+                {% csrf_token %}
+                <div class="comment-insert-block">
+                    <div class="comment-insert-header inline-div">
+                        <p>Write new comment</p>
+                    </div>
+                    <div>
+                    <textarea name="comment" class="textarea-field form-control"
+                              placeholder="Insert comment"></textarea>
+                    </div>
+
+                    <div class="inline-div" style="margin-left: 75%; margin-bottom: 2%">
+                        {% if issue.open %}
+                            <input type="submit" class="btn btn-danger" name="closeBtn" value="Close issue"/>
+                        {% else %}
+                            <input type="submit" class="btn btn-info" name="reopenBtn" value="Reopen issue">
+                        {% endif %}
+                        <input type="submit" class="btn btn-success" name="commentBtn" value="Comment"/>
+                    </div>
+                </div>
+            </div>
+            <div class="issue-side">
+                {% include 'my_git/issues/issue_new_side.html' with labels=all_labels issue_milestone=selected_milestone milestones=milestones assinges=assignes contributors=contributors existing_labels=issue.label.all %}
+                <input type="submit" name="saveChangesBtn" class="btn btn-success" value="Save changes">
+            </div>
+    </form>
+
+    </div>
+
+
+{% endblock %}

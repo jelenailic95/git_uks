@@ -7,7 +7,7 @@ from django.contrib import messages
 import logging
 from my_git.constants import HttpMethod
 from my_git.forms import *
-from my_git.models import User, Issue, Label, Repository, Milestone
+from my_git.models import User, Issue, Label, Repository, Milestone, Comment
 
 
 def welcome(request):
@@ -104,28 +104,81 @@ def update_user_profile(request):
 
 def issues_view(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
-
-    issues = Issue.objects.all()
-    milestones = Milestone.objects.all()
+    issues = Issue.find_issues_by_repository(repo=repository.id)
+    milestones = Milestone.find_milestones_by_repository(repo=repository.id)
     labels = Label.objects.all()
+    print(request.GET.get('query'))
+    if request.GET.get('open'):
+        issues = issues.filter(open=True)
+    elif request.GET.get('closed'):
+        issues = issues.filter(open=False)
+    elif request.GET.get('query'):
+        issues = issues.filter(title__contains=request.GET.get('query'))
     context = {
         "issues_view": "active",
-        "num_of_open": 0,
-        "num_of_closed": 0,
+        "num_of_open": issues.filter(open=True).count(),
+        "num_of_closed": issues.filter(open=False).count(),
         "issues": issues,
         "labels": labels,
         "milestones": milestones,
         "repository": repository,
-        "owner": repository.owner
+        "owner": repository.owner,
     }
+
+    if request.method == HttpMethod.POST.name:
+        open_issue_sort = request.POST.get('open_issue_sort')
+        closed_issue_sort = request.POST.get('closed_issue_sort')
+        title_sort_up = request.POST.get('title_sort_up')
+        title_sort_down = request.POST.get('title_sort_down')
+        milestones_sort_up = request.POST.get('milestones_sort_up')
+        milestones_sort_down = request.POST.get('milestones_sort_down')
+
+        open_issue_filter = request.POST.get('open_issues_filter')
+        closed_issue_filter = request.POST.get('closed_issues_filter')
+
+        '''
+        if open_issue_filter:
+            context['issues'] = issues.filter(open=True)
+            context['num_of_open'] = issues.filter(open=True).count()
+            context['num_of_closed'] = 0
+        elif closed_issue_filter:
+            context['issues'] = issues.filter(open=False)
+            context['num_of_open'] = 0
+            context['num_of_closed'] = issues.filter(open=False).count()
+        '''
+
+        if open_issue_sort:
+            context['issues'] = issues.order_by('-open')
+        elif closed_issue_sort:
+            context['issues'] = issues.order_by('open')
+        elif title_sort_up:
+            context['issues'] = issues.order_by('-title')
+        elif title_sort_down:
+            context['issues'] = issues.order_by('title')
+        elif milestones_sort_up:
+            context['issues'] = issues.order_by('milestone')
+        elif milestones_sort_down:
+            context['issues'] = issues.order_by('-milestone')
+
     return render(request, 'my_git/issues/issues.html', context)
 
 
 def new_issue(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
     labels = Label.objects.all()
-    milestones = Milestone.objects.all()
+    milestones = Milestone.find_milestones_by_repository(repo=repository.id)
+
     username = User.objects.get(username=request.session['user'])
+
+    context = {
+        'user': username,
+        'repository': repository,
+        'owner': repository.owner,
+        'contributors': repository.contributors.all(),
+        'labels': labels,
+        'milestones': milestones,
+        "issues_view": "active",
+    }
 
     if request.method == HttpMethod.POST.name:
         assignee_form = request.POST.getlist('assignee')
@@ -135,18 +188,53 @@ def new_issue(request, repo_name):
         milestone_form = request.POST.get('milestone')
         Issue.save_new_issue(title=title_form, content=content_form, milestone=milestone_form,
                              labels=labels_form,
-                             logged_user=username, assignees=assignee_form)
-        pass
+                             logged_user=username, assignees=assignee_form, repository=repository)
+        return redirect('issues', repo_name=repository)
     else:
-        pass
+        return render(request, 'my_git/issues/new_issue.html', context)
+
+
+def issue_view(request, repo_name, id):
+    logged_user = get_logged_user(request.session['user'])
+    repository = Repository.objects.get(name=repo_name)
+    issue = Issue.objects.get(id=id)
+    milestones = Milestone.find_milestones_by_repository(repo=repository.id)
+    comments = Comment.find_comments_by_issue_id(issue_id=issue.id)
     context = {
-        'user': username,
+        'issue': issue,
         'repository': repository,
-        'owner': repository.owner,
+        "issues_view": "active",
+        "comments": comments,
+        "owner": repository.owner,
+        "selected_milestone": [issue.milestone],
+        "milestones": milestones,
+        "assignes": issue.assignees.all(),
         'contributors': repository.contributors.all(),
-        'labels': labels,
-        'milestones': milestones}
-    return render(request, 'my_git/issues/new_issue.html', context)
+        'all_labels': Label.objects.all()
+    }
+
+    if request.method == HttpMethod.POST.name:
+        close_button = request.POST.get('closeBtn')
+        reopen_button = request.POST.get('reopenBtn')
+        save_button = request.POST.get('saveChangesBtn')
+        if close_button:
+            issue.open = False
+            issue.save()
+        elif reopen_button:
+            issue.open = True
+            issue.save()
+        elif save_button:
+            assignee_form = request.POST.getlist('assignee')
+            print(assignee_form)
+            labels_form = request.POST.getlist('labels')
+            milestone_form = request.POST.get('milestone')
+            Issue.update_issue(issue=issue, assignees=assignee_form, labels=labels_form, milestone=milestone_form,
+                               repository=repository)
+        else:
+            comment_for_save = request.POST.get('comment')
+            Comment.save_comment(comment_for_save, logged_user, issue)
+
+    return render(request, 'my_git/issues/issue_view.html', context)
 
 
 def get_repositories(request):

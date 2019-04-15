@@ -47,6 +47,20 @@ class Milestone(models.Model):
     def __str__(self):
         return "{}".format(self.title)
 
+    @staticmethod
+    def find_milestones_by_repository(repo):
+        try:
+            return Milestone.objects.filter(repository_id=repo)
+        except Milestone.DoesNotExist:
+            return None
+
+    @staticmethod
+    def find_milestone_by_name_and_repo(repo, name):
+        try:
+            return Milestone.objects.get(repository_id=repo, title=name)
+        except Milestone.DoesNotExist:
+            return None
+
 
 class Label(models.Model):
     id = models.AutoField(primary_key=True)
@@ -78,24 +92,44 @@ class Issue(models.Model):
     label = models.ManyToManyField(Label)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     assignees = models.ManyToManyField(User, related_name='assignee')
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE, blank=True)
 
     def __str__(self):
         return "{}".format(self.title)
 
-    def save_new_issue(title, content, milestone, labels, logged_user, assignees):
+    def save_new_issue(title, content, milestone, labels, logged_user, assignees, repository):
         issue = Issue()
         issue.date = datetime.now()
         issue.open = True
         issue.title = title
         issue.content = content
-        issue.milestone = Milestone.objects.get(title=milestone)
+        issue.milestone = Milestone.find_milestone_by_name_and_repo(repo=repository.id, name=milestone)
         issue.user = User.objects.get(username=logged_user)
+        issue.repository = repository
         issue.save()
         for label in labels:
             issue.label.add(Label.objects.get(name=label))
         for un in assignees:
             issue.assignees.add(User.objects.get(username=un))
-        issue.save()
+
+    @staticmethod
+    def find_issues_by_repository(repo):
+        try:
+            return Issue.objects.filter(repository_id=repo)
+        except Issue.DoesNotExist:
+            return None
+
+    @staticmethod
+    def update_issue(issue, assignees, labels, milestone, repository):
+        issue_for_update = issue
+        issue_for_update.milestone = Milestone.find_milestone_by_name_and_repo(repo=repository.id, name=milestone)
+        issue_for_update.save()
+        issue.assignees.clear()
+        issue.label.clear()
+        for label in labels:
+            issue.label.add(Label.objects.get(name=label))
+        for un in assignees:
+            issue.assignees.add(User.objects.get(username=un))
 
 
 class Comment(models.Model):
@@ -104,6 +138,22 @@ class Comment(models.Model):
     date = models.DateTimeField()
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    @staticmethod
+    def find_comments_by_issue_id(issue_id):
+        try:
+            return Comment.objects.filter(issue_id=issue_id).order_by('date')
+        except Comment.DoesNotExist:
+            return None
+
+    @staticmethod
+    def save_comment(content, user, issue):
+        comment = Comment()
+        comment.content = content
+        comment.date = datetime.now()
+        comment.author = User.objects.get(username=user)
+        comment.issue = issue
+        comment.save()
 
 
 class HistoryItem(models.Model):
