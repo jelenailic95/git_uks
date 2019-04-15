@@ -116,6 +116,18 @@ class Issue(models.Model):
         except Issue.DoesNotExist:
             return None
 
+    @staticmethod
+    def update_issue(issue, assignees, labels, milestone, repository):
+        issue_for_update = issue
+        issue_for_update.milestone = Milestone.find_milestone_by_name_and_repo(repo=repository.id, name=milestone)
+        issue_for_update.save()
+        issue.assignees.clear()
+        issue.label.clear()
+        for label in labels:
+            issue.label.add(Label.objects.get(name=label))
+        for un in assignees:
+            issue.assignees.add(User.objects.get(username=un))
+
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)

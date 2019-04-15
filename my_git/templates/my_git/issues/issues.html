@@ -8,36 +8,73 @@
     <div>
         {% include 'my_git/repositories/repository_header.html' %}
     </div>
-    <div>
-        {% include 'my_git/issues/issues_header.html' with repository=repository %}
-    </div>
+    <form method="post" id="form">
+        <div>
+            {% include 'my_git/issues/issues_header.html' with repository=repository %}
+        </div>
 
-    <div class="all-issues">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th scope="col" width="15%">
-                    <a class="btn" data-toggle="tooltip" data-placement="top" title="Open issues"><i
-                            class="fas fa-exclamation-circle"></i>{{ num_of_open }}</a>
-                    <a class="btn" data-toggle="tooltip" data-placement="top" title="Closed issues"><i
-                            class="far fa-check-circle"></i>{{ num_of_closed }}</a>
-                </th>
-                <th>
-                    <a class="btn">Title</a>
-                </th>
-                <th class="text-left" width="15%"><a class="btn">Author</a></th>
-                <th class="text-left"><a class="btn">Labels</a></th>
-                <th class="text-left"><a class="btn">Milestones</a></th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for issue in issues %}
+        <div class="all-issues">
+            {% csrf_token %}
+            <table class="table table-striped">
+                <thead>
                 <tr>
-                    {% include 'my_git/issues/issue_table_item.html' with issue=issue %}
+                    <th scope="col" width="15%">
+                        <input type="hidden" name="open_issue_sort" id="open_issue_sort">
+                        <a class="btn" data-toggle="tooltip"
+                           onclick="changeValue('open_issue_sort', 'True');document.forms['form'].submit()"
+                           data-placement="top" title="Open issues"><i
+                                class="fas fa-exclamation-circle"></i>{{ num_of_open }}</a>
+                        <input type="hidden" name="closed_issue_sort" id="closed_issue_sort">
+                        <a class="btn" data-toggle="tooltip" data-placement="top"
+                           onclick=" changeValue('closed_issue_sort', 'True');document.forms['form'].submit();"
+                           title="Closed issues"><i
+                                class="far fa-check-circle"></i>{{ num_of_closed }}</a>
+                    </th>
+                    <th>
+                        <input type="hidden" name="title_sort_up" id="title_sort_up">
+                        <input type="hidden" name="title_sort_down" id="title_sort_down">
+                        <a href="#" class="btn">Title</a>
+                        <a class="btn" onclick=" changeValue('title_sort_up', 'True');document.forms['form'].submit();">
+                            <i class="fas fa-sort-up"></i></a>
+                        <a class="btn"
+                           onclick=" changeValue('title_sort_down', 'True');document.forms['form'].submit();">
+                            <i class="fas fa-sort-down"></i></a>
+                    </th>
+                    <th class="text-left" width="15%">
+                        <a class="btn">Author</a>
+                    </th>
+                    <th class="text-left">
+                        <a class="btn">Labels</a>
+                    </th>
+                    <th class="text-left">
+                        <input type="hidden" name="milestones_sort_up" id="milestones_sort_up">
+                        <input type="hidden" name="milestones_sort_down" id="milestones_sort_down">
+                        <a class="btn">Milestones</a>
+                        <a class="btn"
+                           onclick=" changeValue('milestones_sort_down', 'True');document.forms['form'].submit();">
+                            <i class="fas fa-sort-up"></i></a>
+                        <a class="btn"
+                           onclick=" changeValue('milestones_sort_up', 'True');document.forms['form'].submit();">
+                            <i class="fas fa-sort-down"></i></a>
+                    </th>
                 </tr>
-            {% endfor %}
+                </thead>
+                <tbody>
+                {% for issue in issues %}
+                    <tr>
+                        {% include 'my_git/issues/issue_table_item.html' with issue=issue %}
+                    </tr>
+                {% endfor %}
 
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+        </div>
+    </form>
+
 {% endblock %}
+
+<script>
+    function changeValue(id, value) {
+        let elem = document.getElementById(id).value = value;
+    }
+</script>

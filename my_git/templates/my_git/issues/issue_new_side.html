@@ -11,9 +11,13 @@
     <label id="assigneeLabel" for="assignee"><em
             style="color: #6c757d;font-weight: bold">Assignees</em></label>
     <p></p>
-    <select name="assignee" id="assignee" class="selectpicker" multiple data-live-search="true">
+    <select name="assignee" id="assignee" class="selectpicker" multiple data-live-search="true" data-actions-box="true">
         {% for user in contributors %}
-            <option>{{ user.username }}</option>
+            {% if user in assignes %}
+                <option selected>{{ user.username }}</option>
+            {% else %}
+                <option>{{ user.username }}</option>
+            {% endif %}
         {% endfor %}
     </select>
 </div>
@@ -22,9 +26,14 @@
     <label id="labels" for="selectLabels"><em
             style="color: #6c757d;font-weight: bold">Labels</em></label>
     <p></p>
-    <select name="labels" id="selectLabels" class="selectpicker" multiple data-live-search="true">
+    <select name="labels" id="selectLabels" class="selectpicker" multiple data-live-search="true" data-actions-box="true">
         {% for label in labels %}
-            <option data-content="<span class='badge' style='background-color:{{ label.color }}'>{{ label.name }}</span>">{{label.name}}</option>
+            {% if label in existing_labels %}
+                <option selected data-content="<span class='badge' style='background-color:{{ label.color }}'>{{ label.name }}</span>">{{ label.name }}</option>
+            {% else %}
+                <option data-content="<span class='badge' style='background-color:{{ label.color }}'>{{ label.name }}</span>">{{ label.name }}</option>
+            {% endif %}
+
         {% endfor %}
     </select>
 </div>
@@ -44,7 +53,11 @@
     <p></p>
     <select name="milestone" id="milestoneInput" class="selectpicker" data-live-search="true">
         {% for milestone in milestones %}
-            <option>{{ milestone.title }}</option>
+            {% if milestone in issue_milestone %}
+                <option selected>{{ milestone.title }}</option>
+            {% else %}
+                <option>{{ milestone.title }}</option>
+            {% endif %}
         {% endfor %}
     </select>
 </div>
