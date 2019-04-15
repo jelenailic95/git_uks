@@ -42,7 +42,8 @@ class UserUpdateProfileForm(forms.ModelForm):
 class CreateRepositoryForm(forms.ModelForm):
     repository_name = forms.CharField()
     description = forms.CharField(required=False)
-    type = forms.CharField()
+    CHOICES = (('public', 'public '), ('private', 'private'))
+    type = forms.ChoiceField(choices=CHOICES)
 
     class Meta:
         model = Repository

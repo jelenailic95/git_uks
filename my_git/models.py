@@ -36,9 +36,6 @@ class Repository(models.Model):
     def __str__(self):
         return "{}".format(self.name)
 
-    def __str__(self):
-        return "{}".format(self.name)
-
 
 class Milestone(models.Model):
     id = models.AutoField(primary_key=True)
