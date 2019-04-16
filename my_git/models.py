@@ -24,7 +24,7 @@ class Repository(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)  # cascade ili null
-    contributors = models.ManyToManyField(User, related_name='contributors')
+    collaborators = models.ManyToManyField(User, related_name='collaborators')
     TYPE_OPTION = (
         ('public', 'public'),
         ('private', 'private'))

@@ -69,7 +69,7 @@ def get_user_profile(request):
 
 def update_user_profile(request):
     logged_user = get_logged_user(request.session['user'])
-    if request.method == 'POST' and 'username' in request.POST:
+    if request.method == HttpMethod.POST.name and 'username' in request.POST:
         form = UserUpdateProfileForm(request.POST, request.FILES)
         if form.is_valid():
             logged_user.username = form.cleaned_data['username']
@@ -174,7 +174,7 @@ def new_issue(request, repo_name):
         'user': username,
         'repository': repository,
         'owner': repository.owner,
-        'contributors': repository.contributors.all(),
+        'collaborators': repository.collaborators.all(),
         'labels': labels,
         'milestones': milestones,
         "issues_view": "active",
@@ -209,7 +209,7 @@ def issue_view(request, repo_name, id):
         "selected_milestone": [issue.milestone],
         "milestones": milestones,
         "assignes": issue.assignees.all(),
-        'contributors': repository.contributors.all(),
+        'collaborators': repository.collaborators.all(),
         'all_labels': Label.objects.all()
     }
 
@@ -249,7 +249,7 @@ def get_repositories(request):
         # filter by case insensitive repository name
         repositories = Repository.objects.filter(name__icontains=name).order_by('-creation_date')
 
-    if request.method == 'POST':
+    if request.method == HttpMethod.POST.name:
         repository = Repository.objects.get(id=request.POST.get('repo_id'))
         repository.star = request.POST.get('repo_star')
         repository.save()
@@ -273,7 +273,7 @@ def get_stars(request):
         # filter by case insensitive repository name
         repositories = repositories.filter(name__icontains=name).order_by('-creation_date')
 
-    if request.method == 'POST':
+    if request.method == HttpMethod.POST.name:
         repository = Repository.objects.get(id=request.POST.get('repo_id'))
         repository.star = request.POST.get('repo_star')
         repository.save()
@@ -301,7 +301,7 @@ def get_repository(request, repo_name):
 def create_repository(request):
     logged_user = get_logged_user(request.session['user'])
 
-    if request.method == 'POST':
+    if request.method == HttpMethod.POST.name:
         form = CreateRepositoryForm(request.POST)
         if form.is_valid():
             obj = Repository()
@@ -327,7 +327,7 @@ def get_repository_settings(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
 
     # rename repository
-    if request.method == 'POST' and 'btn-rename' in request.POST:
+    if request.method == HttpMethod.POST.name and 'btn-rename' in request.POST:
         form = InputFieldForm(request.POST)
         if form.is_valid():
             repository.name = form.cleaned_data['value']
@@ -337,8 +337,18 @@ def get_repository_settings(request, repo_name):
     else:
         form = InputFieldForm()
 
+    # add collaborator
+    if request.method == HttpMethod.POST.name and 'btn-add-collaborator' in request.POST:
+        add_collaborator(request, repository)
+
+    # remove collaborator
+    if request.method == HttpMethod.POST.name and 'remove-collaborator' in request.POST:
+        collaborator_id = request.POST.get('collaborator_id')
+        repository.collaborators.remove(User.objects.get(id=collaborator_id))
+        repository.save()
+
     # delete repository
-    if request.method == 'POST' and 'btn-delete' in request.POST:
+    if request.method == HttpMethod.POST.name and 'btn-delete' in request.POST:
         form = DeleteForm(request.POST)
         if form.is_valid():
             repository.delete()
@@ -351,10 +361,26 @@ def get_repository_settings(request, repo_name):
         "repository": repository,
         "owner": repository.owner,
         "form_update": form,
-        "repository_settings_view": "active"
+        "repository_settings_view": "active",
+        "collaborators": repository.collaborators
     }
 
     return render(request, 'my_git/repositories/repository_settings.html', context)
+
+
+def add_collaborator(request, repository):
+    username = request.POST.get('collaborator')
+    try:
+        collaborator = User.objects.get(username=username)
+        print(username)
+        if collaborator == repository.owner or collaborator in repository.collaborators.all():
+            messages.warning(request, 'Already a collaborator. Add someone new.')
+        else:
+            repository.collaborators.add(collaborator)
+            repository.save()
+            messages.success(request, 'Collaborator is successfully added.')
+    except User.DoesNotExist:
+        messages.warning(request, 'User with this username doesn\'t exist. Try again!')
 
 
 def get_logged_user(username):
