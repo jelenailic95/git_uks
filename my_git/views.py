@@ -7,7 +7,7 @@ from django.contrib import messages
 import logging
 from my_git.constants import HttpMethod
 from my_git.forms import *
-from my_git.models import User, Issue, Label, Repository, Milestone, Comment
+from my_git.models import *
 
 
 def welcome(request):
@@ -381,6 +381,54 @@ def add_collaborator(request, repository):
             messages.success(request, 'Collaborator is successfully added.')
     except User.DoesNotExist:
         messages.warning(request, 'User with this username doesn\'t exist. Try again!')
+
+
+def get_wiki(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+
+    context = {
+        "repository": repository,
+        "owner": repository.owner,
+        "repository_wiki_view": "active",
+        "pages": Wiki.objects.filter(repository=repository).order_by('title')
+    }
+    return render(request, 'my_git/wiki/wiki.html', context)
+
+
+def create_wiki_page(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+
+    context = {
+        "repository": repository,
+        "owner": repository.owner,
+        "repository_wiki_view": "active",
+        "pages": Wiki.objects.filter(repository=repository).order_by('title')
+    }
+
+    if request.method == HttpMethod.POST.name:
+        wiki = Wiki()
+        wiki.title = request.POST.get("title")
+        wiki.content = request.POST.get("content")
+        wiki.repository = repository
+        wiki.save()
+        messages.success(request, 'Wiki Page is successfully created.')
+        return render(request, 'my_git/wiki/wiki.html', context)
+
+    return render(request, 'my_git/wiki/create_wiki_page.html', context)
+
+
+def get_wiki_page(request, repo_name, page_title):
+    print(page_title)
+    repository = Repository.objects.get(name=repo_name)
+    wiki = Wiki.objects.get(title=page_title, repository=repository)
+    context = {
+        "repository": repository,
+        "owner": repository.owner,
+        "repository_wiki_view": "active",
+        "page": wiki
+    }
+
+    return render(request, 'my_git/wiki/wiki_page_preview.html', context)
 
 
 def get_logged_user(username):

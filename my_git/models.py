@@ -36,6 +36,14 @@ class Repository(models.Model):
     def __str__(self):
         return "{}".format(self.name)
 
+class Wiki(models.Model):
+    id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=200)
+    content = models.CharField(max_length=5000)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{}".format(self.title)
 
 class Milestone(models.Model):
     id = models.AutoField(primary_key=True)
