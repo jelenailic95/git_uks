@@ -31,7 +31,7 @@ def login(request):
                 request.session['user'] = result.username
                 return redirect('home')
             except User.DoesNotExist:
-                messages.error(request, 'Bad credentials, try again!')
+                messages.warning(request, 'Bad credentials, try again!')
                 return redirect('login')
     else:
         form = LoginForm()
@@ -237,10 +237,17 @@ def issue_view(request, repo_name, id):
     return render(request, 'my_git/issues/issue_view.html', context)
 
 
+def get_public_repositories(request):
+    repositories = Repository.objects.filter(type='public').order_by('-creation_date')
+    print(repositories)
+
+    return render(request, 'my_git/explore.html', {"repositories": repositories})
+
+
 def get_repositories(request):
     logged_user = get_logged_user(request.session['user'])
 
-    repositories = Repository.objects.all().order_by('-creation_date')
+    repositories = Repository.objects.filter(owner=logged_user).order_by('-creation_date')
 
     # filter repositories by name
     if request.method == 'GET' and 'repo_name' in request.GET:
@@ -264,14 +271,16 @@ def get_repositories(request):
 
 
 def get_stars(request):
-    repositories = Repository.objects.filter(star=True).order_by('-creation_date')
+    logged_user = get_logged_user(request.session['user'])
+
+    repositories = Repository.objects.filter(owner=logged_user, star=True).order_by('-creation_date')
 
     # filter repositories by name
     if request.method == 'GET' and 'repo_name' in request.GET:
         name = request.GET.get('repo_name', '')
 
         # filter by case insensitive repository name
-        repositories = repositories.filter(name__icontains=name).order_by('-creation_date')
+        repositories = repositories.filter(owner=logged_user, name__icontains=name).order_by('-creation_date')
 
     if request.method == HttpMethod.POST.name:
         repository = Repository.objects.get(id=request.POST.get('repo_id'))

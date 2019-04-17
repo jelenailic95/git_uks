@@ -30,7 +30,6 @@ ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
 
 INSTALLED_APPS = [
     'my_git',
-    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

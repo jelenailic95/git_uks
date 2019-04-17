@@ -29,6 +29,7 @@ urlpatterns = [
     # todo: change auth_views to my_git_views.login
     path('login/', my_git_views.login, name='login'),
     path('register/', my_git_views.register, name='register'),
+    path('explore/', my_git_views.get_public_repositories, name='explore'),
     path('profile/', my_git_views.get_user_profile, name='profile_preview'),
     path('profile/edit', my_git_views.update_user_profile, name='profile_update'),
     path('repositories/', my_git_views.get_repositories, name='repositories'),
