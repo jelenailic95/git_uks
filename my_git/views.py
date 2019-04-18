@@ -8,6 +8,8 @@ import logging
 from my_git.constants import HttpMethod
 from my_git.forms import *
 from my_git.models import *
+from itertools import chain
+from operator import attrgetter
 
 
 def welcome(request):
@@ -199,12 +201,47 @@ def issue_view(request, repo_name, id):
     repository = Repository.objects.get(name=repo_name)
     issue = Issue.objects.get(id=id)
     milestones = Milestone.find_milestones_by_repository(repo=repository.id)
+
+    if request.method == HttpMethod.POST.name:
+        close_button = request.POST.get('closeBtn')
+        reopen_button = request.POST.get('reopenBtn')
+        save_button = request.POST.get('saveChangesBtn')
+        if close_button:
+            HistoryItem.save_history_item(issue, 'opened', 'closed', 'issue', 'change', logged_user)
+            issue.open = False
+            issue.save()
+        elif reopen_button:
+            HistoryItem.save_history_item(issue, 'closed', 'opened', 'issue', 'change', logged_user)
+            issue.open = True
+            issue.save()
+        elif save_button:
+            assignee_form = request.POST.getlist('assignee')
+            labels_form = request.POST.getlist('labels')
+            milestone_form = request.POST.get('milestone')
+
+            # create history item for the milestone change
+            if milestone_form != issue.milestone.title:
+                HistoryItem.save_history_item(issue, issue.milestone.title, milestone_form, 'milestone', 'change',
+                                              logged_user)
+            Issue.update_issue(issue=issue, assignees=assignee_form, labels=labels_form, milestone=milestone_form,
+                               repository=repository)
+        else:
+            comment_for_save = request.POST.get('comment')
+            Comment.save_comment(comment_for_save, logged_user, issue)
+
     comments = Comment.find_comments_by_issue_id(issue_id=issue.id)
+    history_items = HistoryItem.objects.filter(issue=issue)
+
+    result_list = sorted(
+        chain(comments, history_items),
+        key=attrgetter('date'))
+
     context = {
         'issue': issue,
         'repository': repository,
         "issues_view": "active",
         "comments": comments,
+        "result_list": result_list,
         "owner": repository.owner,
         "selected_milestone": [issue.milestone],
         "milestones": milestones,
@@ -212,28 +249,6 @@ def issue_view(request, repo_name, id):
         'collaborators': repository.collaborators.all(),
         'all_labels': Label.objects.all()
     }
-
-    if request.method == HttpMethod.POST.name:
-        close_button = request.POST.get('closeBtn')
-        reopen_button = request.POST.get('reopenBtn')
-        save_button = request.POST.get('saveChangesBtn')
-        if close_button:
-            issue.open = False
-            issue.save()
-        elif reopen_button:
-            issue.open = True
-            issue.save()
-        elif save_button:
-            assignee_form = request.POST.getlist('assignee')
-            print(assignee_form)
-            labels_form = request.POST.getlist('labels')
-            milestone_form = request.POST.get('milestone')
-            Issue.update_issue(issue=issue, assignees=assignee_form, labels=labels_form, milestone=milestone_form,
-                               repository=repository)
-        else:
-            comment_for_save = request.POST.get('comment')
-            Comment.save_comment(comment_for_save, logged_user, issue)
-
     return render(request, 'my_git/issues/issue_view.html', context)
 
 

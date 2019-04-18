@@ -45,7 +45,7 @@
                             {% csrf_token %}
                             <input type="hidden" name="repo_id" value={{ repository.id }}>
                             {% if repository.star == False %}
-                                <button style="width: 75px;margin-left: 50%" class="btn btn-primary btn-sm" type="submit" id="btn-star"
+                                <button style="width: 75px;" class="btn btn-primary btn-sm" type="submit" id="btn-star"
                                         name="repo_star"
                                         value=True><i class="fa fa-star"></i>&nbsp;Star
                                 </button>

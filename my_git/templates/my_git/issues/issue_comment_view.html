@@ -1,17 +1,38 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/issue_comment.css' %}">
 
-<div class="comment_view_block">
-    <div class="comment_view_header inline-div">
-        {% if issue.author is not null %}
-            <p class="username-info">{{ issue.author.username }}</p>
-        {% else %}
-            <p class="username-info">{{ issue.user.username }}</p>
-        {% endif %}
-        <p> commented at {{ issue.date | date:'j F Y G:i'  }}</p>
-    </div>
-    <div class="comment_view_body">
-        {{ issue.content }}
-    </div>
 
-</div>
+{# if old_value doesnt exist then it is a comment #}
+{% if item.old_value is null %}
+    <div class="comment_view_block">
+        <div class="comment_view_header inline-div">
+            {% if item.author is not null %}
+                <p class="username-info">{{ item.author }}</p>
+            {% else %} {# this is the first comment made by issue author #}
+                <p class="username-info">{{ item.user.username }}</p>
+            {% endif %}
+            <p> commented at {{ item.date | date:'j F Y G:i' }}</p>
+        </div>
+        <div class="comment_view_body">
+            {{ item.content }}
+        </div>
+    </div>
+    <hr>
+
+{% else %}  {# its a history item #}
+    <div style="margin-left:5%">
+        {% if item.attr_name == 'issue' and item.new_value == 'closed' %}  {# issue is closed #}
+            <span class="close-issue far fa-times-circle inline"></span>
+            <b>&nbsp;{{ item.author }}</b> closed this
+        {% elif item.attr_name == 'issue' and item.new_value == 'opened' %}  {# issue is opened #}
+            <span class="open-issue far fa-check-circle inline"></span>
+            <b>&nbsp;{{ item.author }}</b> reopened this
+        {% elif item.attr_name == 'milestone' %}   {# milestone is changed #}
+            <span class="fa fa-sign"></span>
+            <b>&nbsp;{{ item.author }}</b> added this to the <b> {{ item.new_value }} </b> {{ item.attr_name }}
+        {% endif %}
+        <p class="text-muted inline">at {{ item.date | date:'j F Y G:i' }}</p>
+
+    </div>
+    <hr>
+{% endif %}

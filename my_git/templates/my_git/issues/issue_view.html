@@ -17,7 +17,7 @@
                     {% if issue.open %}
                         <span class="open-issue fas fa-exclamation-circle inline">  Open</span>
                     {% else %}
-                        <span class="close-issue far fa-check-circle inline">  Close</span>
+                        <span class="close-issue far fa-times-circle inline">  Close</span>
                     {% endif %}
                     <p class="username-info">{{ issue.user.username }}</p>
                     <p> opened issue at {{ issue.date | date }}</p>
@@ -25,28 +25,25 @@
                 </div>
                 <hr style="border: 1px #E6EBF1 solid; width:93em">
                 <div style="margin-top: 2%">
-                    {% include 'my_git/issues/issue_comment_view.html' with issue=issue %}
+                    {% include 'my_git/issues/issue_comment_view.html' with item=issue %}
                 </div>
-                {% for comment in comments %}
+                {% for item in result_list %}
                     <div style="margin-top: 2%">
-                        {% include 'my_git/issues/issue_comment_view.html' with issue=comment %}
+                        {% include 'my_git/issues/issue_comment_view.html' with item=item %}
                     </div>
 
                 {% endfor %}
-                <div style="width: 60%;margin-top: 5%">
-                    <hr>
-                </div>
                 {% csrf_token %}
                 <div class="comment-insert-block">
                     <div class="comment-insert-header inline-div">
-                        <p>Write new comment</p>
+                        <p style="margin-left: 2%; margin-top:1%;">Write new comment</p>
                     </div>
                     <div>
                     <textarea name="comment" class="textarea-field form-control"
                               placeholder="Insert comment"></textarea>
                     </div>
 
-                    <div class="inline-div" style="margin-left: 75%; margin-bottom: 2%">
+                    <div class="inline-div" style="margin-left: 65%; margin-bottom: 2%;">
                         {% if issue.open %}
                             <input type="submit" class="btn btn-danger" name="closeBtn" value="Close issue"/>
                         {% else %}

@@ -169,8 +169,22 @@ class HistoryItem(models.Model):
     old_value = models.CharField(max_length=500)
     new_value = models.CharField(max_length=500)
     attr_name = models.CharField(max_length=500)
-    datetime = models.DateTimeField()
+    date = models.DateTimeField()
     MODE_OPTION = (
         ('create', 'create'),
         ('change', 'change'))
     mode = models.CharField(choices=MODE_OPTION, max_length=6, default='create')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    issue = models.ForeignKey(Issue, on_delete=models.CASCADE, default=None)
+
+    @staticmethod
+    def save_history_item(issue, old_value, new_value, attr_name, mode, author):
+        history_item = HistoryItem()
+        history_item.issue = issue
+        history_item.old_value = old_value
+        history_item.new_value = new_value
+        history_item.attr_name = attr_name
+        history_item.date = datetime.now()
+        history_item.mode = mode
+        history_item.author = author
+        history_item.save()
