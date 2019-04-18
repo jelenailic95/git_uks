@@ -1,0 +1,39 @@
+{% load static %}
+
+
+{% block content %}
+    <div>
+        {% include 'my_git/repositories/repository_header.html' %}
+    </div>
+    <div>
+        {% include 'my_git/issues/issues_header.html' with repository=repository %}
+    </div>
+    <div class="all-labels">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>
+                    <a class="btn">Name</a>
+                </th>
+                <th class="text-left" width="15%"><a class="btn">Description</a></th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for label in labels %}
+                <tr>
+                    <td>
+                        <span class="badge" style="background-color: {{ label.color }}">{{ label.name }}</span>
+                    </td>
+                    <td>{{ label.description }}</td>
+                    <td><i class="fa fa-edit"></i> Edit</td>
+                    <td><i class="fa fa-trash"></i> Delete</td>
+
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

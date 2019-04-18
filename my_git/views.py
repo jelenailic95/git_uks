@@ -257,3 +257,14 @@ def get_repository_settings(request, repo_name):
 def get_logged_user(username):
     logged_user = User.objects.get(username=username)
     return logged_user
+
+def labels_view(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+    labels = Label.objects.all()
+    context = {
+        "labels": labels,
+        "repository": repository,
+        "owner": repository.owner
+    }
+    return render(request, 'my_git/labels/labels.html', context)
+

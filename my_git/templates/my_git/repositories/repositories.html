@@ -9,7 +9,7 @@
         <br>
         <h4 style="margin-left: 10%">There are no repositories</h4>
     {% else %}
-        <table class="table table-hover">
+        <table class="table table-striped">
             <thead>
             <tr>
                 <th><i class="fa fa-tag"></i></th>
@@ -17,10 +17,9 @@
                 <th><i class="fa fa-users"></i> / <i class="fa fa-user-secret"></i></th>
                 <th><i class="fa fa-code"></i></th>
                 <th></th>
-                <th></th>
             </tr>
             </thead>
-            <tbody style="margin-right: 20px">
+            <tbody>
 
             {% for repository in repositories %}
                 <tr>
