@@ -22,10 +22,11 @@
          class="img-circle" style="height:100px;"/>
 
     <div class="topnav">
-        <a class="active" href="#">Overview</a>
-        <a href="{% url 'repositories' %}">Repositories</a>
+        <a href="#">Overview</a>
+        <a href="/repositories" class="{{ repositories_view }}">Repositories</a>
         <a href="#">Projects</a>
-        <a href="{% url 'stars' %}">Stars</a>
+        <a href="/stars" class="{{ stars_view }}"><i class="fa fa-star"></i> Stars</a>
+
 
         <form>
             <button id="search-btn" style="margin-top:10px;float: right;" class="btn btn-default">

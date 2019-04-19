@@ -30,7 +30,6 @@ ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
 
 INSTALLED_APPS = [
     'my_git',
-    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -125,3 +124,5 @@ STATICFILES_DIRS = [
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

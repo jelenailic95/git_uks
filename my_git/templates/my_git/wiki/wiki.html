@@ -1,0 +1,45 @@
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div>
+        {% include 'my_git/repositories/repository_header.html' %}
+    </div>
+
+    <div style="margin-left: 10%">
+        <br>
+        <a href="/repositories/{{ repository.name }}/wiki/new" class="btn btn-success">
+            New Page</a>
+        <br>
+
+        <br>
+        <div class="col-md-3">
+            {% if pages|length == 0 %}
+                <h5>There are no pages.</h5>
+                <h5>Create Wiki Page now.</h5>
+            {% else %}
+                <b>Pages</b>
+                <br><br>
+                <ul class="list-group">
+                    {% for page in pages %}
+                        <li class="list-group-item list-group-item-info">
+                            <strong>
+                                <a class="d-block" href="/repositories/{{ repository.name }}/wiki/{{ page.title }}">
+                                    {{ page.title }}
+                                </a>
+                            </strong>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    <br><br>
+    </div>
+
+
+{% endblock %}
