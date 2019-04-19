@@ -280,5 +280,6 @@ def new_label(request, repo_name):
     else:
         pass
     context = {
+        "repo_name": repo_name
     }
     return render(request, 'my_git/labels/new_label.html', context)
