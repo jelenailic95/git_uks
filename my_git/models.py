@@ -57,6 +57,13 @@ class Label(models.Model):
     def __str__(self):
         return "{}".format(self.name)
 
+    def save_new_label(name, description, color):
+        label = Label()
+        label.name = name;
+        label.description = description;
+        label.color = color;
+        label.save()
+
 
 class Task(models.Model):
     id = models.AutoField(primary_key=True)

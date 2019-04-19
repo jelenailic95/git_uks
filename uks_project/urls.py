@@ -35,6 +35,7 @@ urlpatterns = [
     path('repositories/<str:repo_name>/settings', my_git_views.get_repository_settings, name='repository_settings'),
     path('repositories/<str:repo_name>/issues', my_git_views.issues_view, name='issues'),
     path('repositories/<str:repo_name>/labels', my_git_views.labels_view, name='repository_labels'),
+    path('repositories/<str:repo_name>/labels/new', my_git_views.new_label, name='new-label'),
     #path('repositories/<str:repo_name>/issues/<str:id>', my_git_views.issue_view, name='issue_view'),
     path('repositories/<str:repo_name>/issues/new', my_git_views.new_issue, name='new-issue'),
     path('new/', my_git_views.create_repository, name='create_repository'),

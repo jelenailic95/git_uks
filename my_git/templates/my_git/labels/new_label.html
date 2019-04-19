@@ -1,0 +1,42 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/new_issue.css' %}">
+
+<div>
+    {% include 'my_git/repositories/repository_header.html' %}
+</div>
+
+<div class="container container-padding">
+    <form method="post" class="new-issue-block row">
+        {% csrf_token %}
+        <div class="new-issue-inputs">
+            <div class="first">
+                <label class="col-sm-2 col-form-label" for="nameInput">Name</label>
+                <div class="col-sm-12">
+                    <input name="nameInput" type="text" class="form-control" id="nameInput"
+                           placeholder="Name of label">
+                </div>
+            </div>
+            <div class="first">
+                <label class="col-sm-2 col-form-label" for="content">Description</label>
+                <div class="col-sm-12">
+                    <textarea name="descriptionInput" class="form-control" id="descriptionInput"
+                              placeholder="Description"></textarea>
+                </div>
+            </div>
+            <div class="first">
+                <label class="col-sm-2 col-form-label" for="content">Description</label>
+                <div class="col-sm-12">
+                                  <input type="color" name="color" value="#ff0000">
+
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn btn-success first float-lg-right">Submit new label</button>
+        </div>
+
+
+    </form>
+</div>
+
