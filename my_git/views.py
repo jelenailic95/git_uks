@@ -190,13 +190,14 @@ def new_issue(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
     labels = Label.objects.all()
     milestones = Milestone.find_milestones_by_repository(repo=repository.id)
-
-    username = User.objects.get(username=request.session['user'])
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
     context = {
-        'user': username,
+        "logged_user": logged_user,
+        'user': logged_user,
         'repository': repository,
-        'owner': repository.owner,
+        'owner': owner,
         'collaborators': repository.collaborators.all(),
         'labels': labels,
         'milestones': milestones,
@@ -211,7 +212,7 @@ def new_issue(request, repo_name):
         milestone_form = request.POST.get('milestone')
         Issue.save_new_issue(title=title_form, content=content_form, milestone=milestone_form,
                              labels=labels_form,
-                             logged_user=username, assignees=assignee_form, repository=repository)
+                             logged_user=logged_user, assignees=assignee_form, repository=repository)
         return redirect('issues', repo_name=repository)
     else:
         return render(request, 'my_git/issues/new_issue.html', context)
@@ -222,6 +223,7 @@ def issue_view(request, repo_name, id):
     repository = Repository.objects.get(name=repo_name)
     issue = Issue.objects.get(id=id)
     milestones = Milestone.find_milestones_by_repository(repo=repository.id)
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
     if request.method == HttpMethod.POST.name:
         close_button = request.POST.get('closeBtn')
@@ -258,12 +260,13 @@ def issue_view(request, repo_name, id):
         key=attrgetter('date'))
 
     context = {
+        "logged_user":logged_user,
+        "owner":owner,
         'issue': issue,
         'repository': repository,
         "issues_view": "active",
         "comments": comments,
         "result_list": result_list,
-        "owner": repository.owner,
         "selected_milestone": [issue.milestone],
         "milestones": milestones,
         "assignes": issue.assignees.all(),
@@ -488,6 +491,26 @@ def get_wiki_page(request, repo_name, page_title):
     }
 
     return render(request, 'my_git/wiki/wiki_page_preview.html', context)
+
+
+def get_repository_insights(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+    all_issues = Issue.find_issues_by_repository(repo=repository.id)
+    open_issues = all_issues.filter(open=True)
+    closed_issues = all_issues.filter(open=False)
+
+    print(open_issues)
+    context = {
+        "logged_user": logged_user,
+        "owner": owner,
+        "repository": repository,
+        "repository_insights_view": "active",
+        "open_issues": open_issues,
+        "closed_issues": closed_issues
+    }
+    return render(request, 'my_git/repositories/insights.html', context)
 
 
 def get_logged_user(username):

@@ -1,0 +1,85 @@
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/issue_view.css' %}">
+
+    <div>
+        {% include 'my_git/repositories/repository_header.html' %}
+    </div>
+
+    <div>
+        <h5 style="margin-left: 10%; margin-top:2%;">
+            <b>Created at:</b> {{ repository.creation_date }}
+        </h5>
+        <br>
+        {% if repository.collabolators.count == 0 %}
+            <h6 style="margin-left: 10%; margin-top:2%;">This repository doesn’t have any collaborators yet.</h6>
+        {% else %}
+            <h5 style="margin-left: 10%; margin-top:2%;"><b>Collaborators:</b></h5>
+            <table>
+                <tbody>
+
+                {% for collaborator in repository.collaborators.all %}
+                    <tr>
+                        {% if collaborator.image == "" %}
+                            <td><img alt="User photo" src="../../../static/my_git/images/default_user.png"
+                                     class="rounded-circle" style="height:50px; width:50px"/></td>
+                        {% else %}
+                            <td><img alt="User photo" src="../../../../media/{{ collaborator.image }}"
+                                     class="rounded-circle" style="height:50px; width:50px"/></td>
+                        {% endif %}
+                        <td class="text-info">&nbsp;&nbsp;&nbsp;<i class="fa fa-user"></i> {{ collaborator }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+    <br>
+
+    <div style="margin-left: 10%; margin-top:2%;">
+        {% if issues.count == 0 %}
+            <h6>This repository doesn’t have any issues yet.</h6>
+        {% else %}
+            <div class="col-md-5">
+                <h5><b>
+                    <i class="fas fa-exclamation-circle"></i>&nbsp;{{ closed_issues.count }} Issues closed</b></h5>
+                <ul class="list-group">
+                    {% for issue in closed_issues %}
+                        <li class="list-group-item" style=" border-left: 0 none; border-right: 0 none;">
+                            <strong>
+                                <a class="d-block" href="{% url 'issue_view' issue.repository issue.id %}">
+                                    <span class="close-issue fas fa-exclamation-circle inline">  Closed</span>
+                                    {{ issue }}
+                                    <small class="text-muted">{{ issue.date }}</small>
+                                </a>
+                            </strong>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <br>
+
+                <br>
+                <h5><b>
+                    <i class="far fa-check-circle"></i>&nbsp;{{ open_issues.count }} Issues created</b></h5>
+                <ul class="list-group">
+                    {% for issue in open_issues %}
+                        <li class="list-group-item" style=" border-left: 0 none; border-right: 0 none;">
+                            <strong>
+                                <a class="d-block" href="{% url 'issue_view' issue.repository issue.id %}">
+                                    <span class="open-issue far fa-check-circle inline">  Open</span>
+                                    {{ issue }}
+                                    <small class="text-muted">{{ issue.date }}</small>
+                                </a>
+                            </strong>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+    <br>
+{% endblock %}
