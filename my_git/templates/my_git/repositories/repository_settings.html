@@ -1,0 +1,76 @@
+{% load static %}
+
+
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/repositories.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div>
+        {% include 'my_git/repositories/repository_header.html' %}
+    </div>
+
+    <br>
+    <div style="margin-left: 10%">
+        <p><b>Repository name</b></p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form_update }}
+            <button name="btn-rename" class="btn btn-outline-secondary" type="submit">Rename</button>
+        </form>
+
+        <hr>
+        <div class="form-group">
+            <b>Collaborators</b>
+            <p>
+                {% if collaborators.all|length == 0 %}
+                    <h6>
+                        <i>This repository doesn’t have any collaborators yet.
+                            Use the form below to add a collaborator.</i>
+                    </h6>
+                {% else %}
+                    {% for collaborator in collaborators.all %}
+                        <div>
+                            {{ collaborator.username }}
+                            <form method="post" style="display: inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="collaborator_id" value={{ collaborator.id }}>
+                                <button type="submit" class="btn btn-link" name="remove-collaborator">
+                                    <i class="fa fa-remove"></i>
+                                </button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </p>
+            Search by username:
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="collaborator"/>
+                <button name="btn-add-collaborator" class="btn btn-outline-secondary" type="submit">Add collaborator
+                </button>
+            </form>
+        </div>
+        <hr>
+        <p><b>Danger Zone</b></p>
+        <div id="danger-zone">
+            <p>Once you delete a repository, there is no going back. Please be certain.
+            </p>
+            <form method="post">
+                {% csrf_token %}
+                {{ form }}
+                <button name="btn-delete" class="btn btn-danger" type="submit">Delete Repository</button>
+            </form>
+        </div>
+    </div>
+    <br><br>
+{% endblock %}

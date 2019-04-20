@@ -1,0 +1,25 @@
+{% extends 'my_git/home.html' %}
+
+{% block content %}
+
+    <br>
+    <h4 style="margin-left: 2%">Public repositories</h4>
+
+    <div class="card-deck">
+
+        {% for repository in repositories %}
+            <div class="card border-secondary mb-3" style="max-width: 18rem; margin-left: 2%; margin-top:2%;">
+                <div class="card-header"><a href="/repositories/{{ repository.name }}">{{ repository.owner }} /
+                    <b>{{ repository.name }}</b></a></div>
+                <div class="card-body text-dark">
+                    <p class="card-text">
+                        {{ repository.description }}
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">{{ repository.creation_date }}</small>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

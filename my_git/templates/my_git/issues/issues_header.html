@@ -1,0 +1,46 @@
+{% load static %}
+<html lang="en">
+<header>
+    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/issues_header.css' %}">
+</header>
+<body>
+<div class="my-row">
+    <div class="input-group">
+        <div class="input-group-btn search-panel">
+            <button type="button" class="btn btn-default dropdown-toggle" style="height: 2.5em;" data-toggle="dropdown">
+                <span id="search_concept">Filter by</span> <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li>
+                    <a class="btn" href="?closed=False">Open</a>
+                </li>
+                <li>
+                    <a class="btn" href="?closed=True">Closed</a>
+                </li>
+            </ul>
+        </div>
+        <form method="get" id="search-form">
+            <input type="text" style="display: inline-block; width: 80%" class="form-control" id="search-input"
+                   name="query"
+                   placeholder="Search term...">
+            <button style="display: inline-block" class="btn btn-default"
+                    onclick="document.forms['search-form'].submit()" type="submit"><i
+                    class="fas fa-search"
+                    style="height: 1.5em" onclick=""></i></button>
+        </form>
+        <span class="labels-btn">
+                    <button class="btn btn-outline-dark" type="button"><i class="fas fa-tag"></i>&nbsp;Labels</button>
+                </span>
+
+        <span class="milestones-btn">
+                    <button class="btn btn-outline-dark" type="button"><i class="fas fa-sign"></i>&nbsp;Milestones</button>
+                </span>
+
+        <span class="new-issue-btn col">
+                    <a href="/repositories/{{ repository }}/issues/new"><button class="btn btn-success float-right"
+                                                                                type="button">New issue</button></a>
+                </span>
+    </div>
+</div>
+</body>
+</html>

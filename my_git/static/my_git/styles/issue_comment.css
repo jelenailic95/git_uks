@@ -1,0 +1,35 @@
+.comment_view_block {
+    width: 100%;
+    min-height: 12%;
+    background-color: #fff;
+    border: 1px solid #d1d5da;
+    border-radius: 3px;
+    position: relative;
+}
+
+.comment_view_header {
+    height: 5%;
+    display: block;
+    border-bottom: 1px solid #d1d5da;
+    border-radius: 3px;
+    color: #586069;
+    background-color: #f1f8ff;
+    border-bottom-color: #c0d3eb;
+    position: relative;
+}
+
+.comment_view_body {
+    margin-left: 3%;
+    margin-top: 2%;
+}
+
+.username-info {
+    color: #586069;
+    margin-left: 3%;
+    font-weight: bold;
+    padding-top: 1%;
+}
+
+.inline-div > * {
+    display: inline-block;
+}
