@@ -11,6 +11,8 @@ from my_git.models import *
 from itertools import chain
 from operator import attrgetter
 
+from django.db.models import Q
+
 
 def welcome(request):
     # del request.session['user']
@@ -18,7 +20,20 @@ def welcome(request):
 
 
 def home(request):
-    context = {"home_view": "active"}
+    logged_user = get_logged_user(request.session['user'])
+    collaborator_repositories = Repository.objects.filter(Q(collaborators=logged_user))
+    my_repositories = Repository.objects.filter(owner=logged_user)
+
+    all_repositories = sorted(
+        chain(collaborator_repositories, my_repositories),
+        key=attrgetter('creation_date'),
+        reverse=True)
+
+    context = {
+        "home_view": "active",
+        "repositories": all_repositories
+    }
+
     return render(request, 'my_git/home.html', context)
 
 
@@ -105,6 +120,8 @@ def update_user_profile(request):
 
 
 def issues_view(request, repo_name):
+    logged_user = get_logged_user(request.session['user'])
+
     repository = Repository.objects.get(name=repo_name)
     issues = Issue.find_issues_by_repository(repo=repository.id)
     milestones = Milestone.find_milestones_by_repository(repo=repository.id)
@@ -116,7 +133,11 @@ def issues_view(request, repo_name):
         issues = issues.filter(open=False)
     elif request.GET.get('query'):
         issues = issues.filter(title__contains=request.GET.get('query'))
+
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+
     context = {
+        "logged_user": logged_user,
         "issues_view": "active",
         "num_of_open": issues.filter(open=True).count(),
         "num_of_closed": issues.filter(open=False).count(),
@@ -124,7 +145,7 @@ def issues_view(request, repo_name):
         "labels": labels,
         "milestones": milestones,
         "repository": repository,
-        "owner": repository.owner,
+        "owner": owner,
     }
 
     if request.method == HttpMethod.POST.name:
@@ -254,7 +275,6 @@ def issue_view(request, repo_name, id):
 
 def get_public_repositories(request):
     repositories = Repository.objects.filter(type='public').order_by('-creation_date')
-    print(repositories)
 
     return render(request, 'my_git/explore.html', {"repositories": repositories})
 
@@ -277,7 +297,7 @@ def get_repositories(request):
         repository.save()
 
     context = {
-        "user": logged_user,
+        "logged_user": logged_user,
         "repositories": repositories,
         "repositories_view": "active"
     }
@@ -303,6 +323,7 @@ def get_stars(request):
         repository.save()
 
     context = {
+        "logged_user": logged_user,
         'repositories': repositories,
         'stars_view': 'active'
     }
@@ -311,11 +332,14 @@ def get_stars(request):
 
 
 def get_repository(request, repo_name):
+    logged_user = get_logged_user(request.session['user'])
     repository = Repository.objects.get(name=repo_name)
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
     context = {
+        "logged_user": logged_user,
         "repository": repository,
-        "owner": repository.owner,
+        "owner": owner,
         "repository_view": "active"
     }
 
@@ -349,6 +373,8 @@ def create_repository(request):
 
 def get_repository_settings(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
     # rename repository
     if request.method == HttpMethod.POST.name and 'btn-rename' in request.POST:
@@ -382,8 +408,9 @@ def get_repository_settings(request, repo_name):
     form.initial['value'] = repository.name
 
     context = {
+        "logged_user": logged_user,
         "repository": repository,
-        "owner": repository.owner,
+        "owner": owner,
         "form_update": form,
         "repository_settings_view": "active",
         "collaborators": repository.collaborators
@@ -409,10 +436,13 @@ def add_collaborator(request, repository):
 
 def get_wiki(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
     context = {
+        "logged_user": logged_user,
+        "owner": owner,
         "repository": repository,
-        "owner": repository.owner,
         "repository_wiki_view": "active",
         "pages": Wiki.objects.filter(repository=repository).order_by('title')
     }
@@ -421,10 +451,13 @@ def get_wiki(request, repo_name):
 
 def create_wiki_page(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
     context = {
+        "logged_user": logged_user,
         "repository": repository,
-        "owner": repository.owner,
+        "owner": owner,
         "repository_wiki_view": "active",
         "pages": Wiki.objects.filter(repository=repository).order_by('title')
     }
@@ -442,12 +475,14 @@ def create_wiki_page(request, repo_name):
 
 
 def get_wiki_page(request, repo_name, page_title):
-    print(page_title)
+    logged_user = get_logged_user(request.session['user'])
     repository = Repository.objects.get(name=repo_name)
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
     wiki = Wiki.objects.get(title=page_title, repository=repository)
     context = {
+        "logged_user": logged_user,
         "repository": repository,
-        "owner": repository.owner,
+        "owner": owner,
         "repository_wiki_view": "active",
         "page": wiki
     }
@@ -458,3 +493,10 @@ def get_wiki_page(request, repo_name, page_title):
 def get_logged_user(username):
     logged_user = User.objects.get(username=username)
     return logged_user
+
+
+def check_if_logged_user_is_repo_owner(repository, logged_user):
+    owner = False
+    if repository.owner == logged_user:
+        owner = True
+    return owner

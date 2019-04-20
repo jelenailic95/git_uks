@@ -6,22 +6,35 @@
 
     <br>
     <h5 style="margin-left: 10%; border-left:5px solid #6f42c1"> &nbsp;
-        {{ owner }} / <b>{{ repository.name }} </b> <i>{{ repository.type }}</i></h5>
+        {% if repository.type == "public" %}
+            <i class="fa fa-users"></i>
+        {% else %}
+            <i class="fa fa-user-secret"></i>
+        {% endif %}
+        {{ repository.owner }} / <b>{{ repository.name }} </b> <i class="text-muted">{{ repository.type }}</i></h5>
     <br><br>
-    <img alt="User photo" src="../../../static/my_git/images/default_user.png"
-         class="img-circle" style="height:100px;"/>
+    {% if logged_user.image == "" %}
+        <img alt="User photo" src="../../../static/my_git/images/default_user.png"
+             class="img-circle" style="height:100px;"/>
+    {% else %}
+        <img alt="User photo" src="../../../../media/{{ logged_user.image }}"
+             class="rounded-circle" style="height:90px; width: 90px; margin-left: 1%"/>
+    {% endif %}
+
 
     <div class="topnav">
         <a href="/repositories/{{ repository.name }}" class="{{ repository_view }}"><i class="fa fa-code"></i> Code</a>
         <a href="/repositories/{{ repository.name }}/issues" class="{{ issues_view }}">
             <i class="fa fa-exclamation-circle"></i> Issues</a>
-        <a href="#">
-            <i class="fa fa-question"></i> Pull requests</a>
+        {#        <a href="#">#}
+        {#            <i class="fa fa-question"></i> Pull requests</a>#}
         <a href="/repositories/{{ repository.name }}/wiki" class="{{ repository_wiki_view }}">
             <i class="fa fa-book"></i> Wiki</a>
         <a href="#">
             <i class="fa fa-chart-bar"></i> Insights</a>
-        <a href="/repositories/{{ repository.name }}/settings" class="{{ repository_settings_view }}">
-            <i class="fa fa-cog"></i> Settings</a>
+        {% if owner == True %}
+            <a href="/repositories/{{ repository.name }}/settings" class="{{ repository_settings_view }}">
+                <i class="fa fa-cog"></i> Settings</a>
+        {% endif %}
     </div>
 {% endblock %}

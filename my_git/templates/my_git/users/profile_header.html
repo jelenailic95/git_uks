@@ -18,13 +18,18 @@
         <i class="fa fa-book"></i> New
     </button><br>
 
-    <img alt="User photo" src="../../../static/my_git/images/default_user.png"
-         class="img-circle" style="height:100px;"/>
+    {% if logged_user.image == "" %}
+        <img alt="User photo" src="../../../static/my_git/images/default_user.png"
+             class="img-circle" style="height:100px;"/>
+    {% else %}
+        <img alt="User photo" src="../../../../media/{{ logged_user.image }}"
+             class="rounded-circle" style="height:90px; width: 90px; margin-left: 1%"/>
+    {% endif %}
 
     <div class="topnav">
-        <a href="#">Overview</a>
+        {#        <a href="#">Overview</a>#}
         <a href="/repositories" class="{{ repositories_view }}">Repositories</a>
-        <a href="#">Projects</a>
+        {#        <a href="#">Projects</a>#}
         <a href="/stars" class="{{ stars_view }}"><i class="fa fa-star"></i> Stars</a>
 
 
