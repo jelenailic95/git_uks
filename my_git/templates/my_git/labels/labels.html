@@ -15,7 +15,7 @@
                 <th>
                     <a class="btn">Name</a>
                 </th>
-                <th class="text-left" width="15%"><a class="btn">Description</a></th>
+                <th ><a class="btn">Description</a></th>
                 <th></th>
                 <th></th>
             </tr>
@@ -24,16 +24,52 @@
             {% for label in labels %}
                 <tr>
                     <td>
-                        <span class="badge" style="background-color: {{ label.color }}">{{ label.name }}</span>
+                        <span style="background-color: {{ label.color }}">{{ label.name }}</span>
                     </td>
                     <td>{{ label.description }}</td>
-                    <td><i class="fa fa-edit"></i> Edit</td>
+                    <td>
+                        <div class="btn"
+                             onclick="showEdit('{{ label.id }}')"><i class="fa fa-edit"></i>Edit
+                        </div>
+                    </td>
                     <td><i class="fa fa-trash"></i> Delete</td>
-
                 </tr>
+                <form method="post">
+                    {% csrf_token %}
+                    <tr id="edit{{ label.id }}" style="visibility:collapse;">
+                            <input id="labelId" type="hidden" name="labelId"  value="{{ label.id }}">
+                        <td>
+                            <input id="editName+{{ l }}" type="text" class="form-control col-sm-8" name="editName" value="{{ label.name }}">
+                        </td>
+                        <td>
+                            <input id="editDescription" type="text" class="form-control col-sm-8" name="editDescription" value="{{ label.description }}">
+                        </td>
+                        <td>
+                            <input id="editColor" type="color" name="editColor" value={{ label.color }}>
+                        </td>
+                        <td>
+                            <button type="submit"
+                                    class="btn btn-success" style="margin-right: 2%">Save changes</button>
+                            <button onclick="showEdit('{{ label.id }}')" class="btn btn-outline-dark">Cancel</button>
+                        </td>
+                    </tr>
+                </form>
             {% endfor %}
 
             </tbody>
         </table>
     </div>
 {% endblock %}
+
+<script>
+    function showEdit(param) {
+        console.log(param);
+        let el = document.getElementById("edit" + param);
+        console.log(el);
+        if (el.style.visibility === "collapse") {
+            el.style.visibility = "visible";
+        } else {
+            el.style.visibility = "collapse";
+        }
+    }
+</script>

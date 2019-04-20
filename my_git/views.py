@@ -463,6 +463,15 @@ def get_logged_user(username):
 def labels_view(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
     labels = Label.objects.all()
+    if request.method == HttpMethod.POST.name:
+        print(request.POST)
+        id = request.POST.get('labelId')
+        label = Label.objects.get(id=id)
+        label.name = request.POST.get('editName')
+        label.description = request.POST.get('editDescription')
+        label.color = request.POST.get('editColor')
+        Label.save(label)
+        pass
     context = {
         "labels": labels,
         "repository": repository,
@@ -472,6 +481,7 @@ def labels_view(request, repo_name):
 
 
 def new_label(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
     if request.method == HttpMethod.POST.name:
         name = request.POST.get('nameInput')
         description = request.POST.get('descriptionInput')
@@ -480,7 +490,9 @@ def new_label(request, repo_name):
         pass
     else:
         pass
+
     context = {
-        "repo_name": repo_name
+        "repository": repository,
+        "owner": repository.owner
     }
     return render(request, 'my_git/labels/new_label.html', context)
