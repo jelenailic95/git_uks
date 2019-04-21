@@ -1,0 +1,39 @@
+{% load static %}
+
+<html lang="en">
+<header>
+    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/issue_table.css' %}">
+</header>
+<body>
+<td>
+    {% if issue.open == True %}
+        <i style="margin-left: 3em; color:green" id="open" class="fas fa-exclamation-circle"></i>
+    {% else %}
+        <i style="margin-left: 3em; color:red" id="closed" class="far fa-check-circle"></i>
+    {% endif %}
+
+
+</td>
+<td>
+    <div class="title-labels">
+        <h5 id="tableTitle"><a href="/repositories/{{ repository }}/issues/{{ issue.id }}">{{ issue.title }}</a></h5>
+    </div>
+
+</td>
+<td>
+    <div class="profile-image">
+        <img src="../../../static/my_git/images/profile.png" width="40" height="40" alt="profile picture"
+             id="profile-pic">
+    </div>
+</td>
+<td>
+    <div >
+            {% for label in issue.label.all %}
+                <span class="badge" style="background-color: {{ label.color }}">{{ label.name }}</span>
+            {% endfor %}
+        </div>
+</td>
+<td >
+    <p><i class="fas fa-sign"></i>&nbsp;{{ issue.milestone.title }}</p>
+</td>
+</body>

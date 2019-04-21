@@ -18,6 +18,9 @@ from django.urls import path
 from my_git import views as my_git_views
 from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,8 +28,27 @@ urlpatterns = [
     path('home/', my_git_views.home, name='home'),
     # todo: change auth_views to my_git_views.login
     path('login/', my_git_views.login, name='login'),
-    path('logout/', auth_views.LoginView.as_view(template_name='my_git/users/logout.html'), name='logout'),
-    path('register/', my_git_views.register, name='register')
+    path('register/', my_git_views.register, name='register'),
+    path('explore/', my_git_views.get_public_repositories, name='explore'),
+    path('profile/', my_git_views.get_user_profile, name='profile_preview'),
+    path('profile/edit', my_git_views.update_user_profile, name='profile_update'),
+    path('repositories/', my_git_views.get_repositories, name='repositories'),
+    path('repositories/<str:repo_name>', my_git_views.get_repository, name='repository_preview'),
+    path('repositories/<str:repo_name>/settings', my_git_views.get_repository_settings, name='repository_settings'),
+    path('repositories/<str:repo_name>/wiki', my_git_views.get_wiki, name='repository_wiki'),
+    path('repositories/<str:repo_name>/wiki/new', my_git_views.create_wiki_page, name='wiki_new_page'),
+    path('repositories/<str:repo_name>/wiki/<str:page_title>', my_git_views.get_wiki_page, name='wiki_page_preview'),
+    path('repositories/<str:repo_name>/issues', my_git_views.issues_view, name='issues'),
+    path('repositories/<str:repo_name>/issues/<int:id>', my_git_views.issue_view, name='issue_view'),
+    #path('repositories/<str:repo_name>/issues/<str:id>', my_git_views.issue_view, name='issue_view'),
+    path('repositories/<str:repo_name>/issues/new', my_git_views.new_issue, name='new-issue'),
+    path('repositories/<str:repo_name>/labels', my_git_views.labels_view, name='repository_labels'),
+    path('repositories/<str:repo_name>/labels/new', my_git_views.new_label, name='new-label'),
+    path('new/', my_git_views.create_repository, name='create_repository'),
+    path('stars/', my_git_views.get_stars, name='stars')
 ]
 
 urlpatterns += staticfiles_urlpatterns()
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,40 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/new_issue.css' %}">
+
+<div>
+    {% include 'my_git/repositories/repository_header.html' %}
+</div>
+
+<div class="container container-padding">
+    <form method="post" class="new-issue-block row">
+        {% csrf_token %}
+        {% comment %}<div class="profile-image">
+            <img src="../../../static/my_git/images/profile.png" width="70" height="70" alt="profile picture"
+                 id="profile-pic">
+        </div>{% endcomment %}
+        <div class="new-issue-inputs">
+            <div class="first">
+                <label class="col-sm-2 col-form-label" for="titleInput">Title</label>
+                <div class="col-sm-12">
+                    <input name="titleInput" type="text" class="form-control" id="titleInput"
+                           placeholder="Title">
+                </div>
+            </div>
+            <div class="first">
+                <label class="col-sm-2 col-form-label" for="content">Content</label>
+                <div class="col-sm-12">
+                    <textarea name="contentInput" class="form-control" id="contentInput"
+                              placeholder="Content..."></textarea>
+
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success first float-lg-right">Submit new issue</button>
+        </div>
+        <div class="new-issue-side">
+            {% include 'my_git/issues/issue_new_side.html' with labels=labels milestones=milestones contributors=contributors %}
+        </div>
+
+    </form>
+</div>
+

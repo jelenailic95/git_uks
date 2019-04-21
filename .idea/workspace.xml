@@ -2,10 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1187e6eb-db6f-4545-9116-db87f034e790" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/my_git/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/my_git/templates/my_git/home.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/my_git/templates/my_git/users/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/my_git/templates/my_git/users/logout.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/my_git/templates/my_git/users/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/uks-project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/uks-project.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my_git/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/my_git/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/my_git/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/my_git/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/my_git/migrations/0001_initial.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/my_git/migrations/0002_auto_20190326_1546.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/my_git/migrations/0003_auto_20190326_1643.py" beforeDir="false" />
@@ -15,6 +21,7 @@
       <change beforePath="$PROJECT_DIR$/my_git/migrations/__init__.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/my_git/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/my_git/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/my_git/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/my_git/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/uks_project/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/uks_project/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/uks_project/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/uks_project/urls.py" afterDir="false" />
     </list>
@@ -45,7 +52,69 @@
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/my_git/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="10" column="57" selection-start-line="10" selection-start-column="57" selection-end-line="10" selection-end-column="57" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/my_git/forms.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+              <folding>
+                <element signature="e#0#24#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/uks_project/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="246">
+              <caret line="24" column="34" selection-start-line="24" selection-start-column="32" selection-end-line="24" selection-end-column="37" />
+              <folding>
+                <element signature="e#635#667#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/my_git/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="348">
+              <caret line="38" column="33" lean-forward="true" selection-start-line="27" selection-start-column="4" selection-end-line="38" selection-end-column="33" />
+              <folding>
+                <element signature="e#24#63#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/my_git/templates/my_git/home.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="225">
+              <caret line="21" column="53" selection-start-line="21" selection-start-column="53" selection-end-line="21" selection-end-column="53" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -56,47 +125,44 @@
       <find>tag</find>
       <find>crispy</find>
       <find>crispy_f</find>
+      <find>mid</find>
+      <find>migration</find>
+      <find>migrations</find>
+      <find>UpdatePro</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="master" />
-      </map>
-    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/manage.py" />
         <option value="$PROJECT_DIR$/Dockerfile" />
-        <option value="$PROJECT_DIR$/my_git/admin.py" />
         <option value="$PROJECT_DIR$/users/views.py" />
         <option value="$PROJECT_DIR$/users/forms.py" />
         <option value="$PROJECT_DIR$/users/templates/users/register.html" />
         <option value="$PROJECT_DIR$/docker-compose.yaml" />
-        <option value="$PROJECT_DIR$/requirements.txt" />
-        <option value="$PROJECT_DIR$/my_git/templates/my_git/home.html" />
-        <option value="$PROJECT_DIR$/my_git/static/my_git/styles/welcome.css" />
-        <option value="$PROJECT_DIR$/my_git/templates/my_git/welcome.html" />
-        <option value="$PROJECT_DIR$/my_git/templates/my_git/users/login.html" />
         <option value="$PROJECT_DIR$/my_git/templates/my_git/users/logout.html" />
-        <option value="$PROJECT_DIR$/my_git/static/my_git/styles/login.css" />
+        <option value="$PROJECT_DIR$/requirements.txt" />
+        <option value="$PROJECT_DIR$/my_git/templates/my_git/users/login.html" />
+        <option value="$PROJECT_DIR$/my_git/admin.py" />
+        <option value="$PROJECT_DIR$/uks_project/settings.py" />
+        <option value="$PROJECT_DIR$/my_git/constants.py" />
+        <option value="$PROJECT_DIR$/my_git/templates/my_git/home.html" />
+        <option value="$PROJECT_DIR$/uks_project/urls.py" />
+        <option value="$PROJECT_DIR$/my_git/views.py" />
         <option value="$PROJECT_DIR$/my_git/templates/my_git/users/register.html" />
         <option value="$PROJECT_DIR$/my_git/models.py" />
-        <option value="$PROJECT_DIR$/uks_project/settings.py" />
-        <option value="$PROJECT_DIR$/uks_project/urls.py" />
         <option value="$PROJECT_DIR$/my_git/forms.py" />
-        <option value="$PROJECT_DIR$/my_git/views.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-206" />
-    <option name="y" value="127" />
-    <option name="width" value="640" />
-    <option name="height" value="555" />
+    <option name="x" value="67" />
+    <option name="y" value="25" />
+    <option name="width" value="1299" />
+    <option name="height" value="743" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -106,7 +172,53 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scope">
+        <subPane subId="Scope 'Changed Files'; set:Changed Files; ALL; class com.intellij.packageDependencies.ChangeListScope">
+          <expand>
+            <path>
+              <item name="git_uks" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/projects/git_uks" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+            <path>
+              <item name="git_uks" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/projects/git_uks" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name=".idea" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="git_uks" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/projects/git_uks" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="my_git" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="git_uks" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/projects/git_uks" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="my_git" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="templates" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
+          <expand>
+            <path>
+              <item name="git_uks" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/projects/git_uks" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+            <path>
+              <item name="git_uks" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/projects/git_uks" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name=".idea" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="git_uks" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/projects/git_uks" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name=".idea" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="inspectionProfiles" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -118,27 +230,6 @@
               <item name="git_uks" type="b2602c69:ProjectViewProjectNode" />
               <item name="git_uks" type="462c0819:PsiDirectoryNode" />
               <item name="my_git" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="git_uks" type="b2602c69:ProjectViewProjectNode" />
-              <item name="git_uks" type="462c0819:PsiDirectoryNode" />
-              <item name="my_git" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="git_uks" type="b2602c69:ProjectViewProjectNode" />
-              <item name="git_uks" type="462c0819:PsiDirectoryNode" />
-              <item name="my_git" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="my_git" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="git_uks" type="b2602c69:ProjectViewProjectNode" />
-              <item name="git_uks" type="462c0819:PsiDirectoryNode" />
-              <item name="my_git" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="my_git" type="462c0819:PsiDirectoryNode" />
-              <item name="images" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="git_uks" type="b2602c69:ProjectViewProjectNode" />
@@ -175,23 +266,21 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/my_git/static/my_git/images" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/docker-compose.yaml" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/my_git" />
+      <recent name="$PROJECT_DIR$/my_git/templates/my_git/users" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/my_git/static/my_git/images" />
       <recent name="$PROJECT_DIR$/my_git/static/images" />
       <recent name="$PROJECT_DIR$/my_git/static" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/my_git/static/my_git/images" />
-      <recent name="$PROJECT_DIR$/my_git/static/my_git" />
-      <recent name="$PROJECT_DIR$/my_git/templates/my_git" />
-      <recent name="$PROJECT_DIR$/my_git/static/images" />
-      <recent name="$PROJECT_DIR$/my_git/templates/my_git/users" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -206,7 +295,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Django server.uks-project">
+  <component name="RunManager" selected="Docker.Django">
     <configuration name="Test: " type="DjangoTestsConfigurationType" temporary="true">
       <module name="uks-project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -227,61 +316,18 @@
       <option name="OPTIONS" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="uks-project" type="Python.DjangoServer" factoryName="Django server">
-      <module name="uks-project" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-        <env name="DJANGO_SETTINGS_MODULE" value="uks_project.settings" />
-      </envs>
-      <option name="SDK_HOME" value="docker://git_uks_web:latest/python" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="DockerContainerSettingsRunConfigurationExtension">
-        <option name="envVars">
-          <list />
-        </option>
-        <option name="extraHosts">
-          <list />
-        </option>
-        <option name="links">
-          <list />
-        </option>
-        <option name="networkDisabled" value="false" />
-        <option name="networkMode" value="bridge" />
-        <option name="portBindings">
-          <list />
-        </option>
-        <option name="publishAllPorts" value="false" />
-        <option name="version" value="1" />
-        <option name="volumeBindings">
-          <list>
-            <DockerVolumeBindingImpl>
-              <option name="containerPath" value="/opt/project" />
-              <option name="editable" value="true" />
-              <option name="hostPath" value="$PROJECT_DIR$" />
-              <option name="readOnly" value="false" />
-            </DockerVolumeBindingImpl>
-          </list>
-        </option>
-      </EXTENSION>
-      <option name="launchJavascriptDebuger" value="false" />
-      <option name="port" value="8000" />
-      <option name="host" value="" />
-      <option name="additionalOptions" value="" />
-      <option name="browserUrl" value="" />
-      <option name="runTestServer" value="false" />
-      <option name="runNoReload" value="false" />
-      <option name="useCustomRunCommand" value="false" />
-      <option name="customRunCommand" value="" />
+    <configuration name="Django" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="commandLineOptions" value="--build" />
+          <option name="sourceFilePath" value="docker-compose.yaml" />
+        </settings>
+      </deployment>
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Django server.uks-project" />
       <item itemvalue="Django tests.Test: " />
+      <item itemvalue="Docker.Django" />
     </list>
     <recent_temporary>
       <list>
@@ -305,12 +351,8 @@
       <workItem from="1553600861654" duration="11661000" />
       <workItem from="1553771914779" duration="2684000" />
       <workItem from="1553778582168" duration="7866000" />
-      <workItem from="1553803523952" duration="6587000" />
-      <workItem from="1553846464602" duration="3102000" />
-      <workItem from="1553857647097" duration="2099000" />
-      <workItem from="1553867816146" duration="7733000" />
-      <workItem from="1553884560271" duration="1817000" />
-      <workItem from="1553961183460" duration="4697000" />
+      <workItem from="1553803523952" duration="4078000" />
+      <workItem from="1553934427477" duration="16048000" />
     </task>
     <servers />
   </component>
@@ -320,22 +362,23 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="66594000" />
+    <option name="totallyTimeSpent" value="57590000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26028278" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="1" side_tool="true" />
+      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.24181964" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.41184387" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.6016151" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3990228" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Docker" order="7" visible="true" weight="0.3755047" />
+      <window_info anchor="bottom" id="Docker" order="7" weight="0.12214984" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
@@ -345,92 +388,46 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="SciView" order="3" />
-      <window_info anchor="right" id="Database" order="4" />
+      <window_info anchor="right" id="Database" order="4" weight="0.32969153" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Merge branch 'master' of https://github.com/jelenailic95/git_uks&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;docker-compose.yaml" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of https://github.com/jelenailic95/git_uks&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;docker-compose.yaml" />
-  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/uks_project/wsgi.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/uks_project/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/my_git/admin.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="26" lean-forward="true" selection-start-line="5" selection-start-column="26" selection-end-line="5" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Dockerfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="29" lean-forward="true" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/manage.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="25" lean-forward="true" selection-start-line="6" selection-start-column="2" selection-end-line="13" selection-end-column="25" />
-          <folding>
-            <element signature="e#23#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/local/lib/python3.6/dist-packages/psycopg2/__init__.py" />
-    <entry file="file://$PROJECT_DIR$/my_git/migrations/0001_initial.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/my_git/migrations/0002_auto_20190326_1546.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/my_git/migrations/0003_auto_20190326_1643.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/users/apps.py" />
     <entry file="file://$PROJECT_DIR$/users/tests.py" />
     <entry file="file://$PROJECT_DIR$/users/views.py" />
     <entry file="file://$PROJECT_DIR$/users/models.py" />
     <entry file="file://$PROJECT_DIR$/users/admin.py" />
     <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-2011149643/1170049292/crispy_forms/templatetags/crispy_forms_tags.py" />
-    <entry file="file://$PROJECT_DIR$/my_git/static/my_git/images/planet.png" />
-    <entry file="file://$PROJECT_DIR$/my_git/static/my_git/images/planet.jpg" />
-    <entry file="file://$PROJECT_DIR$/my_git/static/my_git/images/rsz_planet.jpg" />
-    <entry file="file://$PROJECT_DIR$/docker-compose.yaml">
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" selection-start-line="18" selection-end-line="18" />
+        <state relative-caret-position="34">
+          <caret line="2" column="26" lean-forward="true" selection-start-line="2" selection-start-column="26" selection-end-line="2" selection-end-column="26" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/my_git/static/my_git/images/logo-not-transparent.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/my_git/static/my_git/images/planet.jpeg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/my_git/static/my_git/styles/login.css">
+    <entry file="file://$PROJECT_DIR$/my_git/templates/my_git/users/logout.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="3" selection-start-line="5" selection-start-column="3" selection-end-line="5" selection-end-column="3" />
+        <state relative-caret-position="153">
+          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/-2011149643/1170049292/django/forms/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="146">
+          <caret line="182" column="8" selection-start-line="182" selection-start-column="8" selection-end-line="182" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/my_git/apps.py">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/my_git/static/my_git/styles/welcome.css">
       <provider selected="true" editor-type-id="text-editor">
@@ -439,39 +436,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-2011149643/1170049292/django/contrib/auth/views.py" />
-    <entry file="file://$PROJECT_DIR$/my_git/templates/my_git/users/logout.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-2011149643/1170049292/django/contrib/auth/forms.py" />
-    <entry file="file://$PROJECT_DIR$/my_git/templates/my_git/home.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="30" lean-forward="true" selection-start-line="3" selection-start-column="30" selection-end-line="3" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/my_git/templates/my_git/welcome.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="7" lean-forward="true" selection-start-line="30" selection-start-column="7" selection-end-line="30" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/my_git/templates/my_git/users/register.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="89">
-          <caret line="23" column="29" selection-start-line="23" selection-start-column="29" selection-end-line="23" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/-2011149643/1170049292/django/contrib/auth/forms.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-119">
@@ -479,63 +445,215 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/uks_project/settings.py">
+    <entry file="file://$PROJECT_DIR$/my_git/static/my_git/images/logo.png">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8">
-          <caret line="5" column="38" lean-forward="true" selection-start-line="5" selection-start-column="38" selection-end-line="5" selection-end-column="38" />
+        <state relative-caret-position="150">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+      <provider editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1845">
+          <caret line="123" selection-start-line="123" selection-end-line="123" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/uks_project/urls.py">
+    <entry file="file://$PROJECT_DIR$/my_git/tests.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="26" column="34" lean-forward="true" selection-start-line="26" selection-start-column="34" selection-end-line="26" selection-end-column="34" />
+        <state relative-caret-position="45">
+          <caret line="3" column="13" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="13" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/uks-project.iml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/modules.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/misc.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/encodings.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/vcs.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="871">
+          <caret line="100" column="59" selection-start-line="100" selection-start-column="59" selection-end-line="100" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="22" lean-forward="true" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/my_git/migrations/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/my_git/constants.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="17" lean-forward="true" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/my_git/templates/my_git/users/login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="22" column="42" selection-start-line="22" selection-start-column="38" selection-end-line="22" selection-end-column="42" />
+        <state relative-caret-position="90">
+          <caret line="6" column="21" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/my_git/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="22" column="12" lean-forward="true" selection-start-line="22" selection-start-column="12" selection-end-line="22" selection-end-column="12" />
+        <state relative-caret-position="165">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/my_git/forms.py">
+    <entry file="file://$PROJECT_DIR$/my_git/static/my_git/images/default_user.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/my_git/templates/my_git/users/logout.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="7" column="30" lean-forward="true" selection-start-line="7" selection-start-column="30" selection-end-line="7" selection-end-column="30" />
+        <state relative-caret-position="30">
+          <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/-2011149643/1170049292/django/views/generic/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-262">
+          <caret line="48" column="8" selection-start-line="48" selection-start-column="8" selection-end-line="48" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uks_project/wsgi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/manage.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="12" column="12" lean-forward="true" selection-start-line="12" selection-start-column="12" selection-end-line="12" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uks_project/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1227">
+          <caret line="35" column="27" selection-start-line="35" selection-start-column="27" selection-end-line="35" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/my_git/constants.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/-2011149643/1170049292/django/contrib/auth/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="146">
+          <caret line="41" column="24" selection-start-line="41" selection-start-column="17" selection-end-line="41" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docker-compose.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="10" lean-forward="true" selection-start-line="14" selection-start-column="10" selection-end-line="14" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uks_project/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="246">
+          <caret line="24" column="34" selection-start-line="24" selection-start-column="32" selection-end-line="24" selection-end-column="37" />
           <folding>
-            <element signature="e#0#24#0" expanded="true" />
+            <element signature="e#635#667#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/my_git/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="57" selection-start-line="10" selection-start-column="57" selection-end-line="10" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/-2011149643/1170049292/django/contrib/auth/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+<caret line="15" column="33" lean-forward="true" selection-start-line="15" selection-start-column="33" selection-end-line="15" selection-end-column="33" />
+        <state relative-caret-position="323">
+          <caret line="64" column="22" selection-start-line="64" selection-start-column="6" selection-end-line="64" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/my_git/admin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="25" lean-forward="true" selection-start-line="6" selection-start-column="24" selection-end-line="6" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/my_git/templates/my_git/home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="20" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/my_git/templates/my_git/users/register.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="93">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Dockerfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="11" lean-forward="true" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/my_git/templates/my_git/users/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="127">
+          <caret line="13" column="41" lean-forward="true" selection-start-line="13" selection-start-column="41" selection-end-line="13" selection-end-column="41" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/my_git/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-43">
-          <caret line="31" column="30" lean-forward="true" selection-start-line="31" selection-end-line="32" />
+        <state relative-caret-position="348">
+          <caret line="38" column="33" lean-forward="true" selection-start-line="27" selection-start-column="4" selection-end-line="38" selection-end-column="33" />
           <folding>
             <element signature="e#24#63#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/my_git/static/my_git/images/logo.png">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/my_git/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
   </component>
 </project>

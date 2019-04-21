@@ -1,0 +1,87 @@
+{% load static %}
+
+
+{% block content %}
+    <div>
+        {% include 'my_git/repositories/repository_header.html' %}
+    </div>
+    <div>
+        {% include 'my_git/labels/labels_header.html' with repository=repository %}
+    </div>
+    <div class="all-labels">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>
+                    <a class="btn">Name</a>
+                </th>
+                <th><a class="btn">Description</a></th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for label in labels %}
+                <tr>
+                    <td>
+                        <span style="background-color: {{ label.color }}; color:white">{{ label.name }}</span>
+                    </td>
+                    <td>{{ label.description }}</td>
+                    <td>
+                        <button class="btn btn-outline-dark btn-sm"
+                                onclick="showEdit('{{ label.id }}')"><i class="fa fa-edit"></i>Edit
+                        </button>
+                    </td>
+                    <td>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input id="labelId" type="hidden" name="labelId" value="{{ label.id }}">
+                            <button type="submit" class="btn btn-outline-dark btn-sm">
+                                <i class="fa fa-trash"></i>Delete
+                            </button>
+                        </form>
+
+                    </td>
+                </tr>
+                <form method="post">
+                    {% csrf_token %}
+                    <tr id="edit{{ label.id }}" style="visibility:collapse;">
+                        <input id="labelId" type="hidden" name="labelId" value="{{ label.id }}">
+                        <td>
+                            <input id="editName+{{ l }}" type="text" class="form-control col-sm-8" name="editName"
+                                   value="{{ label.name }}">
+                        </td>
+                        <td>
+                            <input id="editDescription" type="text" class="form-control col-sm-8" name="editDescription"
+                                   value="{{ label.description }}">
+                        </td>
+                        <td>
+                            <input id="editColor" type="color" name="editColor" value={{ label.color }}>
+                        </td>
+                        <td>
+                            <button type="submit"  id="updateBtn" name="updateBtn"
+                                    class="btn btn-success" style="margin-right: 2%">Save changes
+                            </button>
+                            <button onclick="showEdit('{{ label.id }}')" class="btn btn-outline-dark">Cancel</button>
+                        </td>
+                    </tr>
+                </form>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+<script>
+    function showEdit(param) {
+        console.log(param);
+        let el = document.getElementById("edit" + param);
+        console.log(el);
+        if (el.style.visibility === "collapse") {
+            el.style.visibility = "visible";
+        } else {
+            el.style.visibility = "collapse";
+        }
+    }
+</script>

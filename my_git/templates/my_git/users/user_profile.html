@@ -1,0 +1,37 @@
+{% extends "my_git/home.html" %}
+{% block content %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <br>
+    <div class="card bg-light mb-3" style="max-width: 28%; margin-left: 30%;">
+        <div class="card-header">
+            {% if user.image == "" %}
+                <img alt="User photo" src="../../../static/my_git/images/default_user.png"
+                     class="rounded-circle" style="height:100px; width:100px"/>
+            {% else %}
+                <img alt="User photo" src="../../../../media/{{ user.image }}"
+                     class="rounded-circle" style="height:100px; width:100px"/>
+            {% endif %}
+
+            <button class="btn btn-info" style="margin-left: 47%; margin-bottom: 100px"
+                    onclick="location.href='{% url 'profile_update' %}'">
+                <i class="fa fa-edit"></i></button>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">
+                <i class="fa fa-user"></i> &nbsp; {{ user.username }}
+            </h5>
+            <p class="card-text">
+                <i class="fa fa-envelope"></i> &nbsp; {{ user.email }}
+            </p><br>
+        </div>
+    </div>
+{% endblock content %}
