@@ -11,6 +11,8 @@ from my_git.models import *
 from itertools import chain
 from operator import attrgetter
 
+logger = logging.getLogger(__name__)
+
 
 def welcome(request):
     # del request.session['user']
@@ -33,6 +35,7 @@ def login(request):
                 request.session['user'] = result.username
                 return redirect('home')
             except User.DoesNotExist:
+                logger.error('Invalid credentials for email')# + form.cleaned_data['email'])
                 messages.warning(request, 'Bad credentials, try again!')
                 return redirect('login')
     else:
