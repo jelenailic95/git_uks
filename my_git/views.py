@@ -458,3 +458,45 @@ def get_wiki_page(request, repo_name, page_title):
 def get_logged_user(username):
     logged_user = User.objects.get(username=username)
     return logged_user
+
+
+def labels_view(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+    labels = Label.objects.all()
+    if request.method == HttpMethod.POST.name:
+        print(request.POST)
+        id = request.POST.get('labelId')
+        label = Label.objects.get(id=id)
+        if request.POST.get('updateBtn') == '':
+            print('update')
+            label.name = request.POST.get('editName')
+            label.description = request.POST.get('editDescription')
+            label.color = request.POST.get('editColor')
+            Label.save(label)
+        else:
+            print('delete')
+            Label.delete(label)
+    context = {
+        "labels": labels,
+        "repository": repository,
+        "owner": repository.owner
+    }
+    return render(request, 'my_git/labels/labels.html', context)
+
+
+def new_label(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+    if request.method == HttpMethod.POST.name:
+        name = request.POST.get('nameInput')
+        description = request.POST.get('descriptionInput')
+        color = request.POST.get('color')
+        Label.save_new_label(name=name, description=description, color=color)
+        pass
+    else:
+        pass
+
+    context = {
+        "repository": repository,
+        "owner": repository.owner
+    }
+    return render(request, 'my_git/labels/new_label.html', context)
