@@ -5,6 +5,9 @@
 
 <div>
     {% include 'my_git/repositories/repository_header.html' %}
+    <div>
+        {% include 'my_git/labels/labels_header.html' with repository=repository %}
+    </div>
 </div>
 
 <div class="container container-padding">
@@ -12,7 +15,7 @@
         {% csrf_token %}
         <div class="new-issue-inputs">
             <div class="first">
-                <label class="col-sm-2 col-form-label" for="nameInput">Name</label>
+                <label  class="col-sm-2 col-form-label" for="nameInput">Name</label>
                 <div class="col-sm-12">
                     <input name="nameInput" type="text" class="form-control" id="nameInput"
                            placeholder="Name of label">

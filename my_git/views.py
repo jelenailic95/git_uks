@@ -467,11 +467,15 @@ def labels_view(request, repo_name):
         print(request.POST)
         id = request.POST.get('labelId')
         label = Label.objects.get(id=id)
-        label.name = request.POST.get('editName')
-        label.description = request.POST.get('editDescription')
-        label.color = request.POST.get('editColor')
-        Label.save(label)
-        pass
+        if request.POST.get('updateBtn') == '':
+            print('update')
+            label.name = request.POST.get('editName')
+            label.description = request.POST.get('editDescription')
+            label.color = request.POST.get('editColor')
+            Label.save(label)
+        else:
+            print('delete')
+            Label.delete(label)
     context = {
         "labels": labels,
         "repository": repository,
