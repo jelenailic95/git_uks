@@ -1,18 +1,13 @@
-pipeline {
-    agent {
-        dockerfile true
+node{
+    stage('Initialize') {
+        def dockerHome = tool 'docker'
+        env.PATH = "${dockerHome}/bin"
     }
-    stages {
-        stage('Clone repository'){
-            steps{
-                checkout scm
-            }
-        }
-        stage('Build image'){
-            steps {
-                sh "docker build -f Dockerfile ."
-            }
-        }
+    stage('Checkout'){
+        checkout scm
     }
 
+    stage('Build image') {
+        sh "docker build -f Dockerfile ."
+    }
 }
