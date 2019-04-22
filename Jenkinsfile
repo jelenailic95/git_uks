@@ -5,7 +5,7 @@ node{
         checkout scm
     }
 
-    stage('Build and push image') {
+    stage('Build image') {
         withEnv(['PATH+EXTRA=/usr/sbin:/usr/bin:/sbin:/bin']){
             sh "docker login --username=mygituks --password=mdj1646MDJ"
             sh "docker build -t my_git_uks -f Dockerfile ."
