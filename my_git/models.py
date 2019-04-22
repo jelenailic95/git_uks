@@ -49,11 +49,13 @@ class Wiki(models.Model):
 
 class Milestone(models.Model):
     id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, default='')
+    description = models.CharField(max_length=500, null=True, default='')
     due_date = models.DateField()
     closed_date = models.DateField(null=True)
-    open = models.BooleanField()
+    open = models.BooleanField(default=True)
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+
 
     def __str__(self):
         return "{}".format(self.title)

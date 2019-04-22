@@ -22,7 +22,7 @@
                     <a {% if buttonName == 'label' %}
                         href="{% url 'new-label' repository.name %}"
                     {% else %}
-                        href="{% url 'new-milestone' repository.name %}"
+                        href="{% url 'new-milestone' repository.name "new" %}"
 
                     {% endif %}>
 
