@@ -8,6 +8,10 @@ node{
     }
 
     stage('Build image') {
-        sh "docker build -f Dockerfile ."
+        steps {
+            withEnv(['PATH+EXTRA=/usr/sbin:/usr/bin:/sbin:/bin']){
+                sh "docker build -f Dockerfile ."
+            }
+        }
     }
 }
