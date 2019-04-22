@@ -15,13 +15,12 @@
             <b>Created at:</b> {{ repository.creation_date }}
         </h5>
         <br>
-        {% if repository.collabolators.count == 0 %}
-            <h6 style="margin-left: 10%; margin-top:2%;">This repository doesn’t have any collaborators yet.</h6>
+        <h5 style="margin-left: 10%; margin-top:2%;"><b>Collaborators:</b></h5>
+        {% if repository.collaborators.all|length == 0 %}
+            <h6 style="margin-left: 10%; margin-top:2%;"><i>This repository doesnt have any collaborators yet.</i></h6>
         {% else %}
-            <h5 style="margin-left: 10%; margin-top:2%;"><b>Collaborators:</b></h5>
             <table>
                 <tbody>
-
                 {% for collaborator in repository.collaborators.all %}
                     <tr>
                         {% if collaborator.image == "" %}
@@ -53,7 +52,7 @@
                             <strong>
                                 <a class="d-block" href="{% url 'issue_view' issue.repository issue.id %}">
                                     <span class="close-issue fas fa-exclamation-circle inline">  Closed</span>
-                                    {{ issue }}
+                                    &nbsp;{{ issue }}
                                     <small class="text-muted">{{ issue.date }}</small>
                                 </a>
                             </strong>
@@ -71,7 +70,7 @@
                             <strong>
                                 <a class="d-block" href="{% url 'issue_view' issue.repository issue.id %}">
                                     <span class="open-issue far fa-check-circle inline">  Open</span>
-                                    {{ issue }}
+                                    &nbsp;{{ issue }}
                                     <small class="text-muted">{{ issue.date }}</small>
                                 </a>
                             </strong>

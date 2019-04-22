@@ -22,8 +22,15 @@
 </td>
 <td>
     <div class="profile-image">
-        <img src="../../../static/my_git/images/profile.png" width="40" height="40" alt="profile picture"
-             id="profile-pic">
+
+       {% if logged_user.image == "" %}
+        <img alt="Profile photo" src="../../../static/my_git/images/default_user.png"
+             class="img-circle" style="height:40px; width: 40px;" id="profile-pic"/>
+    {% else %}
+        <img alt="Profile photo" src="../../../../media/{{ logged_user.image }}"
+             class="rounded-circle" style="height:40px; width: 40px;" id="profile-pic"/>
+    {% endif %}
+
     </div>
 </td>
 <td>

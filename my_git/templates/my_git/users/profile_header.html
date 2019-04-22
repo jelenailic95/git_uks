@@ -20,7 +20,7 @@
 
     {% if logged_user.image == "" %}
         <img alt="User photo" src="../../../static/my_git/images/default_user.png"
-             class="img-circle" style="height:100px;"/>
+             class="img-circle" style="height:90px; width: 90px; margin-left: 1%"/>
     {% else %}
         <img alt="User photo" src="../../../../media/{{ logged_user.image }}"
              class="rounded-circle" style="height:90px; width: 90px; margin-left: 1%"/>
