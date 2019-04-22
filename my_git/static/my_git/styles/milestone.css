@@ -1,0 +1,73 @@
+
+.open-milestone {
+    background-color: #2cbe4e;
+    border-radius: 3px;
+    color: #fff;
+    display: inline-block;
+    font-weight: 600;
+    line-height: 20px;
+    padding: 6px 4px 8px;
+    text-align: center;
+    height: 30px;
+}
+
+.milestone_view_block {
+    width: 60%;
+    margin-bottom: 1%;
+    margin-left: 20%;
+    min-height: 12%;
+    background-color: #fff;
+    border: 1px solid #d1d5da;
+    border-radius: 3px;
+    position: relative;
+}
+
+.milestone_view_header {
+    height: 6%;
+    border-bottom: 1px solid #d1d5da;
+    border-radius: 3px;
+    color: #586069;
+    background-color: #f1f8ff;
+    border-bottom-color: #c0d3eb;
+}
+
+
+.close-milestone {
+    background-color: #cb2431;
+    border-radius: 3px;
+    color: #fff;
+    display: inline-block;
+    font-weight: 600;
+    line-height: 20px;
+    padding: 6px 4px 8px;
+    text-align: center;
+    height: 30px;
+}
+
+.milestone-title {
+    padding-left: 2%;
+    padding-top: 0.5%;
+}
+
+
+
+.milestone_div {
+    margin-left: 5%;
+    margin-top: 3%;
+    width: 60%;
+    position: relative;
+    display: inline-block;
+}
+
+
+.inline-div > * {
+    display: inline-block;
+}
+
+.block-side {
+    width: 40%;
+}
+
+.inline{
+    margin-left: 4%;
+}

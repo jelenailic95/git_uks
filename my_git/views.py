@@ -479,7 +479,8 @@ def labels_view(request, repo_name):
     context = {
         "labels": labels,
         "repository": repository,
-        "owner": repository.owner
+        "owner": repository.owner,
+        "buttonName": "label"
     }
     return render(request, 'my_git/labels/labels.html', context)
 
@@ -497,6 +498,95 @@ def new_label(request, repo_name):
 
     context = {
         "repository": repository,
-        "owner": repository.owner
+        "owner": repository.owner,
+        "buttonName": "label"
+
     }
     return render(request, 'my_git/labels/new_label.html', context)
+
+
+def milestones_view(request, repo_name):
+    print(request.POST)
+    if request.method == HttpMethod.POST.name:
+        milestone = Milestone.objects.get(id=request.POST.get('milestoneId'))
+        if request.POST.get('editBtn') == '':
+            pass
+        elif request.POST.get('closeBtn') == '':
+            milestone.open = False
+            milestone.closed_date = datetime.now()
+            Milestone.save(milestone)
+        elif request.POST.get('reopenBtn') == '':
+            milestone.open = True
+            Milestone.save(milestone)
+        elif request.POST.get('deleteBtn') == '':
+            Milestone.delete(milestone)
+    repository = Repository.objects.get(name=repo_name)
+    milestones = Milestone.find_milestones_by_repository(repository.id)
+    context = {
+        "repository": repository,
+        "owner": repository.owner,
+        "buttonName": "milestone",
+        "milestones": milestones,
+        "now_date": datetime.now()
+    }
+    return render(request, 'my_git/milestones/milestones.html', context)
+
+
+def new_milestone(request, repo_name, type):
+    repository = Repository.objects.get(name=repo_name)
+    milestone = Milestone()
+    milestone.due_date = datetime.now();
+    print(request)
+    # ako je submitovana forma
+    if request.method == HttpMethod.POST.name:
+        # ako je update uzmi postojeci
+        if "new" not in request.path:
+            milestone = Milestone.objects.get(id=type)
+        milestone.title = request.POST.get('titleInput')
+        milestone.description = request.POST.get('descriptionInput')
+        milestone.due_date = request.POST.get('dateInput')
+        milestone.repository = repository
+        Milestone.save(milestone)
+        return redirect('repository_milestones', repo_name=repository.name)
+    # ako je update popuni polja
+    elif "new" not in request.path:
+        milestone = Milestone.objects.get(id=type)
+        milestone.title = milestone.title
+        milestone.due_date = milestone.due_date
+        milestone.description = milestone.description
+    context = {
+        "repository": repository,
+        "owner": repository.owner,
+        "buttonName": "milestone",
+        "dateToday": datetime.now().strftime('%Y-%m-%d'),
+        "date": milestone.due_date.strftime('%Y-%m-%d'),
+        "milestone": milestone
+
+    }
+    return render(request, 'my_git/milestones/new_milestone.html', context)
+
+#
+# def edit_milestone(request, repo_name, type):
+#     print(request)
+#     milestone = Milestone()
+#     if "edit" in request.path:
+#         milestone = Milestone.objects.get(id=milestone_id)
+#         milestone.title = milestone.title
+#         milestone.due_date = milestone.due_date
+#         milestone.description = milestone.description
+#     repository = Repository.objects.get(name=repo_name)
+#     if request.method == HttpMethod.POST.name:
+#         title = request.POST.get('titleInput')
+#         description = request.POST.get('descriptionInput')
+#         date = request.POST.get('dateInput')
+#         Milestone.save_new_milestone(title=title, description=description, date=date, open=True, rep=repository)
+#         pass
+#     context = {
+#         "repository": repository,
+#         "owner": repository.owner,
+#         "buttonName": "milestone",
+#         "date": datetime.now().strftime('%Y-%m-%d'),
+#         "milestone": milestone
+#
+#     }
+#     return render(request, 'my_git/milestones/new_milestone.html', context)

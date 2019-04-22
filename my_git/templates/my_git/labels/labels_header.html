@@ -13,12 +13,21 @@
                 </span>
 
         <span class="milestones-btn">
-                    <button class="btn btn-outline-dark" type="button"><i class="fas fa-sign"></i>Milestones</button>
+                    <button class="btn btn-outline-dark" type="button"
+                    onclick="location.href='{% url 'repository_milestones' repository.name %}'"
+                    ><i class="fas fa-sign"></i>Milestones</button>
                 </span>
 
         <span class="new-issue-btn col">
-                    <a href="/repositories/{{ repository }}/labels/new"><button class="btn btn-success float-right"
-                                                                               type="button">New label</button></a>
+                    <a {% if buttonName == 'label' %}
+                        href="{% url 'new-label' repository.name %}"
+                    {% else %}
+                        href="{% url 'new-milestone' repository.name "new" %}"
+
+                    {% endif %}>
+
+                        <button class="btn btn-success float-right"
+                                type="button">New {{ buttonName }}</button></a>
                 </span>
     </div>
 </body>

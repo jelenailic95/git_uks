@@ -36,6 +36,7 @@ class Repository(models.Model):
     def __str__(self):
         return "{}".format(self.name)
 
+
 class Wiki(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)
@@ -45,12 +46,16 @@ class Wiki(models.Model):
     def __str__(self):
         return "{}".format(self.title)
 
+
 class Milestone(models.Model):
     id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, default='')
+    description = models.CharField(max_length=500, null=True, default='')
     due_date = models.DateField()
-    open = models.BooleanField()
+    closed_date = models.DateField(null=True)
+    open = models.BooleanField(default=True)
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+
 
     def __str__(self):
         return "{}".format(self.title)
@@ -69,6 +74,18 @@ class Milestone(models.Model):
         except Milestone.DoesNotExist:
             return None
 
+    @staticmethod
+    def save_new_milestone(title, description, date, open, rep):
+        print(open)
+        print(rep.name)
+        milestone = Milestone()
+        milestone.title = title
+        milestone.description = description
+        milestone.due_date = date
+        milestone.open = open
+        milestone.repository = rep
+        Milestone.save(milestone)
+
 
 class Label(models.Model):
     id = models.AutoField(primary_key=True)
@@ -81,9 +98,9 @@ class Label(models.Model):
 
     def save_new_label(name, description, color):
         label = Label()
-        label.name = name;
-        label.description = description;
-        label.color = color;
+        label.name = name
+        label.description = description
+        label.color = color
         label.save()
 
 

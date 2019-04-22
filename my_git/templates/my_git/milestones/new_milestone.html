@@ -1,0 +1,48 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/new_issue.css' %}">
+
+<div>
+    {% include 'my_git/repositories/repository_header.html' %}
+    <div>
+        {% include 'my_git/labels/labels_header.html' with repository=repository %}
+    </div>
+</div>
+
+<div class="container container-padding">
+    <form method="post" class="new-issue-block row">
+        {% csrf_token %}
+        <div class="new-issue-inputs">
+            <div class="first">
+                <label class="col-sm-2 col-form-label" for="titleInput">Title</label>
+                <div class="col-sm-12">
+                    <input  name="titleInput" type="text" class="form-control" id="titleInput"
+                           placeholder="Title" value='{{ milestone.title }}'>
+                </div>
+            </div>
+            <div class="first">
+                <label class="col-sm-2 col-form-label" for="content">Due date</label>
+                <div class="col-sm-12">
+                    <input value={{ date}} name="dateInput"
+                           {% if milestone.title == ''  %}
+                                min={{ dateToday }}
+                           {% endif %}
+                            class="form-control" type = "date">
+                    </div>
+            </div>
+            <div class="first">
+                <label class="col-sm-2 col-form-label" for="content">Description</label>
+                <div class="col-sm-12">
+                        <textarea name="descriptionInput" class="form-control" id="descriptionInput"
+                                  placeholder="Description" rows="4">{{ milestone.description}}</textarea>
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn btn-success first float-lg-right">Submit</button>
+        </div>
+
+
+    </form>
+</div>
+
