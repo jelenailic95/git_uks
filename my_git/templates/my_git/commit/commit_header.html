@@ -1,0 +1,15 @@
+{% load static %}
+
+
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/commit.css' %}">
+    <div>
+        {% include 'my_git/repositories/repository_header.html' %}
+    </div>
+    <div class="commit_header">
+        <a href="" class=""><i class="fa fa-code"></i> Commits</a>
+
+    </div>
+
+{% endblock %}
+

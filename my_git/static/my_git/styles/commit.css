@@ -1,0 +1,8 @@
+.commit_header {
+    height: 6%;
+    border-bottom: 1px solid #d1d5da;
+    border-radius: 3px;
+    color: #586069;
+    background-color: #f1f8ff;
+    border-bottom-color: #c0d3eb;
+}
