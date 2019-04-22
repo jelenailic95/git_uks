@@ -479,7 +479,8 @@ def labels_view(request, repo_name):
     context = {
         "labels": labels,
         "repository": repository,
-        "owner": repository.owner
+        "owner": repository.owner,
+        "buttonName": "label"
     }
     return render(request, 'my_git/labels/labels.html', context)
 
@@ -497,6 +498,32 @@ def new_label(request, repo_name):
 
     context = {
         "repository": repository,
-        "owner": repository.owner
+        "owner": repository.owner,
+        "buttonName": "label"
+
     }
     return render(request, 'my_git/labels/new_label.html', context)
+
+
+def milestones_view(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+    milestones = Milestone.find_milestones_by_repository(repository.id)
+    context = {
+        "repository": repository,
+        "owner": repository.owner,
+        "buttonName": "milestone",
+        "milestones": milestones
+    }
+    return render(request, 'my_git/milestones/milestones.html', context)
+
+def new_milestone(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+
+    context = {
+        "repository": repository,
+        "owner": repository.owner,
+        "buttonName": "label"
+
+    }
+    return render(request, 'my_git/milestones/new_milestone.html', context)
+

@@ -70,6 +70,8 @@ class Milestone(models.Model):
             return None
 
 
+
+
 class Label(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)

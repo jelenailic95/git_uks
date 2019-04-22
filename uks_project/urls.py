@@ -45,7 +45,10 @@ urlpatterns = [
     path('repositories/<str:repo_name>/labels', my_git_views.labels_view, name='repository_labels'),
     path('repositories/<str:repo_name>/labels/new', my_git_views.new_label, name='new-label'),
     path('new/', my_git_views.create_repository, name='create_repository'),
-    path('stars/', my_git_views.get_stars, name='stars')
+    path('stars/', my_git_views.get_stars, name='stars'),
+    path('repositories/<str:repo_name>/milestones', my_git_views.milestones_view, name='repository_milestones'),
+    path('repositories/<str:repo_name>/milestones/new', my_git_views.new_milestone, name='new-milestone'),
+
 ]
 
 urlpatterns += staticfiles_urlpatterns()

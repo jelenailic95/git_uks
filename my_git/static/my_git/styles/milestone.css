@@ -1,0 +1,65 @@
+
+.open-milestone {
+    background-color: #2cbe4e;
+    border-radius: 3px;
+    color: #fff;
+    display: inline-block;
+    font-weight: 600;
+    line-height: 20px;
+    padding: 6px 4px 8px;
+    text-align: center;
+    height: 30px;
+}
+
+.milestone_view_block {
+    width: 60%;
+    margin-left: 20%;
+    min-height: 12%;
+    background-color: #fff;
+    border: 1px solid #d1d5da;
+    border-radius: 3px;
+    position: relative;
+}
+
+.milestone_view_header {
+    height: 5%;
+    /*display: block;*/
+    border-bottom: 1px solid #d1d5da;
+    border-radius: 3px;
+    color: #586069;
+    background-color: #f1f8ff;
+    border-bottom-color: #c0d3eb;
+    /*position: relative;*/
+}
+
+
+.close-milestone {
+    background-color: #cb2431;
+    border-radius: 3px;
+    color: #fff;
+    display: inline-block;
+    font-weight: 600;
+    line-height: 20px;
+    padding: 6px 4px 8px;
+    text-align: center;
+    height: 30px;
+}
+
+.milestone-title {
+    margin-left: 3%;
+    margin-top: 2%;
+}
+
+p{
+    padding-left: 2%;
+    padding-bottom: 1%;
+    padding-top: 1%;
+}
+
+.milestone_div {
+   display: inline-block;
+
+  padding: 5px;
+  border: 1px solid blue;
+  background-color: yellow;
+}
