@@ -1,4 +1,3 @@
-
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/new_issue.css' %}">
@@ -15,29 +14,28 @@
         {% csrf_token %}
         <div class="new-issue-inputs">
             <div class="first">
-                <label  class="col-sm-2 col-form-label" for="nameInput">Name</label>
+                <label class="col-sm-2 col-form-label" for="titleInput">Title</label>
                 <div class="col-sm-12">
-                    <input name="nameInput" type="text" class="form-control" id="nameInput"
-                           placeholder="Name of label">
+                    <input name="titleInput" type="text" class="form-control" id="titleInput"
+                           placeholder="Title">
                 </div>
+            </div>
+            <div class="first">
+                <label class="col-sm-2 col-form-label" for="content">Due date</label>
+                <div class="col-sm-12">
+                    <input name="dateInput" min={{ date }} class="form-control" type = "date">
+                    </div>
             </div>
             <div class="first">
                 <label class="col-sm-2 col-form-label" for="content">Description</label>
                 <div class="col-sm-12">
-                    <textarea name="descriptionInput" class="form-control" id="descriptionInput"
-                              placeholder="Description"></textarea>
-                </div>
-            </div>
-            <div class="first">
-                <label class="col-sm-2 col-form-label" for="content">Description</label>
-                <div class="col-sm-12">
-                                  <input type="color" name="color" value="#ff0000">
-
+                        <textarea name="descriptionInput" class="form-control" id="descriptionInput"
+                                  placeholder="Description" rows="4"></textarea>
                 </div>
             </div>
 
 
-            <button type="submit" class="btn btn-success first float-lg-right">Submit new label</button>
+            <button type="submit" class="btn btn-success first float-lg-right">Submit new milestone</button>
         </div>
 
 

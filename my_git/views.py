@@ -516,14 +516,21 @@ def milestones_view(request, repo_name):
     }
     return render(request, 'my_git/milestones/milestones.html', context)
 
+
 def new_milestone(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
-
+    if request.method == HttpMethod.POST.name:
+        print(request.POST)
+        title = request.POST.get('titleInput')
+        description = request.POST.get('descriptionInput')
+        date = request.POST.get('dateInput')
+        Milestone.save_new_milestone(title=title, description=description, date=date, open=True, rep=repository)
+        pass
     context = {
         "repository": repository,
         "owner": repository.owner,
-        "buttonName": "label"
+        "buttonName": "milestone",
+        "date": datetime.now().strftime('%Y-%m-%d')
 
     }
     return render(request, 'my_git/milestones/new_milestone.html', context)
-

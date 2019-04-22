@@ -36,6 +36,7 @@ class Repository(models.Model):
     def __str__(self):
         return "{}".format(self.name)
 
+
 class Wiki(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)
@@ -44,6 +45,7 @@ class Wiki(models.Model):
 
     def __str__(self):
         return "{}".format(self.title)
+
 
 class Milestone(models.Model):
     id = models.AutoField(primary_key=True)
@@ -69,7 +71,17 @@ class Milestone(models.Model):
         except Milestone.DoesNotExist:
             return None
 
-
+    @staticmethod
+    def save_new_milestone(title, description, date, open, rep):
+        print(open)
+        print(rep.name)
+        milestone = Milestone()
+        milestone.title = title
+        milestone.description = description
+        milestone.due_date = date
+        milestone.open = open
+        milestone.repository = rep
+        Milestone.save(milestone)
 
 
 class Label(models.Model):
@@ -83,9 +95,9 @@ class Label(models.Model):
 
     def save_new_label(name, description, color):
         label = Label()
-        label.name = name;
-        label.description = description;
-        label.color = color;
+        label.name = name
+        label.description = description
+        label.color = color
         label.save()
 
 
