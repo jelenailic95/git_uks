@@ -51,6 +51,7 @@ class Milestone(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     due_date = models.DateField()
+    closed_date = models.DateField(null=True)
     open = models.BooleanField()
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
 

@@ -506,13 +506,28 @@ def new_label(request, repo_name):
 
 
 def milestones_view(request, repo_name):
+    print(request.POST)
+    if request.method == HttpMethod.POST.name:
+        milestone = Milestone.objects.get(id=request.POST.get('milestoneId'))
+        if request.POST.get('editBtn') == '':
+            pass
+        elif request.POST.get('closeBtn') == '':
+            milestone.open = False
+            milestone.closed_date = datetime.now()
+            Milestone.save(milestone)
+        elif request.POST.get('reopenBtn') == '':
+            milestone.open = True
+            Milestone.save(milestone)
+        elif request.POST.get('deleteBtn') == '':
+            Milestone.delete(milestone)
     repository = Repository.objects.get(name=repo_name)
     milestones = Milestone.find_milestones_by_repository(repository.id)
     context = {
         "repository": repository,
         "owner": repository.owner,
         "buttonName": "milestone",
-        "milestones": milestones
+        "milestones": milestones,
+        "now_date": datetime.now()
     }
     return render(request, 'my_git/milestones/milestones.html', context)
 
@@ -520,7 +535,6 @@ def milestones_view(request, repo_name):
 def new_milestone(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
     if request.method == HttpMethod.POST.name:
-        print(request.POST)
         title = request.POST.get('titleInput')
         description = request.POST.get('descriptionInput')
         date = request.POST.get('dateInput')

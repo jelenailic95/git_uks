@@ -33,7 +33,9 @@
                 </span>
 
         <span class="milestones-btn">
-                    <button class="btn btn-outline-dark" type="button"><i class="fas fa-sign"></i>&nbsp;Milestones</button>
+                    <button class="btn btn-outline-dark" type="button"
+                            onclick="location.href='{% url 'repository_milestones' repository.name %}'">
+                        <i class="fas fa-sign"></i>&nbsp;Milestones</button>
                 </span>
 
         <span class="new-issue-btn col">

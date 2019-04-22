@@ -2,33 +2,36 @@
 <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/milestone.css' %}">
 <div class="milestone_view_block">
     <div class="milestone_view_header">
-        {% if milestone.open %}
+        {% if milestone.open and now_date|date:"Y-m-d" < milestone.due_date|date:"Y-m-d" %}
             <p><i class="fa fa-calendar"></i><b> Due by</b> {{ milestone.due_date | date:'M d, Y' }}</p>
+        {% elif milestone.open and now_date|date:"Y-m-d" > milestone.due_date|date:"Y-m-d" %}
+            <p><i class="fa fa-calendar"></i><b> Past due by</b> {{ milestone.due_date | date:'M d, Y' }}</p>
         {% else %}
-            <p><i class="fa fa-calendar"></i><b> Closed</b> {{ milestone.due_date | date:'M d, Y' }}</p>
+            <p><i class="fa fa-calendar"></i><b> Closed</b> {{ milestone.closed_date | date:'M d, Y' }}</p>
         {% endif %}
 
     </div>
 
     <div>
         <form method="post">
+            {% csrf_token %}
             <h3>{{ milestone.title }}</h3>
-            <input type="hidden" value={{ milestone.id }}>
+            <input name="milestoneId" type="hidden" value={{ milestone.id }}>
             <p>
-                <button class="btn-link">Edit</button>
+                <button name="editBtn" class="btn-link">Edit</button>
             </p>
             {% if milestone.open %}
                 <p>
-                    <button class="btn-link">Close</button>
+                    <button name="closeBtn" class="btn-link">Close</button>
                 </p>
             {% else %}
                 <p>
-                    <button class="btn-link">Reopen</button>
+                    <button name="reopenBtn" class="btn-link">Reopen</button>
                 </p>
             {% endif %}
 
             <p>
-                <button class="btn-link">Delete</button>
+                <button name="deleteBtn" class="btn-link">Delete</button>
             </p>
         </form>
     </div>
