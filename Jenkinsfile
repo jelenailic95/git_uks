@@ -1,20 +1,13 @@
-node {
-    def app
+node ('docker'){
 
-    stage('Initialize'){
+    /*stage 'Initialize'
         def dockerHome = tool 'docker'
-        env.PATH = "${dockerHome}/bin:${env.PATH}"
-    }
-    stage('Clone repository') {
-        /* Let's make sure we have the repository cloned to our workspace */
+        env.PATH = "${dockerHome}/bin:${env.PATH}"*/
 
+    stage 'Clone repository'
         checkout scm
-    }
 
-    stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
+    stage 'Build image'
+        sh "docker build -f Dockerfile ."
 
-        app = docker.build("my_git_uks")
-    }
 }
