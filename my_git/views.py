@@ -13,6 +13,7 @@ from operator import attrgetter
 
 from django.db.models import Q
 from django.shortcuts import get_list_or_404, get_object_or_404
+from django.db import IntegrityError
 
 
 def welcome(request):
@@ -258,8 +259,8 @@ def issue_view(request, repo_name, id):
         key=attrgetter('date'))
 
     context = {
-        "logged_user":logged_user,
-        "owner":owner,
+        "logged_user": logged_user,
+        "owner": owner,
         'issue': issue,
         'repository': repository,
         "issues_view": "active",
@@ -355,22 +356,22 @@ def create_repository(request):
         form = CreateRepositoryForm(request.POST)
         if form.is_valid():
             obj = Repository()
-            obj.name = form.cleaned_data['repository_name']
-            obj.description = form.cleaned_data['description']
-            obj.type = form.cleaned_data['type']
-            obj.owner = logged_user
-            obj.save()
-            messages.success(request, 'Repository is successfully created!')
-            return redirect('repositories')
+            try:
+                obj.name = form.cleaned_data['repository_name']
+                obj.description = form.cleaned_data['description']
+                obj.type = form.cleaned_data['type']
+                obj.owner = logged_user
+                obj.save()
+                messages.success(request, 'Repository is successfully created!')
+                return redirect('repositories')
+            except IntegrityError as e:
+                messages.warning(request, "Repository with that name already exists. Try again.")
+                return render(request, 'my_git/repositories/create_repository.html',
+                              {'owner': logged_user.username, 'form': CreateRepositoryForm()})
     else:
         form = CreateRepositoryForm()
 
-    context = {
-        'owner': logged_user.username,
-        'form': form
-    }
-
-    return render(request, 'my_git/repositories/create_repository.html', context)
+    return render(request, 'my_git/repositories/create_repository.html', {'owner': logged_user.username, 'form': form})
 
 
 def get_repository_settings(request, repo_name):
@@ -479,7 +480,7 @@ def get_wiki_page(request, repo_name, page_title):
     logged_user = get_logged_user(request.session['user'])
     repository = Repository.objects.get(name=repo_name)
     owner = check_if_logged_user_is_repo_owner(repository, logged_user)
-    wiki =get_object_or_404(Wiki, title=page_title, repository=repository)
+    wiki = get_object_or_404(Wiki, title=page_title, repository=repository)
     context = {
         "logged_user": logged_user,
         "repository": repository,

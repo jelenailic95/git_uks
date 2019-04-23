@@ -10,8 +10,8 @@ def upload_location(instance, filename):
 
 class User(models.Model):
     id = models.AutoField(primary_key=True)
-    username = models.CharField(default='', max_length=100)
-    email = models.EmailField(default=1)
+    username = models.CharField(default='', max_length=100, unique=True)
+    email = models.EmailField(default=1, unique=True)
     password = models.CharField(max_length=30)
     image = models.ImageField(upload_to=upload_location, null=True, blank=True, default='')
 
@@ -21,7 +21,7 @@ class User(models.Model):
 
 class Repository(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.CharField(max_length=1000)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)  # cascade ili null
     collaborators = models.ManyToManyField(User, related_name='collaborators')
