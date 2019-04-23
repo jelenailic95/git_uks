@@ -4,6 +4,7 @@ from my_git.views import *
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.urls import reverse
 
+
 # Create your tests here.
 
 class RepositoryTests(TestCase):
@@ -89,11 +90,10 @@ class RepositoryTests(TestCase):
         self.assertEqual(response.context['repository'], repository)
         self.assertTemplateUsed(response, 'my_git/repositories/repository_preview.html')
 
-
     def test_create_repository_with_form(self):
         # create new repository
         response = self.client.post("/new/",
-                                    {'repository_name': "repo_test", 'description': "desc_test", "type":"private"})
+                                    {'repository_name': "repo_test", 'description': "desc_test", "type": "private"})
 
         # we are redirected to the repositories page
         self.assertEqual(response.status_code, 302)
@@ -112,12 +112,12 @@ class RepositoryTests(TestCase):
         # check if the new repository is being displayed
         self.assertEqual(len(response.context['repositories'].all()), 2)
 
-
     def test_add_collaborator(self):
         # create new user
         collaborator = User.objects.create(username="collab", password="pass1", email="collab@gmail.com")
 
-        response = self.client.post("/repositories/repo/settings", {'btn-add-collaborator': '', 'collaborator':'collab' })
+        response = self.client.post("/repositories/repo/settings",
+                                    {'btn-add-collaborator': '', 'collaborator': 'collab'})
 
         self.assertEqual(response.status_code, 200)
 
@@ -125,17 +125,15 @@ class RepositoryTests(TestCase):
         self.assertTrue(self.repository.collaborators.exists())
         self.assertEqual(self.repository.collaborators.all()[0].username, collaborator.username)
 
-
     def test_rename_repository(self):
         # open settings page and rename repository
-        response = self.client.post("/repositories/repo/settings", {'btn-rename': "", 'value':'repo_new'})
+        response = self.client.post("/repositories/repo/settings", {'btn-rename': "", 'value': 'repo_new'})
 
         self.assertEqual(response.status_code, 302)
 
         repository = Repository.objects.get(name="repo_new")
         self.assertNotEqual(repository, "repo")
         self.assertEqual(repository.name, "repo_new")
-
 
     def test_delete_repository(self):
         # open settings page and delete repository
@@ -166,7 +164,7 @@ class WikiTests(TestCase):
         self.assertEqual(len(response.context['pages']), 1)
 
         # add one wiki page
-        self.client.post('/repositories/repo/wiki/new', {'title':'New title', 'content':'Content1'})
+        self.client.post('/repositories/repo/wiki/new', {'title': 'New title', 'content': 'Content1'})
 
         response = self.client.get('/repositories/repo/wiki')
 
@@ -174,7 +172,7 @@ class WikiTests(TestCase):
         self.assertEqual(len(response.context['pages']), 2)
 
     def test_create_wiki_page(self):
-        response = self.client.post('/repositories/repo/wiki/new', {'title':'Test title', 'content':'Test content'})
+        response = self.client.post('/repositories/repo/wiki/new', {'title': 'Test title', 'content': 'Test content'})
 
         self.assertEqual(response.status_code, 200)
 
@@ -190,4 +188,44 @@ class WikiTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['page'], self.wiki)
-        print(response.context)
+
+
+class IssueTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create(username="user", password="pass1", email="user@gmail.com")
+        self.repository = Repository.objects.create(name="repo", description="desc", owner=self.user, type="private")
+        self.milestone = Milestone.objects.create(title="", due_date=datetime.now(), open=True,
+                                                  repository=self.repository)
+        self.issue = Issue.objects.create(title="Title", content="Content", date=datetime.now(), open=True,
+                                          milestone=self.milestone, user=self.user, repository=self.repository)
+
+        session = self.client.session
+        session['user'] = 'user'
+        session.save()
+
+    def test_create_issues(self):
+        issue = Issue.objects.get(id=self.issue.id)
+
+        self.assertIsInstance(issue, Issue)
+        self.assertEqual(issue.title, "Title")
+        self.assertEqual(issue.content, "Content")
+        self.assertEqual(issue.open, True)
+        self.assertEqual(issue.milestone, self.milestone)
+        self.assertEqual(issue.user, self.user)
+        self.assertEqual(issue.repository, self.repository)
+
+    def test_get_issues(self):
+        response = self.client.get('/repositories/repo/issues')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['issues'].all()), 1)
+        self.assertTemplateUsed(response, 'my_git/issues/issues.html')
+
+    def test_get_issue(self):
+        response = self.client.get('/repositories/repo/issues/' + str(self.issue.id))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['issue'], self.issue)
+
+    
