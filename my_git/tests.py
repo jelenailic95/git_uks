@@ -32,6 +32,8 @@ class RepositoryTests(TestCase):
 
         # one repository is added in setUp
         self.assertEqual(len(response.context['repositories'].all()), 1)
+        self.assertEqual(response.context['repositories'][0].name, 'repo')
+        self.assertEqual(response.context['repositories'][0].description, 'desc')
         self.assertTemplateUsed(response, 'my_git/repositories/repositories.html')
 
     def test_get_public_repositories(self):
@@ -50,6 +52,8 @@ class RepositoryTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['repositories'].all()), 2)
+        self.assertEqual(response.context['repositories'][0].name, 'repo_new2')
+        self.assertEqual(response.context['repositories'][1].name, 'repo_new1')
 
     def test_get_starred_repositories(self):
         response = self.client.get(reverse('stars'))
@@ -144,6 +148,28 @@ class RepositoryTests(TestCase):
         response = self.client.get(reverse('repositories'))
         self.assertEqual(len(response.context['repositories'].all()), 0)
 
+    def test_insights_page(self):
+        response = self.client.get('/repositories/repo/insights')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['repository'], self.repository)
+        self.assertEqual(response.context['logged_user'], self.user)
+        self.assertEqual(len(response.context['open_issues']), 0)
+        self.assertEqual(len(response.context['closed_issues']), 0)
+        self.assertTemplateUsed(response, 'my_git/repositories/insights.html')
+
+        milestone = Milestone.objects.create(title="", due_date=datetime.now(), open=True,
+                                                  repository=self.repository)
+        issue = Issue.objects.create(title="Title", content="Content", date=datetime.now(), open=True,
+                                          milestone=milestone, user=self.user, repository=self.repository)
+
+        response = self.client.get('/repositories/repo/insights')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['repository'], self.repository)
+        self.assertEqual(len(response.context['open_issues']), 1)
+        self.assertEqual(response.context['open_issues'][0].title, 'Title')
+
 
 class WikiTests(TestCase):
     def setUp(self):
@@ -162,6 +188,9 @@ class WikiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         # at the moment there are no wiki pages
         self.assertEqual(len(response.context['pages']), 1)
+        self.assertEqual(response.context['pages'][0].title, 'Title')
+        self.assertEqual(response.context['pages'][0].content, 'Content')
+        self.assertTemplateUsed(response, 'my_git/wiki/wiki.html')
 
         # add one wiki page
         self.client.post('/repositories/repo/wiki/new', {'title': 'New title', 'content': 'Content1'})
@@ -188,6 +217,7 @@ class WikiTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['page'], self.wiki)
+        self.assertTemplateUsed(response, 'my_git/wiki/wiki_page_preview.html')
 
 
 class IssueTests(TestCase):
@@ -220,6 +250,10 @@ class IssueTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['issues'].all()), 1)
+        self.assertEqual(response.context['issues'][0].title, 'Title')
+        self.assertEqual(response.context['issues'][0].content, 'Content')
+        self.assertEqual(response.context['issues'][0].open, True)
+
         self.assertTemplateUsed(response, 'my_git/issues/issues.html')
 
     def test_get_issue(self):
@@ -227,5 +261,4 @@ class IssueTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue)
-
-    
+        self.assertTemplateUsed(response, 'my_git/issues/issue_view.html')

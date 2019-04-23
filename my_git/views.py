@@ -500,7 +500,6 @@ def get_repository_insights(request, repo_name):
     open_issues = all_issues.filter(open=True)
     closed_issues = all_issues.filter(open=False)
 
-    print(open_issues)
     context = {
         "logged_user": logged_user,
         "owner": owner,
