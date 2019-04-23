@@ -26,6 +26,7 @@ urlpatterns = [
     path('', my_git_views.welcome, name='welcome'),
     path('home/', my_git_views.home, name='home'),
     path('login/', my_git_views.login, name='login'),
+    path('logout/', my_git_views.logout, name='logout'),
     path('register/', my_git_views.register, name='register'),
     path('explore/', my_git_views.get_public_repositories, name='explore'),
     path('profile/', my_git_views.get_user_profile, name='profile_preview'),

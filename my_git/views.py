@@ -67,6 +67,12 @@ def login(request):
     return render(request, 'my_git/users/login.html', {'form': form})
 
 
+def logout(request):
+    for key in list(request.session.keys()):
+        del request.session[key]
+    return redirect('welcome')
+
+
 def register(request):
     if request.method == HttpMethod.POST.name:
         form = UserRegisterForm(request.POST, request.FILES)
@@ -295,6 +301,7 @@ def issue_view(request, repo_name, id):
 ########################################################################################################################
 #                                                   REPOSITORY                                                         #
 ########################################################################################################################
+
 
 def get_public_repositories(request):
     repositories = Repository.objects.filter(type='public').order_by('-creation_date')
