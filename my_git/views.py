@@ -16,6 +16,11 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 from django.db import IntegrityError
 
 
+########################################################################################################################
+#                                              HOME & WELCOME PAGE                                                     #
+########################################################################################################################
+
+
 def welcome(request):
     # del request.session['user']
     return render(request, 'my_git/welcome.html')
@@ -37,6 +42,11 @@ def home(request):
     }
 
     return render(request, 'my_git/home.html', context)
+
+
+########################################################################################################################
+#                                                   USER                                                               #
+########################################################################################################################
 
 
 def login(request):
@@ -65,7 +75,6 @@ def register(request):
             obj.username = form.cleaned_data['username']
             obj.password = form.cleaned_data['password1']
             obj.email = form.cleaned_data['email']
-            print(request.FILES)
             if 'image' in request.FILES:
                 obj.image = request.FILES['image']
             obj.save()
@@ -117,6 +126,10 @@ def update_user_profile(request):
 
     return render(request, 'my_git/users/update_user_profile.html', context)
 
+
+########################################################################################################################
+#                                                   ISSUE                                                              #
+########################################################################################################################
 
 def issues_view(request, repo_name):
     logged_user = get_logged_user(request.session['user'])
@@ -275,6 +288,10 @@ def issue_view(request, repo_name, id):
     return render(request, 'my_git/issues/issue_view.html', context)
 
 
+########################################################################################################################
+#                                                   REPOSITORY                                                         #
+########################################################################################################################
+
 def get_public_repositories(request):
     repositories = Repository.objects.filter(type='public').order_by('-creation_date')
 
@@ -333,22 +350,6 @@ def get_stars(request):
     return render(request, 'my_git/stars.html', context)
 
 
-def get_repository(request, repo_name):
-    logged_user = get_logged_user(request.session['user'])
-    repository = get_object_or_404(Repository, name=repo_name)
-
-    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
-
-    context = {
-        "logged_user": logged_user,
-        "repository": repository,
-        "owner": owner,
-        "repository_view": "active"
-    }
-
-    return render(request, 'my_git/repositories/repository_preview.html', context)
-
-
 def create_repository(request):
     logged_user = get_logged_user(request.session['user'])
 
@@ -372,6 +373,41 @@ def create_repository(request):
         form = CreateRepositoryForm()
 
     return render(request, 'my_git/repositories/create_repository.html', {'owner': logged_user.username, 'form': form})
+
+
+def get_repository(request, repo_name):
+    logged_user = get_logged_user(request.session['user'])
+    repository = get_object_or_404(Repository, name=repo_name)
+
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+
+    context = {
+        "logged_user": logged_user,
+        "repository": repository,
+        "owner": owner,
+        "repository_view": "active"
+    }
+
+    return render(request, 'my_git/repositories/repository_preview.html', context)
+
+
+def get_repository_insights(request, repo_name):
+    repository = get_object_or_404(Repository, name=repo_name)
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+    all_issues = Issue.find_issues_by_repository(repo=repository.id)
+    open_issues = all_issues.filter(open=True)
+    closed_issues = all_issues.filter(open=False)
+
+    context = {
+        "logged_user": logged_user,
+        "owner": owner,
+        "repository": repository,
+        "repository_insights_view": "active",
+        "open_issues": open_issues,
+        "closed_issues": closed_issues
+    }
+    return render(request, 'my_git/repositories/insights.html', context)
 
 
 def get_repository_settings(request, repo_name):
@@ -436,6 +472,10 @@ def add_collaborator(request, repository):
         messages.warning(request, 'User with this username doesn\'t exist. Try again!')
 
 
+########################################################################################################################
+#                                                   WIKI                                                               #
+########################################################################################################################
+
 def get_wiki(request, repo_name):
     repository = get_object_or_404(Repository, name=repo_name)
     logged_user = get_logged_user(request.session['user'])
@@ -492,25 +532,6 @@ def get_wiki_page(request, repo_name, page_title):
     return render(request, 'my_git/wiki/wiki_page_preview.html', context)
 
 
-def get_repository_insights(request, repo_name):
-    repository = get_object_or_404(Repository, name=repo_name)
-    logged_user = get_logged_user(request.session['user'])
-    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
-    all_issues = Issue.find_issues_by_repository(repo=repository.id)
-    open_issues = all_issues.filter(open=True)
-    closed_issues = all_issues.filter(open=False)
-
-    context = {
-        "logged_user": logged_user,
-        "owner": owner,
-        "repository": repository,
-        "repository_insights_view": "active",
-        "open_issues": open_issues,
-        "closed_issues": closed_issues
-    }
-    return render(request, 'my_git/repositories/insights.html', context)
-
-
 def get_logged_user(username):
     try:
         logged_user = User.objects.get(username=username)
@@ -522,7 +543,4 @@ def get_logged_user(username):
 
 
 def check_if_logged_user_is_repo_owner(repository, logged_user):
-    owner = False
-    if repository.owner == logged_user:
-        owner = True
-    return owner
+    return repository.owner == logged_user

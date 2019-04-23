@@ -5,7 +5,9 @@ from django.contrib.sessions.middleware import SessionMiddleware
 from django.urls import reverse
 
 
-# Create your tests here.
+########################################################################################################################
+################################################ REPOSITORY TESTS ######################################################
+########################################################################################################################
 
 class RepositoryTests(TestCase):
     def setUp(self):
@@ -159,9 +161,9 @@ class RepositoryTests(TestCase):
         self.assertTemplateUsed(response, 'my_git/repositories/insights.html')
 
         milestone = Milestone.objects.create(title="", due_date=datetime.now(), open=True,
-                                                  repository=self.repository)
+                                             repository=self.repository)
         issue = Issue.objects.create(title="Title", content="Content", date=datetime.now(), open=True,
-                                          milestone=milestone, user=self.user, repository=self.repository)
+                                     milestone=milestone, user=self.user, repository=self.repository)
 
         response = self.client.get('/repositories/repo/insights')
 
@@ -170,6 +172,9 @@ class RepositoryTests(TestCase):
         self.assertEqual(len(response.context['open_issues']), 1)
         self.assertEqual(response.context['open_issues'][0].title, 'Title')
 
+########################################################################################################################
+################################################## WIKI TESTS ##########################################################
+########################################################################################################################
 
 class WikiTests(TestCase):
     def setUp(self):
@@ -220,6 +225,10 @@ class WikiTests(TestCase):
         self.assertTemplateUsed(response, 'my_git/wiki/wiki_page_preview.html')
 
 
+########################################################################################################################
+################################################## ISSUE TESTS #########################################################
+########################################################################################################################
+
 class IssueTests(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -262,3 +271,44 @@ class IssueTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue)
         self.assertTemplateUsed(response, 'my_git/issues/issue_view.html')
+
+
+########################################################################################################################
+################################################## USER TESTS ##########################################################
+########################################################################################################################
+
+class UserTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create(username="user", password="pass1", email="user@gmail.com")
+
+        session = self.client.session
+        session['user'] = 'user'
+        session.save()
+
+    def test_login(self):
+        response = self.client.post(reverse('login'), {'email': 'user@gmail.com', 'password': 'pass1'})
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_register(self):
+        response = self.client.post(reverse('register'), {'username': 'test_username',
+                                                          'email': 'user_test@gmail.com', 'password1': 'test_pass'})
+
+        self.assertEqual(response.status_code, 200)
+
+        # user = User.objects.get(username='test_username')
+        # self.assertEquals(user.username, 'test_username')
+        # self.assertEquals(user.email, 'user_test@gmail.com')
+        # self.assertEquals(user.password, 'test_pass')
+
+    def test_update_user_profile(self):
+        self.client.post(reverse('profile_update'), {'email': 'new_mail@gmail.com', 'password': '',
+                                                     'username': 'user'})
+
+        user = User.objects.get(username='user')
+
+        self.assertEquals(user.username, 'user')
+        self.assertEquals(user.email, 'new_mail@gmail.com')
+        self.assertNotEquals(user.email, 'user@gmail.com')
+        self.assertEquals(user.password, 'pass1')
