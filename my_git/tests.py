@@ -172,6 +172,7 @@ class RepositoryTests(TestCase):
         self.assertEqual(len(response.context['open_issues']), 1)
         self.assertEqual(response.context['open_issues'][0].title, 'Title')
 
+
 ########################################################################################################################
 ################################################## WIKI TESTS ##########################################################
 ########################################################################################################################
@@ -312,3 +313,87 @@ class UserTest(TestCase):
         self.assertEquals(user.email, 'new_mail@gmail.com')
         self.assertNotEquals(user.email, 'user@gmail.com')
         self.assertEquals(user.password, 'pass1')
+
+
+########################################################################################################################
+################################################## MILESTONE TESTS #####################################################
+########################################################################################################################
+
+class MilestoneTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create(username="user", password="pass1", email="user@gmail.com")
+        self.repository = Repository.objects.create(name="repo", description="desc", owner=self.user, type="private")
+        self.milestone1 = Milestone.objects.create(title="Title", due_date=datetime.now(), open=True,
+                                                   repository=self.repository, description="desc1")
+        self.milestone2 = Milestone.objects.create(title="Title2", due_date=datetime.now(), open=False,
+                                                   repository=self.repository, description="desc2")
+        session = self.client.session
+        session['user'] = 'user'
+        session.save()
+
+    def test_get_milestones(self):
+        response = self.client.get('/repositories/repo/milestones')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['milestones'].all()), 2)
+        self.assertEqual(response.context['milestones'][1].title, self.milestone1.title)
+        self.assertEqual(response.context['milestones'][1].description, self.milestone1.description)
+        self.assertEqual(response.context['milestones'][1].open, self.milestone1.open)
+        self.assertEqual(response.context['milestones'][1].repository, self.milestone1.repository)
+
+    def test_close_milestone(self):
+        response = self.client.post('/repositories/repo/milestones',
+                                    {'milestoneId': self.milestone1.id, 'closeBtn': ''})
+
+        milestone = Milestone.objects.get(id=self.milestone1.id)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(milestone.open, False)
+
+    def test_reopen_milestone(self):
+        response = self.client.post('/repositories/repo/milestones',
+                                    {'milestoneId': self.milestone2.id, 'reopenBtn': ''})
+
+        milestone = Milestone.objects.get(id=self.milestone2.id)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(milestone.open, True)
+
+    def test_delete_milestone(self):
+        response = self.client.post('/repositories/repo/milestones',
+                                    {'milestoneId': self.milestone2.id, 'deleteBtn': ''})
+
+        self.assertEqual(response.status_code, 200)
+
+        # get all milestones
+        response = self.client.get('/repositories/repo/milestones')
+
+        # one milestone is deleted
+        self.assertEqual(len(response.context['milestones'].all()), 1)
+
+    def test_create_milestone(self):
+        response = self.client.post('/repositories/repo/milestones/new',
+                                    {'titleInput': 'Title test', 'dateInput': '2019-10-10',
+                                     'descriptionInput': 'Desc test'})
+
+        milestone = Milestone.objects.get(title="Title test", description='Desc test', repository=self.repository)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIsInstance(milestone, Milestone)
+        self.assertEqual(milestone.title, "Title test")
+        self.assertEqual(milestone.description, "Desc test")
+        self.assertEqual(milestone.open, True)
+        self.assertEqual(milestone.repository, self.repository)
+
+    def test_update_milestone(self):
+        response = self.client.post('/repositories/repo/milestones/' + str(self.milestone1.id),
+                                    {'titleInput': 'Title updated', 'dateInput': '2019-10-10',
+                                     'descriptionInput': 'desc1'})
+
+        milestone = Milestone.objects.get(id=self.milestone1.id)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIsInstance(milestone, Milestone)
+        self.assertEqual(milestone.title, "Title updated")
+        self.assertEqual(milestone.description, self.milestone1.description)
+        self.assertEqual(milestone.open, self.milestone1.open)
+        self.assertEqual(milestone.repository, self.milestone1.repository)

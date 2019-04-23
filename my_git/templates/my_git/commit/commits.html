@@ -1,0 +1,21 @@
+{% load static %}
+
+
+{% block content %}
+
+
+    <div class="all-labels" style="    margin-top: 2%; margin-bottom: 5%">
+
+    {% if commits.all|length != 0 %}
+        {% for commit in commits %}
+            <div>
+                {% include 'my_git/commit/commit_item.html' with commit=commit %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <h6 style="margin-left: 20%;">There are no commits. </h6>
+    {% endif %}
+
+    </div>
+{% endblock %}
+

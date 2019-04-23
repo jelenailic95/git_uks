@@ -2,17 +2,14 @@ version: '3'
 
 services:
   db:
-    restart: always
-    container_name: my_git_db
     image: postgres
-#    volumes:
-#      - ./pgdata:/var/lib/postgresql/data
+  #    volumes:
+  #      - ./pgdata:/var/lib/postgresql/data
     ports:
       - "8001:5432"
   web:
-    container_name: my_git_web
     build: .
-    command: ["./entrypoint.sh"]
+    command: ['./entrypoint.sh']
     volumes:
       - .:/code
     ports:

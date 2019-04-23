@@ -1,0 +1,39 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/milestone.css' %}">
+<div class="milestone_view_block ">
+    <div class="milestone_view_header milestone-title inline-div">
+        {% if milestone.open and now_date|date:"Y-m-d" < milestone.due_date|date:"Y-m-d" %}
+            <i class="fa fa-calendar"></i><b> Due by</b> {{ milestone.due_date | date:'M d, Y' }}
+        {% elif milestone.open and now_date|date:"Y-m-d" > milestone.due_date|date:"Y-m-d" %}
+            <i class="fa fa-calendar"></i><b> Past due by</b> {{ milestone.due_date | date:'M d, Y' }}
+        {% else %}
+            <i class="fa fa-calendar"></i><b> Closed</b> {{ milestone.closed_date | date:'M d, Y' }}
+        {% endif %}
+                <button onclick="location.href='{% url 'new-milestone' repository.name milestone.id %}'"
+                        name="editBtn" class="btn btn-outline-dark btn-sm inline">Edit
+                </button>
+    </div>
+
+    <div class="inline-div">
+        <div class="block-side">
+            <h3 class="inline">{{ milestone.title }}</h3>
+        </div>
+        <div class="block-side">
+
+            <form method="post" class="inline">
+                {% csrf_token %}
+                <input name="milestoneId" type="hidden" value={{ milestone.id }}>
+
+                {% if milestone.open %}
+                    <button name="closeBtn" class="btn btn-outline-dark btn-sm">Close</button>
+                {% else %}
+                    <button name="reopenBtn" class="btn btn-outline-dark btn-sm">Reopen</button>
+                {% endif %}
+
+                <button name="deleteBtn" class="btn btn-outline-dark btn-sm">Delete</button>
+
+            </form>
+
+        </div>
+    </div>
+</div>

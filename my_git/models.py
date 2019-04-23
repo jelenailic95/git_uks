@@ -1,3 +1,6 @@
+import random
+import string
+
 from django.db import models
 
 from datetime import datetime
@@ -37,6 +40,7 @@ class Repository(models.Model):
     def __str__(self):
         return "{}".format(self.name)
 
+
 class Wiki(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)
@@ -46,11 +50,14 @@ class Wiki(models.Model):
     def __str__(self):
         return "{}".format(self.title)
 
+
 class Milestone(models.Model):
     id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, default='')
+    description = models.CharField(max_length=500, null=True, default='')
     due_date = models.DateField()
-    open = models.BooleanField()
+    closed_date = models.DateField(null=True)
+    open = models.BooleanField(default=True)
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -70,14 +77,34 @@ class Milestone(models.Model):
         except Milestone.DoesNotExist:
             return None
 
+    @staticmethod
+    def save_new_milestone(title, description, date, open, rep):
+        print(open)
+        print(rep.name)
+        milestone = Milestone()
+        milestone.title = title
+        milestone.description = description
+        milestone.due_date = date
+        milestone.open = open
+        milestone.repository = rep
+        Milestone.save(milestone)
+
 
 class Label(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     color = models.CharField(max_length=15)
+    description = models.CharField(max_length=1000, default='description')
 
     def __str__(self):
         return "{}".format(self.name)
+
+    def save_new_label(name, description, color):
+        label = Label()
+        label.name = name
+        label.description = description
+        label.color = color
+        label.save()
 
 
 class Task(models.Model):
@@ -189,3 +216,32 @@ class HistoryItem(models.Model):
         history_item.mode = mode
         history_item.author = author
         history_item.save()
+
+
+class Commit(models.Model):
+    id = models.AutoField(primary_key=True)
+    commit_id = models.CharField(max_length=100, default='')
+    message = models.CharField(max_length=100, default='')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField()
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{}".format(self.message)
+
+    @staticmethod
+    def create_new_commit(message, repository, user):
+        commit = Commit()
+        commit.message = message
+        commit.repository = repository
+        commit.user = user
+        commit.date = datetime.now()
+        commit.commit_id = ''.join(random.choices(string.ascii_letters + string.digits, k=7))
+        Commit.save(commit)
+
+    @staticmethod
+    def find_commits_by_repository(repo):
+        try:
+            return Commit.objects.filter(repository_id=repo)
+        except Commit.DoesNotExist:
+            return None

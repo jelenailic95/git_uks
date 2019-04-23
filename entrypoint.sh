@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# collect static files
-python manage.py collectstatic --noinput
-
 # create migrations
 python manage.py makemigrations
 

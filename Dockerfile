@@ -10,3 +10,5 @@ ADD . /code
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 COPY . /code/
+
+RUN ["chmod", "+x","./entrypoint.sh"]

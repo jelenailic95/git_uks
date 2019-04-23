@@ -29,11 +29,13 @@
                     style="height: 1.5em" onclick=""></i></button>
         </form>
         <span class="labels-btn">
-                    <button class="btn btn-outline-dark" type="button"><i class="fas fa-tag"></i>&nbsp;Labels</button>
+                    <button onclick="location.href='{% url 'repository_labels' repository.name %}'" class="btn btn-outline-dark" type="button"><i class="fas fa-tag"></i>Labels</button>
                 </span>
 
         <span class="milestones-btn">
-                    <button class="btn btn-outline-dark" type="button"><i class="fas fa-sign"></i>&nbsp;Milestones</button>
+                    <button class="btn btn-outline-dark" type="button"
+                            onclick="location.href='{% url 'repository_milestones' repository.name %}'">
+                        <i class="fas fa-sign"></i>&nbsp;Milestones</button>
                 </span>
 
         <span class="new-issue-btn col">
