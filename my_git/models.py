@@ -237,3 +237,10 @@ class Commit(models.Model):
         commit.date = datetime.now()
         commit.commit_id = ''.join(random.choices(string.ascii_letters + string.digits, k=7))
         Commit.save(commit)
+
+    @staticmethod
+    def find_commits_by_repository(repo):
+        try:
+            return Commit.objects.filter(repository_id=repo)
+        except Commit.DoesNotExist:
+            return None

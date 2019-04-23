@@ -1,0 +1,18 @@
+{% load static %}
+
+
+{% block content %}
+
+
+    <div class="all-labels" style="    margin-top: 2%; margin-bottom: 5%">
+
+        {% for commit in commits %}
+            <div>
+                {% include 'my_git/commit/commit_item.html' with commit=commit %}
+            </div>
+        {% endfor %}
+
+
+    </div>
+{% endblock %}
+

@@ -312,11 +312,14 @@ def get_stars(request):
 
 def get_repository(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
+    commits = Commit.find_commits_by_repository(repo=repository.id)
 
     context = {
         "repository": repository,
         "owner": repository.owner,
-        "repository_view": "active"
+        "repository_view": "active",
+        "active_window": "commit",
+        "commits": commits
     }
 
     return render(request, 'my_git/repositories/repository_preview.html', context)
@@ -487,14 +490,13 @@ def labels_view(request, repo_name):
 
 def new_label(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
+    print(request)
     if request.method == HttpMethod.POST.name:
         name = request.POST.get('nameInput')
         description = request.POST.get('descriptionInput')
         color = request.POST.get('color')
         Label.save_new_label(name=name, description=description, color=color)
-        pass
-    else:
-        pass
+        return redirect('repository_labels', repo_name=repository.name)
 
     context = {
         "repository": repository,
@@ -565,6 +567,7 @@ def new_milestone(request, repo_name, type):
     }
     return render(request, 'my_git/milestones/new_milestone.html', context)
 
+
 def new_commit(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
     if request.method == HttpMethod.POST.name:
@@ -579,3 +582,15 @@ def new_commit(request, repo_name):
 
     }
     return render(request, 'my_git/commit/new_commit.html', context)
+
+
+def get_commits(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+    commits = Commit.find_commits_by_repository(repo=repository.id)
+    context = {
+        "repository": repository,
+        "owner": repository.owner,
+        "commits": commits
+
+    }
+    return render(request, 'my_git/commit/commits.html', context)

@@ -48,6 +48,7 @@ urlpatterns = [
     path('repositories/<str:repo_name>/milestones', my_git_views.milestones_view, name='repository_milestones'),
     path('repositories/<str:repo_name>/milestones/<str:type>', my_git_views.new_milestone, name='new-milestone'),
     path('repositories/<str:repo_name>/commits/new', my_git_views.new_commit, name='new-commit'),
+    # path('repositories/<str:repo_name>/commits', my_git_views.get_commits, name='commits'),
 
 ]
 
