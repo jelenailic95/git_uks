@@ -71,15 +71,19 @@ def register(request):
     if request.method == HttpMethod.POST.name:
         form = UserRegisterForm(request.POST, request.FILES)
         if form.is_valid():
-            obj = User()
-            obj.username = form.cleaned_data['username']
-            obj.password = form.cleaned_data['password1']
-            obj.email = form.cleaned_data['email']
-            if 'image' in request.FILES:
-                obj.image = request.FILES['image']
-            obj.save()
-            messages.success(request, 'Account successfully created! Log in now!')
-            return redirect('login')
+            try:
+                obj = User()
+                obj.username = form.cleaned_data['username']
+                obj.password = form.cleaned_data['password1']
+                obj.email = form.cleaned_data['email']
+                if 'image' in request.FILES:
+                    obj.image = request.FILES['image']
+                obj.save()
+                messages.success(request, 'Account successfully created! Log in now!')
+                return redirect('login')
+            except IntegrityError as e:
+                messages.warning(request, "Username or email is already used. Try again.")
+                return render(request, 'my_git/users/register.html', {'form': form})
     else:
         form = UserRegisterForm()
     return render(request, 'my_git/users/register.html', {'form': form})

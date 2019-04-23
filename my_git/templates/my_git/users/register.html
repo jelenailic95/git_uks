@@ -13,6 +13,14 @@
 </head>
 <body>
 {% block content %}
+   {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <div class="content-section">
         <div class="jumbotron">
             <h3> Create an account</h3>
@@ -23,20 +31,7 @@
             <hr>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {% for field in form %}
-                    <div class="form-group" id="group_{{ field.name }}">
-                        <label for="id_{{ field.name }}" class="control-label">{{ field.label }}</label>
-                        <div class="input-group mb-3">
-                            {% if field.name != 'image' %}
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
-                            </div>
-                            {% endif %}
-                            {{ field }}
-                        </div>
-                    </div>
-                {% endfor %}
-
+               {{ form.as_p }}
                 <br>
                 <button class="btn btn-success" type="submit" style="margin-left: 13%">Sign Up</button>
             </form>
