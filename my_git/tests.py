@@ -72,9 +72,8 @@ class RepositoryTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['repositories'].all()), 0)
 
-        # get repository id and star it
-        repository = Repository.objects.get(name="repo")
-        self.client.post(reverse('stars'), {'repo_star': "True", 'repo_id': repository.id})
+        # star repository
+        self.client.post(reverse('stars'), {'repo_star': "True", 'repo_id': self.repository.id})
 
         response = self.client.get(reverse('stars'))
 
@@ -122,11 +121,9 @@ class RepositoryTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        repository = Repository.objects.get(name="repo")
-
-        self.assertEqual(repository.name, "repo")
-        self.assertTrue(repository.collaborators.exists())
-        self.assertEqual(collaborator.username, repository.collaborators.all()[0].username)
+        self.assertEqual(self.repository.name, "repo")
+        self.assertTrue(self.repository.collaborators.exists())
+        self.assertEqual(self.repository.collaborators.all()[0].username, collaborator.username)
 
 
     def test_rename_repository(self):
@@ -136,7 +133,7 @@ class RepositoryTests(TestCase):
         self.assertEqual(response.status_code, 302)
 
         repository = Repository.objects.get(name="repo_new")
-        self.assertNotEqual(repository.name, "repo")
+        self.assertNotEqual(repository, "repo")
         self.assertEqual(repository.name, "repo_new")
 
 
@@ -148,3 +145,49 @@ class RepositoryTests(TestCase):
 
         response = self.client.get(reverse('repositories'))
         self.assertEqual(len(response.context['repositories'].all()), 0)
+
+
+class WikiTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create(username="user", password="pass1", email="user@gmail.com")
+        self.repository = Repository.objects.create(name="repo", description="desc", owner=self.user, type="private")
+        self.wiki = Wiki.objects.create(title="Title", content="Content", repository=self.repository)
+
+        session = self.client.session
+        session['user'] = 'user'
+        session.save()
+
+    def test_get_wiki(self):
+        response = self.client.get('/repositories/repo/wiki')
+
+        self.assertEqual(response.status_code, 200)
+        # at the moment there are no wiki pages
+        self.assertEqual(len(response.context['pages']), 1)
+
+        # add one wiki page
+        self.client.post('/repositories/repo/wiki/new', {'title':'New title', 'content':'Content1'})
+
+        response = self.client.get('/repositories/repo/wiki')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['pages']), 2)
+
+    def test_create_wiki_page(self):
+        response = self.client.post('/repositories/repo/wiki/new', {'title':'Test title', 'content':'Test content'})
+
+        self.assertEqual(response.status_code, 200)
+
+        wiki = Wiki.objects.get(repository=self.repository, title='Test title')
+
+        self.assertIsInstance(wiki, Wiki)
+        self.assertEqual(wiki.title, "Test title")
+        self.assertEqual(wiki.content, "Test content")
+        self.assertEqual(wiki.repository, self.repository)
+
+    def test_get_wiki_pages(self):
+        response = self.client.get('/repositories/repo/wiki/Title')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['page'], self.wiki)
+        print(response.context)

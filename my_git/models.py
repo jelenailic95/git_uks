@@ -2,6 +2,7 @@ from django.db import models
 
 from datetime import datetime
 
+from django.utils import timezone
 
 # Create your models here.
 def upload_location(instance, filename):
@@ -29,7 +30,7 @@ class Repository(models.Model):
         ('public', 'public'),
         ('private', 'private'))
     type = models.CharField(choices=TYPE_OPTION, max_length=7, default='public')
-    creation_date = models.DateTimeField(default=datetime.now)
+    creation_date = models.DateTimeField(default=timezone.now)
     language = models.CharField(default='', max_length=150)
     star = models.BooleanField(default=False)
 
@@ -107,7 +108,7 @@ class Issue(models.Model):
 
     def save_new_issue(title, content, milestone, labels, logged_user, assignees, repository):
         issue = Issue()
-        issue.date = datetime.now()
+        issue.date = timezone.now()
         issue.open = True
         issue.title = title
         issue.content = content
@@ -158,7 +159,7 @@ class Comment(models.Model):
     def save_comment(content, user, issue):
         comment = Comment()
         comment.content = content
-        comment.date = datetime.now()
+        comment.date = timezone.now()
         comment.author = User.objects.get(username=user)
         comment.issue = issue
         comment.save()
@@ -184,7 +185,7 @@ class HistoryItem(models.Model):
         history_item.old_value = old_value
         history_item.new_value = new_value
         history_item.attr_name = attr_name
-        history_item.date = datetime.now()
+        history_item.date = timezone.now()
         history_item.mode = mode
         history_item.author = author
         history_item.save()
