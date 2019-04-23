@@ -12,6 +12,7 @@ from itertools import chain
 from operator import attrgetter
 
 from django.db.models import Q
+from django.shortcuts import get_list_or_404, get_object_or_404
 
 
 def welcome(request):
@@ -66,9 +67,6 @@ def register(request):
             print(request.FILES)
             if 'image' in request.FILES:
                 obj.image = request.FILES['image']
-                print(obj.image)
-                print(request.FILES['image'])
-
             obj.save()
             messages.success(request, 'Account successfully created! Log in now!')
             return redirect('login')
@@ -122,7 +120,7 @@ def update_user_profile(request):
 def issues_view(request, repo_name):
     logged_user = get_logged_user(request.session['user'])
 
-    repository = Repository.objects.get(name=repo_name)
+    repository = get_object_or_404(Repository, name=repo_name)
     issues = Issue.find_issues_by_repository(repo=repository.id)
     milestones = Milestone.find_milestones_by_repository(repo=repository.id)
     labels = Label.objects.all()
@@ -187,7 +185,7 @@ def issues_view(request, repo_name):
 
 
 def new_issue(request, repo_name):
-    repository = Repository.objects.get(name=repo_name)
+    repository = get_object_or_404(Repository, name=repo_name)
     labels = Label.objects.all()
     milestones = Milestone.find_milestones_by_repository(repo=repository.id)
     logged_user = get_logged_user(request.session['user'])
@@ -220,8 +218,8 @@ def new_issue(request, repo_name):
 
 def issue_view(request, repo_name, id):
     logged_user = get_logged_user(request.session['user'])
-    repository = Repository.objects.get(name=repo_name)
-    issue = Issue.objects.get(id=id)
+    repository = get_object_or_404(Repository, name=repo_name)
+    issue = get_object_or_404(Issue, id=id)
     milestones = Milestone.find_milestones_by_repository(repo=repository.id)
     owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
@@ -295,7 +293,7 @@ def get_repositories(request):
         repositories = Repository.objects.filter(name__icontains=name).order_by('-creation_date')
 
     if request.method == HttpMethod.POST.name:
-        repository = Repository.objects.get(id=request.POST.get('repo_id'))
+        repository = get_object_or_404(Repository, id=request.POST.get('repo_id'), owner=logged_user)
         repository.star = request.POST.get('repo_star')
         repository.save()
 
@@ -321,7 +319,7 @@ def get_stars(request):
         repositories = repositories.filter(owner=logged_user, name__icontains=name).order_by('-creation_date')
 
     if request.method == HttpMethod.POST.name:
-        repository = Repository.objects.get(id=request.POST.get('repo_id'))
+        repository = get_object_or_404(Repository, id=request.POST.get('repo_id'))
         repository.star = request.POST.get('repo_star')
         repository.save()
 
@@ -336,7 +334,8 @@ def get_stars(request):
 
 def get_repository(request, repo_name):
     logged_user = get_logged_user(request.session['user'])
-    repository = Repository.objects.get(name=repo_name)
+    repository = get_object_or_404(Repository, name=repo_name)
+
     owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
     context = {
@@ -375,7 +374,7 @@ def create_repository(request):
 
 
 def get_repository_settings(request, repo_name):
-    repository = Repository.objects.get(name=repo_name)
+    repository = get_object_or_404(Repository, name=repo_name)
     logged_user = get_logged_user(request.session['user'])
     owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
@@ -397,7 +396,7 @@ def get_repository_settings(request, repo_name):
     # remove collaborator
     if request.method == HttpMethod.POST.name and 'remove-collaborator' in request.POST:
         collaborator_id = request.POST.get('collaborator_id')
-        repository.collaborators.remove(User.objects.get(id=collaborator_id))
+        repository.collaborators.remove(get_object_or_404(User, id=collaborator_id))
         repository.save()
 
     # delete repository
@@ -426,7 +425,6 @@ def add_collaborator(request, repository):
     username = request.POST.get('collaborator')
     try:
         collaborator = User.objects.get(username=username)
-        print(username)
         if collaborator == repository.owner or collaborator in repository.collaborators.all():
             messages.warning(request, 'Already a collaborator. Add someone new.')
         else:
@@ -438,7 +436,7 @@ def add_collaborator(request, repository):
 
 
 def get_wiki(request, repo_name):
-    repository = Repository.objects.get(name=repo_name)
+    repository = get_object_or_404(Repository, name=repo_name)
     logged_user = get_logged_user(request.session['user'])
     owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
@@ -453,7 +451,7 @@ def get_wiki(request, repo_name):
 
 
 def create_wiki_page(request, repo_name):
-    repository = Repository.objects.get(name=repo_name)
+    repository = get_object_or_404(Repository, name=repo_name)
     logged_user = get_logged_user(request.session['user'])
     owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
@@ -481,7 +479,7 @@ def get_wiki_page(request, repo_name, page_title):
     logged_user = get_logged_user(request.session['user'])
     repository = Repository.objects.get(name=repo_name)
     owner = check_if_logged_user_is_repo_owner(repository, logged_user)
-    wiki = Wiki.objects.get(title=page_title, repository=repository)
+    wiki =get_object_or_404(Wiki, title=page_title, repository=repository)
     context = {
         "logged_user": logged_user,
         "repository": repository,
@@ -494,7 +492,7 @@ def get_wiki_page(request, repo_name, page_title):
 
 
 def get_repository_insights(request, repo_name):
-    repository = Repository.objects.get(name=repo_name)
+    repository = get_object_or_404(Repository, name=repo_name)
     logged_user = get_logged_user(request.session['user'])
     owner = check_if_logged_user_is_repo_owner(repository, logged_user)
     all_issues = Issue.find_issues_by_repository(repo=repository.id)
@@ -514,8 +512,13 @@ def get_repository_insights(request, repo_name):
 
 
 def get_logged_user(username):
-    logged_user = User.objects.get(username=username)
-    return logged_user
+    try:
+        logged_user = User.objects.get(username=username)
+        return logged_user
+
+    except User.DoesNotExist:
+        messages.warning(request, 'You are not logged in.')
+        return redirect('welcome')
 
 
 def check_if_logged_user_is_repo_owner(repository, logged_user):
