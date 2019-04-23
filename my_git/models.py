@@ -1,3 +1,6 @@
+import random
+import string
+
 from django.db import models
 
 from datetime import datetime
@@ -55,7 +58,6 @@ class Milestone(models.Model):
     closed_date = models.DateField(null=True)
     open = models.BooleanField(default=True)
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
-
 
     def __str__(self):
         return "{}".format(self.title)
@@ -213,3 +215,25 @@ class HistoryItem(models.Model):
         history_item.mode = mode
         history_item.author = author
         history_item.save()
+
+
+class Commit(models.Model):
+    id = models.AutoField(primary_key=True)
+    commit_id = models.CharField(max_length=100, default='')
+    message = models.CharField(max_length=100, default='')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField()
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{}".format(self.message)
+
+    @staticmethod
+    def create_new_commit(message, repository, user):
+        commit = Commit()
+        commit.message = message
+        commit.repository = repository
+        commit.user = user
+        commit.date = datetime.now()
+        commit.commit_id = ''.join(random.choices(string.ascii_letters + string.digits, k=7))
+        Commit.save(commit)

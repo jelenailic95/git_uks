@@ -3,13 +3,24 @@
 
 {% block content %}
     <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/commit.css' %}">
-    <div>
-        {% include 'my_git/repositories/repository_header.html' %}
-    </div>
-    <div class="commit_header">
-        <a href="" class=""><i class="fa fa-code"></i> Commits</a>
 
+    <div class="commit_header">
+        <a href="" class="header_item"><i class="fa fa-spinner"></i> Commits</a>
+        <a href="" class="header_item"><i class="fa fa-random"></i> Branches</a>
+                <span class="new-issue-btn col">
+
+
+
+                </span>
     </div>
+    <div class="button_header">
+        <button class="btn btn-success float-right"  onclick="location.href='{% url 'new-commit' repository.name %}'"
+                                type="button">New commit</button></a>
+    <button class="btn btn-success float-right"
+                                type="button">New branch</button></a>
+    </div>
+
+
 
 {% endblock %}
 

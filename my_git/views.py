@@ -565,28 +565,17 @@ def new_milestone(request, repo_name, type):
     }
     return render(request, 'my_git/milestones/new_milestone.html', context)
 
-#
-# def edit_milestone(request, repo_name, type):
-#     print(request)
-#     milestone = Milestone()
-#     if "edit" in request.path:
-#         milestone = Milestone.objects.get(id=milestone_id)
-#         milestone.title = milestone.title
-#         milestone.due_date = milestone.due_date
-#         milestone.description = milestone.description
-#     repository = Repository.objects.get(name=repo_name)
-#     if request.method == HttpMethod.POST.name:
-#         title = request.POST.get('titleInput')
-#         description = request.POST.get('descriptionInput')
-#         date = request.POST.get('dateInput')
-#         Milestone.save_new_milestone(title=title, description=description, date=date, open=True, rep=repository)
-#         pass
-#     context = {
-#         "repository": repository,
-#         "owner": repository.owner,
-#         "buttonName": "milestone",
-#         "date": datetime.now().strftime('%Y-%m-%d'),
-#         "milestone": milestone
-#
-#     }
-#     return render(request, 'my_git/milestones/new_milestone.html', context)
+def new_commit(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+    if request.method == HttpMethod.POST.name:
+        message = request.POST.get('messageInput')
+        user = get_logged_user(request.session['user'])
+        Commit.create_new_commit(message=message, repository=repository, user=user)
+        return redirect('repository_preview', repo_name=repository.name)
+
+    context = {
+        "repository": repository,
+        "owner": repository.owner
+
+    }
+    return render(request, 'my_git/commit/new_commit.html', context)
