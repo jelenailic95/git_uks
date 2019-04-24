@@ -16,7 +16,7 @@ node{
     stage('Run Tests') {
         withEnv(['PATH+EXTRA=/usr/sbin:/usr/bin:/sbin:/bin']){
             echo "PATH is: $PATH"
-            sh "docker-compose run web python manage.py test"
+            sh "docker exec my_git_web python manage.py test"
         }
 
     }
