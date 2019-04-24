@@ -2,6 +2,8 @@
 
 my_git/migrations
 media
+influxdb
+esdata
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

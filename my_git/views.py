@@ -751,18 +751,6 @@ def new_commit(request, repo_name):
     return render(request, 'my_git/commit/new_commit.html', context)
 
 
-def get_commits(request, repo_name):
-    repository = Repository.objects.get(name=repo_name)
-    commits = Commit.find_commits_by_repository(repo=repository.id)
-    context = {
-        "repository": repository,
-        "owner": repository.owner,
-        "commits": commits
-
-    }
-    return render(request, 'my_git/commit/commits.html', context)
-
-
 ########################################################################################################################
 #                                                   BRANCH                                                             #
 ########################################################################################################################

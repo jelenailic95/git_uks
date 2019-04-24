@@ -449,3 +449,77 @@ class LabelTests(TestCase):
         self.assertEqual(response.context['labels'][1].name, "Test label name")
         self.assertEqual(response.context['labels'][1].description, "Test label desc")
         self.assertEqual(response.context['labels'][1].color, "#000000")
+
+
+########################################################################################################################
+################################################## COMMIT TESTS ########################################################
+########################################################################################################################
+
+
+class CommitTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create(username="user", password="pass1", email="user@gmail.com")
+        self.repository = Repository.objects.create(name="repo", description="desc", owner=self.user, type="private")
+
+        session = self.client.session
+        session['user'] = 'user'
+        session.save()
+
+    def test_create_commit(self):
+        response = self.client.post('/repositories/repo/commits/new', {'messageInput': 'Test commit'})
+
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get('/repositories/repo')
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(len(response.context['commits'].all()), 1)
+        self.assertEqual(response.context['commits'][0].message, 'Test commit')
+        self.assertEqual(response.context['commits'][0].user, self.user)
+        self.assertEqual(response.context['commits'][0].repository, self.repository)
+
+
+########################################################################################################################
+################################################## BRANCH TESTS ########################################################
+########################################################################################################################
+
+class BranchTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create(username="user", password="pass1", email="user@gmail.com")
+        self.repository = Repository.objects.create(name="repo", description="desc", owner=self.user,
+                                                    type="private")
+        self.branch = Branch.objects.create(user=self.user, repository=self.repository, name="branch1")
+
+        session = self.client.session
+        session['user'] = 'user'
+        session.save()
+
+    def test_get_branches(self):
+        response = self.client.get('/repositories/repo/branches')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['branches']), 2)
+        self.assertEqual(response.context['branches'][0].name, 'master')
+        self.assertEqual(response.context['branches'][0].user, self.branch.user)
+
+        # branch from the setUp
+        self.assertEqual(response.context['branches'][1].name, self.branch.name)
+        self.assertEqual(response.context['branches'][1].user, self.branch.user)
+        self.assertEqual(response.context['branches'][1].repository, self.repository)
+
+    def test_create_branch(self):
+        response = self.client.post('/repositories/repo/branches/new', {'branchInput': 'Test branch'})
+
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get('/repositories/repo/branches')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['branches']), 3)
+        self.assertIsInstance(response.context['branches'][2], Branch)
+        self.assertEqual(response.context['branches'][2].name, "Test branch")
+        self.assertEqual(response.context['branches'][2].user, self.branch.user)
+        self.assertEqual(response.context['branches'][2].repository, self.repository)
