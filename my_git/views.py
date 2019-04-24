@@ -708,6 +708,8 @@ def new_milestone(request, repo_name, type):
 
 
 def get_issuses_by_milestone(request, repo_name, id):
+    logged_user = get_logged_user(request.session['user'])
+
     repository = Repository.objects.get(name=repo_name)
     issues = Issue.find_issues_by_milestone(milestone=id)
     milestones = Milestone.find_milestones_by_repository(repo=repository.id)
@@ -728,6 +730,7 @@ def get_issuses_by_milestone(request, repo_name, id):
         "milestones": milestones,
         "repository": repository,
         "owner": repository.owner,
+        "logged_user": logged_user
     }
 
     if request.method == HttpMethod.POST.name:
