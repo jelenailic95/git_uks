@@ -40,6 +40,7 @@ urlpatterns = [
     path('repositories/<str:repo_name>/wiki/<str:page_title>', my_git_views.get_wiki_page, name='wiki_page_preview'),
     path('repositories/<str:repo_name>/issues', my_git_views.issues_view, name='issues'),
     path('repositories/<str:repo_name>/issues/<int:id>', my_git_views.issue_view, name='issue_view'),
+    path('repositories/<str:repo_name>/issues/milestone/<int:id>', my_git_views.get_issuses_by_milestone, name='milestone_issues'),
     # path('repositories/<str:repo_name>/issues/<str:id>', my_git_views.issue_view, name='issue_view'),
     path('repositories/<str:repo_name>/issues/new', my_git_views.new_issue, name='new-issue'),
     path('repositories/<str:repo_name>/labels', my_git_views.labels_view, name='repository_labels'),
@@ -49,6 +50,8 @@ urlpatterns = [
     path('repositories/<str:repo_name>/milestones', my_git_views.milestones_view, name='repository_milestones'),
     path('repositories/<str:repo_name>/milestones/<str:type>', my_git_views.new_milestone, name='new-milestone'),
     path('repositories/<str:repo_name>/commits/new', my_git_views.new_commit, name='new-commit'),
+    path('repositories/<str:repo_name>/branches/new', my_git_views.new_branch, name='new-branch'),
+    path('repositories/<str:repo_name>/branches', my_git_views.branches, name='branches'),
     # path('repositories/<str:repo_name>/commits', my_git_views.get_commits, name='commits'),
 
 ]

@@ -6,13 +6,13 @@
 
     <div class="commit_header">
         <a href="{% url 'repository_preview' repository.name %}" class="header_item"><i class="fa fa-spinner"></i> Commits</a>
-        <a href="" class="header_item"><i class="fa fa-random"></i> Branches</a>
+        <a href="{% url 'branches' repository.name %}" href="" class="header_item"><i class="fa fa-random"></i> Branches</a>
 
     </div>
     <div class="button_header">
         <button class="btn btn-success float-right"  onclick="location.href='{% url 'new-commit' repository.name %}'"
                                 type="button">New commit</button></a>
-    <button class="btn btn-success float-right"
+    <button class="btn btn-success float-right" onclick="location.href='{% url 'new-branch' repository.name %}'"
                                 type="button">New branch</button></a>
     </div>
 

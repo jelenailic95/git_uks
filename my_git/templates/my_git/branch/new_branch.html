@@ -1,0 +1,29 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/commit.css' %}">
+
+<div>
+    {% include 'my_git/repositories/repository_header.html' %}
+
+</div>
+
+<div class="container container-padding" style="margin-left: 25%">
+    <form method="post" class="row">
+        {% csrf_token %}
+        <div class="new-commit-inputs">
+            <div class="first">
+                <label class="col-sm-2 col-form-label" for="branchInput">Branch name</label>
+                <div class="col-sm-12">
+                        <input name="branchInput" class="form-control" id="branchInput"
+                                  placeholder="White the name of branch">
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn btn-success first float-lg-right">Submit</button>
+        </div>
+
+
+    </form>
+</div>
+

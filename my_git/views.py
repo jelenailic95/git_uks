@@ -20,6 +20,8 @@ from django.db import IntegrityError
 #                                              HOME & WELCOME PAGE                                                     #
 ########################################################################################################################
 
+logger = logging.getLogger(__name__)
+
 
 def welcome(request):
     # del request.session['user']
@@ -60,6 +62,7 @@ def login(request):
                 request.session['user'] = result.username
                 return redirect('home')
             except User.DoesNotExist:
+                logger.error('Invalid credentials for email')# + form.cleaned_data['email'])
                 messages.warning(request, 'Bad credentials, try again!')
                 return redirect('login')
     else:
@@ -359,6 +362,21 @@ def get_stars(request):
     }
 
     return render(request, 'my_git/stars.html', context)
+
+
+def get_repository(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+    commits = Commit.find_commits_by_repository(repo=repository.id)
+
+    context = {
+        "repository": repository,
+        "owner": repository.owner,
+        "repository_view": "active",
+        "active_window": "commit",
+        "commits": commits
+    }
+
+    return render(request, 'my_git/repositories/repository_preview.html', context)
 
 
 def create_repository(request):
@@ -673,6 +691,7 @@ def new_milestone(request, repo_name, type):
     elif "new" not in request.path:
         milestone = Milestone.objects.get(id=type)
         milestone.title = milestone.title
+        milestone.open = True
         milestone.due_date = milestone.due_date
         milestone.description = milestone.description
     context = {
@@ -686,6 +705,67 @@ def new_milestone(request, repo_name, type):
 
     }
     return render(request, 'my_git/milestones/new_milestone.html', context)
+
+
+def get_issuses_by_milestone(request, repo_name, id):
+    repository = Repository.objects.get(name=repo_name)
+    issues = Issue.find_issues_by_milestone(milestone=id)
+    milestones = Milestone.find_milestones_by_repository(repo=repository.id)
+    labels = Label.objects.all()
+    print(request.GET.get('query'))
+    if request.GET.get('open'):
+        issues = issues.filter(open=True)
+    elif request.GET.get('closed'):
+        issues = issues.filter(open=False)
+    elif request.GET.get('query'):
+        issues = issues.filter(title__contains=request.GET.get('query'))
+    context = {
+        "issues_view": "active",
+        "num_of_open": issues.filter(open=True).count(),
+        "num_of_closed": issues.filter(open=False).count(),
+        "issues": issues,
+        "labels": labels,
+        "milestones": milestones,
+        "repository": repository,
+        "owner": repository.owner,
+    }
+
+    if request.method == HttpMethod.POST.name:
+        open_issue_sort = request.POST.get('open_issue_sort')
+        closed_issue_sort = request.POST.get('closed_issue_sort')
+        title_sort_up = request.POST.get('title_sort_up')
+        title_sort_down = request.POST.get('title_sort_down')
+        milestones_sort_up = request.POST.get('milestones_sort_up')
+        milestones_sort_down = request.POST.get('milestones_sort_down')
+
+        open_issue_filter = request.POST.get('open_issues_filter')
+        closed_issue_filter = request.POST.get('closed_issues_filter')
+
+        '''
+        if open_issue_filter:
+            context['issues'] = issues.filter(open=True)
+            context['num_of_open'] = issues.filter(open=True).count()
+            context['num_of_closed'] = 0
+        elif closed_issue_filter:
+            context['issues'] = issues.filter(open=False)
+            context['num_of_open'] = 0
+            context['num_of_closed'] = issues.filter(open=False).count()
+        '''
+
+        if open_issue_sort:
+            context['issues'] = issues.order_by('-open')
+        elif closed_issue_sort:
+            context['issues'] = issues.order_by('open')
+        elif title_sort_up:
+            context['issues'] = issues.order_by('-title')
+        elif title_sort_down:
+            context['issues'] = issues.order_by('title')
+        elif milestones_sort_up:
+            context['issues'] = issues.order_by('milestone')
+        elif milestones_sort_down:
+            context['issues'] = issues.order_by('-milestone')
+
+    return render(request, 'my_git/issues/issues.html', context)
 
 
 ########################################################################################################################
@@ -722,3 +802,37 @@ def get_commits(request, repo_name):
 
     }
     return render(request, 'my_git/commit/commits.html', context)
+
+
+def new_branch(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+    print(request)
+    if request.method == HttpMethod.POST.name:
+        name = request.POST.get('branchInput')
+        user = get_logged_user(request.session['user'])
+        Branch.create_new_branch(name=name, repository=repository, user=user)
+        return redirect('branches', repo_name=repository.name)
+
+    context = {
+        "repository": repository,
+        "owner": repository.owner
+
+    }
+    return render(request, 'my_git/branch/new_branch.html', context)
+
+
+def branches(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+    branches = []
+    branches.append(Branch(name="master", user=repository.owner, date=repository.creation_date))
+    branches.extend(Branch.find_branches_by_repository(repo=repository.id))
+
+    context = {
+        "repository": repository,
+        "owner": repository.owner,
+        "repository_view": "active",
+        "active_window": "branch",
+        "branches": branches,
+    }
+
+    return render(request, 'my_git/repositories/repository_preview.html', context)
