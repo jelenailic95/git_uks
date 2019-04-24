@@ -7,7 +7,6 @@ python manage.py makemigrations
 python manage.py migrate
 
 # create super user
-python manage.py createsuperuser --username admin --email admin@example.com --noinput
-python manage.py changepassword admin
+python manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'mdj1646MDJ')"
 # start server
 python manage.py runserver 0.0.0.0:8000

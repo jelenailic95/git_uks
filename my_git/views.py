@@ -149,10 +149,11 @@ def issues_view(request, repo_name):
     issues = Issue.find_issues_by_repository(repo=repository.id)
     milestones = Milestone.find_milestones_by_repository(repo=repository.id)
     labels = Label.objects.all()
-    print(request.GET.get('query'))
-    if request.GET.get('open'):
+    if request.GET.get('closed') == 'False':
+        print('usao opened')
         issues = issues.filter(open=True)
-    elif request.GET.get('closed'):
+    if request.GET.get('closed') == 'True':
+        print('usao closed')
         issues = issues.filter(open=False)
     elif request.GET.get('query'):
         issues = issues.filter(title__contains=request.GET.get('query'))
@@ -266,11 +267,9 @@ def issue_view(request, repo_name, id):
 
     comments = Comment.find_comments_by_issue_id(issue_id=issue.id)
     history_items = HistoryItem.objects.filter(issue=issue)
-
     result_list = sorted(
         chain(comments, history_items),
         key=attrgetter('date'))
-
     context = {
         "logged_user": logged_user,
         "owner": owner,

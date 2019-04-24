@@ -54,8 +54,10 @@
                 </div>
             </div>
             <div class="issue-side">
-                {% include 'my_git/issues/issue_new_side.html' with labels=all_labels issue_milestone=selected_milestone milestones=milestones assinges=assignes collaborators=collaborators existing_labels=issue.label.all %}
-                <input type="submit" name="saveChangesBtn" class="btn btn-success" value="Save changes">
+                <h4 style="margin-top: 5%">Assignes: </h4>
+                 {% for assigne in assignes %}
+                    <p style="margin-top: 4%">{{ assigne.username }}</p>
+                 {% endfor %}
             </div>
     </form>
 
