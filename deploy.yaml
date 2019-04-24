@@ -5,7 +5,7 @@ metadata:
   labels:
     app: uks
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: uks
@@ -18,4 +18,4 @@ spec:
       - name: uks
         image: gituks/uks-git-2019:second
         ports:
-        - containerPort: 80
+        - containerPort: 8000
