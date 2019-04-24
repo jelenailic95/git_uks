@@ -1,0 +1,34 @@
+{% load static %}
+<html lang="en">
+<header>
+    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/label_header.css' %}">
+</header>
+<body>
+<div class="my-row" style="margin-left: 20%">
+    <div class="input-group">
+        <span class="labels-btn">
+                    <button onclick="location.href='{% url 'repository_labels' repository.name %}'"
+                            class="btn btn-outline-dark"
+                            type="button"><i class="fas fa-tag"></i>Labels</button>
+                </span>
+
+        <span class="milestones-btn">
+                    <button class="btn btn-outline-dark" type="button"
+                    onclick="location.href='{% url 'repository_milestones' repository.name %}'"
+                    ><i class="fas fa-sign"></i>Milestones</button>
+                </span>
+
+        <span class="new-issue-btn col">
+                    <a {% if buttonName == 'label' %}
+                        href="{% url 'new-label' repository.name %}"
+                    {% else %}
+                        href="{% url 'new-milestone' repository.name "new" %}"
+
+                    {% endif %}>
+
+                        <button class="btn btn-success float-right"
+                                type="button">New {{ buttonName }}</button></a>
+                </span>
+    </div>
+</body>
+</html>

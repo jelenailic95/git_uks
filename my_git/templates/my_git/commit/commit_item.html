@@ -1,0 +1,22 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/commit.css' %}">
+<div class="commit_view_block ">
+
+    <div class="inline inline-div">
+        <h4 >{{ commit.message }}</h4>
+
+
+    </div>
+    <p></p>
+    <div class="inline-div">
+
+        <img class="inline-item" src="../../../../media/{{ commit.user.image }}" width="4%" height="4%" alt="profile picture"
+             id="profile-pic">
+        <label class="inline-item">{{ commit.user.username }}</label>
+        <i class="fa fa-calendar inline-item"></i> {{ commit.date | date:'M d, Y' }}
+        <label style="color:darkblue; margin-right: 2%; font-size: 12px" class="float-right" >{{ commit.commit_id }}</label>
+
+
+    </div>
+</div>
+</div>

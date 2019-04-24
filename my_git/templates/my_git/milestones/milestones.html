@@ -1,0 +1,22 @@
+{% load static %}
+
+
+{% block content %}
+    <div>
+        {% include 'my_git/repositories/repository_header.html' %}
+    </div>
+    <div>
+        {% include 'my_git/labels/labels_header.html' with repository=repository %}
+    </div>
+    <div class="all-labels" style="    margin-top: 2%; margin-bottom: 5%">
+
+        {% for milestone in milestones %}
+            <div>
+                {% include 'my_git/milestones/milestone_item.html' with milestone=milestone %}
+            </div>
+        {% endfor %}
+
+
+    </div>
+{% endblock %}
+

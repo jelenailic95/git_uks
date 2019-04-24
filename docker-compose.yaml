@@ -2,97 +2,17 @@ version: '3'
 
 services:
   db:
-    restart: always
-    container_name: my_git_db
     image: postgres
-    volumes:
-      - postgres:/var/lib/postgresql/data
-    ports:
-      - "8001:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: db
+  #    volumes:
+  #      - ./pgdata:/var/lib/postgresql/data
+  #    ports:
+  #      - "8001:5432"
   web:
-    container_name: my_git_web
     build: .
-    command: ["./entrypoint.sh"]
+    command: ['./entrypoint.sh']
     volumes:
       - .:/code
     ports:
       - "8000:8000"
     depends_on:
       - db
-      - es
-      - kibana
-    logging:
-      driver: "json-file"
-    environment:
-      - LOGSTASH_HOST=logstash
-  # ELK stack for logging
-  # For searching and indexing data
-  es:
-    image: elasticsearch:5.4
-    container_name: my_git_es
-    volumes:
-      - ./esdata:/usr/share/elasticsearch/data/
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    environment:
-      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-  # Data visualisation and for log aggregation
-  kibana:
-    image: kibana:5.4.3
-    container_name: my_git_kibana
-    ports:
-      - "5601:5601"
-    environment:
-      - ELASTICSEARCH_URL=http://es:9200
-    depends_on:
-      - es
-  # For logging data
-  logstash:
-    image: logstash:5.4.3
-    container_name: my_git_logstash
-    volumes:
-      - ./config/logstash:/logstash_dir
-    command: logstash -f /logstash_dir/logstash.conf
-    depends_on:
-      - es
-    environment:
-      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
-    ports:
-      - "5959:5959"
-    #TICK stack
-    #Metrics and grafana for visualisation
-
-  influxdb:
-    container_name: my_git_influxdb
-    image: influxdb:1.0.2
-    ports:
-      - "8083:8083"
-      - "8086:8086"
-    volumes:
-      - ./influxdb:/var/lib/influxdb
-    restart: always
-
-  grafana:
-    container_name: my_git_grafana
-    image: grafana/grafana:4.3.2
-    ports:
-      - "3000:3000"
-    links:
-      - influxdb
-    restart: always
-
-  telegraf:
-    container_name: my_git_telegraf
-    image: telegraf:1.3.3
-    volumes:
-      - ./config/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: always
-volumes:
-  postgres:
-    external: true

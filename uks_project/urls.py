@@ -21,7 +21,6 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 from django.conf.urls.static import static
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', my_git_views.welcome, name='welcome'),
@@ -40,9 +39,17 @@ urlpatterns = [
     path('repositories/<str:repo_name>/wiki/<str:page_title>', my_git_views.get_wiki_page, name='wiki_page_preview'),
     path('repositories/<str:repo_name>/issues', my_git_views.issues_view, name='issues'),
     path('repositories/<str:repo_name>/issues/<int:id>', my_git_views.issue_view, name='issue_view'),
+    # path('repositories/<str:repo_name>/issues/<str:id>', my_git_views.issue_view, name='issue_view'),
     path('repositories/<str:repo_name>/issues/new', my_git_views.new_issue, name='new-issue'),
+    path('repositories/<str:repo_name>/labels', my_git_views.labels_view, name='repository_labels'),
+    path('repositories/<str:repo_name>/labels/new', my_git_views.new_label, name='new-label'),
     path('new/', my_git_views.create_repository, name='create_repository'),
-    path('stars/', my_git_views.get_stars, name='stars')
+    path('stars/', my_git_views.get_stars, name='stars'),
+    path('repositories/<str:repo_name>/milestones', my_git_views.milestones_view, name='repository_milestones'),
+    path('repositories/<str:repo_name>/milestones/<str:type>', my_git_views.new_milestone, name='new-milestone'),
+    path('repositories/<str:repo_name>/commits/new', my_git_views.new_commit, name='new-commit'),
+    # path('repositories/<str:repo_name>/commits', my_git_views.get_commits, name='commits'),
+
 ]
 
 urlpatterns += staticfiles_urlpatterns()
