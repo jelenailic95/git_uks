@@ -79,8 +79,6 @@ class Milestone(models.Model):
 
     @staticmethod
     def save_new_milestone(title, description, date, open, rep):
-        print(open)
-        print(rep.name)
         milestone = Milestone()
         milestone.title = title
         milestone.description = description
@@ -99,6 +97,7 @@ class Label(models.Model):
     def __str__(self):
         return "{}".format(self.name)
 
+    @staticmethod
     def save_new_label(name, description, color):
         label = Label()
         label.name = name
@@ -133,6 +132,7 @@ class Issue(models.Model):
     def __str__(self):
         return "{}".format(self.title)
 
+    @staticmethod
     def save_new_issue(title, content, milestone, labels, logged_user, assignees, repository):
         issue = Issue()
         issue.date = timezone.now()
