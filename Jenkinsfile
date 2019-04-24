@@ -14,15 +14,7 @@ node{
     }
     stage('Run Tests') {
         withEnv(['PATH+EXTRA=/usr/sbin:/usr/bin:/sbin:/bin']){
-            def testsError = null
-            try {
-                sh "bash test.sh"
-            }
-            catch(err) {
-                testsError = err
-                currentBuild.result = 'FAILURE'
-                echo "Failure"
-            }
+            sh "docker exec my_git_uks python manage.py test"
         }
 
     }
