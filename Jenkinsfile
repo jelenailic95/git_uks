@@ -1,7 +1,8 @@
 node{
     stage('Checkout'){
         def dockerHome = tool 'docker'
-        env.PATH = "${dockerHome}/bin;/usr/local/bin/docker-compose"
+        env.PATH = "${dockerHome}/bin"
+        PATH = "$PATH:/usr/bin"
         checkout scm
     }
 
@@ -14,6 +15,7 @@ node{
     }
     stage('Run Tests') {
         withEnv(['PATH+EXTRA=/usr/sbin:/usr/bin:/sbin:/bin']){
+            echo "PATH is: $PATH"
             sh "docker-compose run web python manage.py test"
         }
 
