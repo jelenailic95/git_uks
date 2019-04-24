@@ -13,7 +13,7 @@
     <p></p>
     <select name="assignee" id="assignee" class="selectpicker" multiple data-live-search="true" data-actions-box="true">
         {% for user in collaborators %}
-            {% if user in assignes %}
+            {% if user == logged_user %}
                 <option selected>{{ user.username }}</option>
             {% else %}
                 <option>{{ user.username }}</option>
@@ -27,6 +27,7 @@
             style="color: #6c757d;font-weight: bold">Labels</em></label>
     <p></p>
     <select name="labels" id="selectLabels" class="selectpicker" multiple data-live-search="true" data-actions-box="true">
+       {% if labels.all|length != 0 %}
         {% for label in labels %}
             {% if label in existing_labels %}
                 <option selected data-content="<span class='badge' style='background-color:{{ label.color }}'>{{ label.name }}</span>">{{ label.name }}</option>
@@ -35,6 +36,7 @@
             {% endif %}
 
         {% endfor %}
+       {% endif %}
     </select>
 </div>
 <hr>
@@ -52,6 +54,7 @@
     <label id="milestone" for="milestoneInput"><em style="color: #6c757d;font-weight: bold">Milestone</em></label>
     <p></p>
     <select name="milestone" id="milestoneInput" class="selectpicker" data-live-search="true">
+
         {% for milestone in milestones %}
             {% if milestone in issue_milestone %}
                 <option selected>{{ milestone.title }}</option>

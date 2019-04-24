@@ -11,15 +11,42 @@ from my_git.models import *
 from itertools import chain
 from operator import attrgetter
 
+from django.db.models import Q
+from django.shortcuts import get_list_or_404, get_object_or_404
+from django.db import IntegrityError
+
+########################################################################################################################
+#                                              HOME & WELCOME PAGE                                                     #
+########################################################################################################################
+
+logger = logging.getLogger(__name__)
+
 
 def welcome(request):
-    # del request.session['user']
     return render(request, 'my_git/welcome.html')
 
 
 def home(request):
-    context = {"home_view": "active"}
+    logged_user = get_logged_user(request.session['user'])
+    collaborator_repositories = Repository.objects.filter(Q(collaborators=logged_user))
+    my_repositories = Repository.objects.filter(owner=logged_user)
+
+    all_repositories = sorted(
+        chain(collaborator_repositories, my_repositories),
+        key=attrgetter('creation_date'),
+        reverse=True)
+
+    context = {
+        "home_view": "active",
+        "repositories": all_repositories
+    }
+
     return render(request, 'my_git/home.html', context)
+
+
+########################################################################################################################
+#                                                   USER                                                               #
+########################################################################################################################
 
 
 def login(request):
@@ -33,6 +60,7 @@ def login(request):
                 request.session['user'] = result.username
                 return redirect('home')
             except User.DoesNotExist:
+                logger.error('Invalid credentials for email')  # + form.cleaned_data['email'])
                 messages.warning(request, 'Bad credentials, try again!')
                 return redirect('login')
     else:
@@ -40,23 +68,29 @@ def login(request):
     return render(request, 'my_git/users/login.html', {'form': form})
 
 
+def logout(request):
+    for key in list(request.session.keys()):
+        del request.session[key]
+    return redirect('welcome')
+
+
 def register(request):
     if request.method == HttpMethod.POST.name:
         form = UserRegisterForm(request.POST, request.FILES)
         if form.is_valid():
-            obj = User()
-            obj.username = form.cleaned_data['username']
-            obj.password = form.cleaned_data['password1']
-            obj.email = form.cleaned_data['email']
-            print(request.FILES)
-            if 'image' in request.FILES:
-                obj.image = request.FILES['image']
-                print(obj.image)
-                print(request.FILES['image'])
-
-            obj.save()
-            messages.success(request, 'Account successfully created! Log in now!')
-            return redirect('login')
+            try:
+                obj = User()
+                obj.username = form.cleaned_data['username']
+                obj.password = form.cleaned_data['password1']
+                obj.email = form.cleaned_data['email']
+                if 'image' in request.FILES:
+                    obj.image = request.FILES['image']
+                obj.save()
+                messages.success(request, 'Account successfully created! Log in now!')
+                return redirect('login')
+            except IntegrityError as e:
+                messages.warning(request, "Username or email is already used. Try again.")
+                return render(request, 'my_git/users/register.html', {'form': form})
     else:
         form = UserRegisterForm()
     return render(request, 'my_git/users/register.html', {'form': form})
@@ -104,8 +138,14 @@ def update_user_profile(request):
     return render(request, 'my_git/users/update_user_profile.html', context)
 
 
+########################################################################################################################
+#                                                   ISSUE                                                              #
+########################################################################################################################
+
 def issues_view(request, repo_name):
-    repository = Repository.objects.get(name=repo_name)
+    logged_user = get_logged_user(request.session['user'])
+
+    repository = get_object_or_404(Repository, name=repo_name)
     issues = Issue.find_issues_by_repository(repo=repository.id)
     milestones = Milestone.find_milestones_by_repository(repo=repository.id)
     labels = Label.objects.all()
@@ -116,7 +156,11 @@ def issues_view(request, repo_name):
         issues = issues.filter(open=False)
     elif request.GET.get('query'):
         issues = issues.filter(title__contains=request.GET.get('query'))
+
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+
     context = {
+        "logged_user": logged_user,
         "issues_view": "active",
         "num_of_open": issues.filter(open=True).count(),
         "num_of_closed": issues.filter(open=False).count(),
@@ -124,7 +168,7 @@ def issues_view(request, repo_name):
         "labels": labels,
         "milestones": milestones,
         "repository": repository,
-        "owner": repository.owner,
+        "owner": owner,
     }
 
     if request.method == HttpMethod.POST.name:
@@ -134,20 +178,6 @@ def issues_view(request, repo_name):
         title_sort_down = request.POST.get('title_sort_down')
         milestones_sort_up = request.POST.get('milestones_sort_up')
         milestones_sort_down = request.POST.get('milestones_sort_down')
-
-        open_issue_filter = request.POST.get('open_issues_filter')
-        closed_issue_filter = request.POST.get('closed_issues_filter')
-
-        '''
-        if open_issue_filter:
-            context['issues'] = issues.filter(open=True)
-            context['num_of_open'] = issues.filter(open=True).count()
-            context['num_of_closed'] = 0
-        elif closed_issue_filter:
-            context['issues'] = issues.filter(open=False)
-            context['num_of_open'] = 0
-            context['num_of_closed'] = issues.filter(open=False).count()
-        '''
 
         if open_issue_sort:
             context['issues'] = issues.order_by('-open')
@@ -166,17 +196,21 @@ def issues_view(request, repo_name):
 
 
 def new_issue(request, repo_name):
-    repository = Repository.objects.get(name=repo_name)
+    repository = get_object_or_404(Repository, name=repo_name)
     labels = Label.objects.all()
     milestones = Milestone.find_milestones_by_repository(repo=repository.id)
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
-    username = User.objects.get(username=request.session['user'])
+    collaborators = list(repository.collaborators.all())
+    collaborators.append(logged_user)
 
     context = {
-        'user': username,
+        "logged_user": logged_user,
+        'user': logged_user,
         'repository': repository,
-        'owner': repository.owner,
-        'collaborators': repository.collaborators.all(),
+        'owner': owner,
+        'collaborators': collaborators,
         'labels': labels,
         'milestones': milestones,
         "issues_view": "active",
@@ -190,7 +224,7 @@ def new_issue(request, repo_name):
         milestone_form = request.POST.get('milestone')
         Issue.save_new_issue(title=title_form, content=content_form, milestone=milestone_form,
                              labels=labels_form,
-                             logged_user=username, assignees=assignee_form, repository=repository)
+                             logged_user=logged_user, assignees=assignee_form, repository=repository)
         return redirect('issues', repo_name=repository)
     else:
         return render(request, 'my_git/issues/new_issue.html', context)
@@ -198,9 +232,10 @@ def new_issue(request, repo_name):
 
 def issue_view(request, repo_name, id):
     logged_user = get_logged_user(request.session['user'])
-    repository = Repository.objects.get(name=repo_name)
-    issue = Issue.objects.get(id=id)
+    repository = get_object_or_404(Repository, name=repo_name)
+    issue = get_object_or_404(Issue, id=id)
     milestones = Milestone.find_milestones_by_repository(repo=repository.id)
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
     if request.method == HttpMethod.POST.name:
         close_button = request.POST.get('closeBtn')
@@ -237,12 +272,13 @@ def issue_view(request, repo_name, id):
         key=attrgetter('date'))
 
     context = {
+        "logged_user": logged_user,
+        "owner": owner,
         'issue': issue,
         'repository': repository,
         "issues_view": "active",
         "comments": comments,
         "result_list": result_list,
-        "owner": repository.owner,
         "selected_milestone": [issue.milestone],
         "milestones": milestones,
         "assignes": issue.assignees.all(),
@@ -252,9 +288,13 @@ def issue_view(request, repo_name, id):
     return render(request, 'my_git/issues/issue_view.html', context)
 
 
+########################################################################################################################
+#                                                   REPOSITORY                                                         #
+########################################################################################################################
+
+
 def get_public_repositories(request):
     repositories = Repository.objects.filter(type='public').order_by('-creation_date')
-    print(repositories)
 
     return render(request, 'my_git/explore.html', {"repositories": repositories})
 
@@ -272,12 +312,12 @@ def get_repositories(request):
         repositories = Repository.objects.filter(name__icontains=name).order_by('-creation_date')
 
     if request.method == HttpMethod.POST.name:
-        repository = Repository.objects.get(id=request.POST.get('repo_id'))
+        repository = get_object_or_404(Repository, id=request.POST.get('repo_id'), owner=logged_user)
         repository.star = request.POST.get('repo_star')
         repository.save()
 
     context = {
-        "user": logged_user,
+        "logged_user": logged_user,
         "repositories": repositories,
         "repositories_view": "active"
     }
@@ -298,28 +338,17 @@ def get_stars(request):
         repositories = repositories.filter(owner=logged_user, name__icontains=name).order_by('-creation_date')
 
     if request.method == HttpMethod.POST.name:
-        repository = Repository.objects.get(id=request.POST.get('repo_id'))
+        repository = get_object_or_404(Repository, id=request.POST.get('repo_id'))
         repository.star = request.POST.get('repo_star')
         repository.save()
 
     context = {
+        "logged_user": logged_user,
         'repositories': repositories,
         'stars_view': 'active'
     }
 
     return render(request, 'my_git/stars.html', context)
-
-
-def get_repository(request, repo_name):
-    repository = Repository.objects.get(name=repo_name)
-
-    context = {
-        "repository": repository,
-        "owner": repository.owner,
-        "repository_view": "active"
-    }
-
-    return render(request, 'my_git/repositories/repository_preview.html', context)
 
 
 def create_repository(request):
@@ -329,26 +358,66 @@ def create_repository(request):
         form = CreateRepositoryForm(request.POST)
         if form.is_valid():
             obj = Repository()
-            obj.name = form.cleaned_data['repository_name']
-            obj.description = form.cleaned_data['description']
-            obj.type = form.cleaned_data['type']
-            obj.owner = logged_user
-            obj.save()
-            messages.success(request, 'Repository is successfully created!')
-            return redirect('repositories')
+            try:
+                obj.name = form.cleaned_data['repository_name']
+                obj.description = form.cleaned_data['description']
+                obj.type = form.cleaned_data['type']
+                obj.owner = logged_user
+                obj.save()
+                messages.success(request, 'Repository is successfully created!')
+                return redirect('repositories')
+            except IntegrityError as e:
+                messages.warning(request, "Repository with that name already exists. Try again.")
+                return render(request, 'my_git/repositories/create_repository.html',
+                              {'owner': logged_user.username, 'form': CreateRepositoryForm()})
     else:
         form = CreateRepositoryForm()
 
+    return render(request, 'my_git/repositories/create_repository.html', {'owner': logged_user.username, 'form': form})
+
+
+def get_repository(request, repo_name):
+    logged_user = get_logged_user(request.session['user'])
+    repository = get_object_or_404(Repository, name=repo_name)
+
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+    commits = Commit.find_commits_by_repository(repo=repository.id)
+
     context = {
-        'owner': logged_user.username,
-        'form': form
+        "logged_user": logged_user,
+        "repository": repository,
+        "owner": owner,
+        "repository_view": "active",
+        "active_window": "commit",
+        "commits": commits
     }
 
-    return render(request, 'my_git/repositories/create_repository.html', context)
+    return render(request, 'my_git/repositories/repository_preview.html', context)
+
+
+def get_repository_insights(request, repo_name):
+    repository = get_object_or_404(Repository, name=repo_name)
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+    all_issues = Issue.find_issues_by_repository(repo=repository.id)
+    open_issues = all_issues.filter(open=True)
+    closed_issues = all_issues.filter(open=False)
+
+    context = {
+        "logged_user": logged_user,
+        "owner": owner,
+        "repository": repository,
+        "repository_insights_view": "active",
+        "open_issues": open_issues,
+        "closed_issues": closed_issues
+    }
+    return render(request, 'my_git/repositories/insights.html', context)
 
 
 def get_repository_settings(request, repo_name):
-    repository = Repository.objects.get(name=repo_name)
+    repository = get_object_or_404(Repository, name=repo_name)
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
     # rename repository
     if request.method == HttpMethod.POST.name and 'btn-rename' in request.POST:
@@ -368,7 +437,7 @@ def get_repository_settings(request, repo_name):
     # remove collaborator
     if request.method == HttpMethod.POST.name and 'remove-collaborator' in request.POST:
         collaborator_id = request.POST.get('collaborator_id')
-        repository.collaborators.remove(User.objects.get(id=collaborator_id))
+        repository.collaborators.remove(get_object_or_404(User, id=collaborator_id))
         repository.save()
 
     # delete repository
@@ -382,8 +451,9 @@ def get_repository_settings(request, repo_name):
     form.initial['value'] = repository.name
 
     context = {
+        "logged_user": logged_user,
         "repository": repository,
-        "owner": repository.owner,
+        "owner": owner,
         "form_update": form,
         "repository_settings_view": "active",
         "collaborators": repository.collaborators
@@ -396,7 +466,6 @@ def add_collaborator(request, repository):
     username = request.POST.get('collaborator')
     try:
         collaborator = User.objects.get(username=username)
-        print(username)
         if collaborator == repository.owner or collaborator in repository.collaborators.all():
             messages.warning(request, 'Already a collaborator. Add someone new.')
         else:
@@ -407,12 +476,19 @@ def add_collaborator(request, repository):
         messages.warning(request, 'User with this username doesn\'t exist. Try again!')
 
 
+########################################################################################################################
+#                                                   WIKI                                                               #
+########################################################################################################################
+
 def get_wiki(request, repo_name):
-    repository = Repository.objects.get(name=repo_name)
+    repository = get_object_or_404(Repository, name=repo_name)
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
     context = {
+        "logged_user": logged_user,
+        "owner": owner,
         "repository": repository,
-        "owner": repository.owner,
         "repository_wiki_view": "active",
         "pages": Wiki.objects.filter(repository=repository).order_by('title')
     }
@@ -420,11 +496,14 @@ def get_wiki(request, repo_name):
 
 
 def create_wiki_page(request, repo_name):
-    repository = Repository.objects.get(name=repo_name)
+    repository = get_object_or_404(Repository, name=repo_name)
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
     context = {
+        "logged_user": logged_user,
         "repository": repository,
-        "owner": repository.owner,
+        "owner": owner,
         "repository_wiki_view": "active",
         "pages": Wiki.objects.filter(repository=repository).order_by('title')
     }
@@ -442,12 +521,14 @@ def create_wiki_page(request, repo_name):
 
 
 def get_wiki_page(request, repo_name, page_title):
-    print(page_title)
+    logged_user = get_logged_user(request.session['user'])
     repository = Repository.objects.get(name=repo_name)
-    wiki = Wiki.objects.get(title=page_title, repository=repository)
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+    wiki = get_object_or_404(Wiki, title=page_title, repository=repository)
     context = {
+        "logged_user": logged_user,
         "repository": repository,
-        "owner": repository.owner,
+        "owner": owner,
         "repository_wiki_view": "active",
         "page": wiki
     }
@@ -456,57 +537,83 @@ def get_wiki_page(request, repo_name, page_title):
 
 
 def get_logged_user(username):
-    logged_user = User.objects.get(username=username)
-    return logged_user
+    try:
+        logged_user = User.objects.get(username=username)
+        return logged_user
+
+    except User.DoesNotExist:
+        messages.warning(request, 'You are not logged in.')
+        return redirect('welcome')
+
+
+def check_if_logged_user_is_repo_owner(repository, logged_user):
+    return repository.owner == logged_user
+
+
+########################################################################################################################
+#                                                   LABEL                                                              #
+########################################################################################################################
 
 
 def labels_view(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+
     labels = Label.objects.all()
     if request.method == HttpMethod.POST.name:
-        print(request.POST)
         id = request.POST.get('labelId')
         label = Label.objects.get(id=id)
         if request.POST.get('updateBtn') == '':
-            print('update')
             label.name = request.POST.get('editName')
             label.description = request.POST.get('editDescription')
             label.color = request.POST.get('editColor')
             Label.save(label)
         else:
-            print('delete')
             Label.delete(label)
     context = {
         "labels": labels,
         "repository": repository,
-        "owner": repository.owner,
-        "buttonName": "label"
+        "owner": owner,
+        "buttonName": "label",
+        "logged_user": logged_user
     }
     return render(request, 'my_git/labels/labels.html', context)
 
 
 def new_label(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+
     if request.method == HttpMethod.POST.name:
         name = request.POST.get('nameInput')
         description = request.POST.get('descriptionInput')
         color = request.POST.get('color')
         Label.save_new_label(name=name, description=description, color=color)
-        pass
-    else:
-        pass
+        return redirect('repository_labels', repo_name=repository.name)
 
     context = {
         "repository": repository,
-        "owner": repository.owner,
-        "buttonName": "label"
+        "owner": owner,
+        "buttonName": "label",
+        "logged_user": logged_user
 
     }
     return render(request, 'my_git/labels/new_label.html', context)
 
 
+########################################################################################################################
+#                                                   MILESTONE                                                          #
+########################################################################################################################
+
+
 def milestones_view(request, repo_name):
-    print(request.POST)
+    repository = Repository.objects.get(name=repo_name)
+
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+
     if request.method == HttpMethod.POST.name:
         milestone = Milestone.objects.get(id=request.POST.get('milestoneId'))
         if request.POST.get('editBtn') == '':
@@ -524,10 +631,12 @@ def milestones_view(request, repo_name):
     milestones = Milestone.find_milestones_by_repository(repository.id)
     context = {
         "repository": repository,
-        "owner": repository.owner,
+        "owner": owner,
         "buttonName": "milestone",
         "milestones": milestones,
-        "now_date": datetime.now()
+        "now_date": datetime.now(),
+        "logged_user": logged_user
+
     }
     return render(request, 'my_git/milestones/milestones.html', context)
 
@@ -535,8 +644,10 @@ def milestones_view(request, repo_name):
 def new_milestone(request, repo_name, type):
     repository = Repository.objects.get(name=repo_name)
     milestone = Milestone()
-    milestone.due_date = datetime.now();
-    print(request)
+    milestone.due_date = datetime.now()
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+
     # ako je submitovana forma
     if request.method == HttpMethod.POST.name:
         # ako je update uzmi postojeci
@@ -552,41 +663,140 @@ def new_milestone(request, repo_name, type):
     elif "new" not in request.path:
         milestone = Milestone.objects.get(id=type)
         milestone.title = milestone.title
+        milestone.open = True
         milestone.due_date = milestone.due_date
         milestone.description = milestone.description
     context = {
         "repository": repository,
-        "owner": repository.owner,
+        "owner": owner,
         "buttonName": "milestone",
         "dateToday": datetime.now().strftime('%Y-%m-%d'),
         "date": milestone.due_date.strftime('%Y-%m-%d'),
-        "milestone": milestone
+        "milestone": milestone,
+        "logged_user": logged_user
 
     }
     return render(request, 'my_git/milestones/new_milestone.html', context)
 
-#
-# def edit_milestone(request, repo_name, type):
-#     print(request)
-#     milestone = Milestone()
-#     if "edit" in request.path:
-#         milestone = Milestone.objects.get(id=milestone_id)
-#         milestone.title = milestone.title
-#         milestone.due_date = milestone.due_date
-#         milestone.description = milestone.description
-#     repository = Repository.objects.get(name=repo_name)
-#     if request.method == HttpMethod.POST.name:
-#         title = request.POST.get('titleInput')
-#         description = request.POST.get('descriptionInput')
-#         date = request.POST.get('dateInput')
-#         Milestone.save_new_milestone(title=title, description=description, date=date, open=True, rep=repository)
-#         pass
-#     context = {
-#         "repository": repository,
-#         "owner": repository.owner,
-#         "buttonName": "milestone",
-#         "date": datetime.now().strftime('%Y-%m-%d'),
-#         "milestone": milestone
-#
-#     }
-#     return render(request, 'my_git/milestones/new_milestone.html', context)
+
+def get_issues_by_milestone(request, repo_name, id):
+    logged_user = get_logged_user(request.session['user'])
+
+    repository = Repository.objects.get(name=repo_name)
+    issues = Issue.find_issues_by_milestone(milestone=id)
+    milestones = Milestone.find_milestones_by_repository(repo=repository.id)
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+
+    labels = Label.objects.all()
+
+    if request.GET.get('open'):
+        issues = issues.filter(open=True)
+    elif request.GET.get('closed'):
+        issues = issues.filter(open=False)
+    elif request.GET.get('query'):
+        issues = issues.filter(title__contains=request.GET.get('query'))
+    context = {
+        "issues_view": "active",
+        "num_of_open": issues.filter(open=True).count(),
+        "num_of_closed": issues.filter(open=False).count(),
+        "issues": issues,
+        "labels": labels,
+        "milestones": milestones,
+        "repository": repository,
+        "owner": owner,
+        "logged_user": logged_user
+    }
+
+    if request.method == HttpMethod.POST.name:
+        open_issue_sort = request.POST.get('open_issue_sort')
+        closed_issue_sort = request.POST.get('closed_issue_sort')
+        title_sort_up = request.POST.get('title_sort_up')
+        title_sort_down = request.POST.get('title_sort_down')
+        milestones_sort_up = request.POST.get('milestones_sort_up')
+        milestones_sort_down = request.POST.get('milestones_sort_down')
+
+        if open_issue_sort:
+            context['issues'] = issues.order_by('-open')
+        elif closed_issue_sort:
+            context['issues'] = issues.order_by('open')
+        elif title_sort_up:
+            context['issues'] = issues.order_by('-title')
+        elif title_sort_down:
+            context['issues'] = issues.order_by('title')
+        elif milestones_sort_up:
+            context['issues'] = issues.order_by('milestone')
+        elif milestones_sort_down:
+            context['issues'] = issues.order_by('-milestone')
+
+    return render(request, 'my_git/issues/issues.html', context)
+
+
+########################################################################################################################
+#                                                   COMMIT                                                             #
+########################################################################################################################
+
+def new_commit(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+
+    if request.method == HttpMethod.POST.name:
+        message = request.POST.get('messageInput')
+        user = get_logged_user(request.session['user'])
+        Commit.create_new_commit(message=message, repository=repository, user=user)
+        return redirect('repository_preview', repo_name=repository.name)
+
+    context = {
+        "repository": repository,
+        "owner": owner,
+        "logged_user": logged_user,
+
+    }
+    return render(request, 'my_git/commit/new_commit.html', context)
+
+
+########################################################################################################################
+#                                                   BRANCH                                                             #
+########################################################################################################################
+
+
+def new_branch(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+
+    if request.method == HttpMethod.POST.name:
+        name = request.POST.get('branchInput')
+        user = get_logged_user(request.session['user'])
+        Branch.create_new_branch(name=name, repository=repository, user=user)
+        return redirect('branches', repo_name=repository.name)
+
+    context = {
+        "repository": repository,
+        "owner": owner,
+        "logged_user": logged_user
+
+    }
+    return render(request, 'my_git/branch/new_branch.html', context)
+
+
+def branches(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+
+    branches = []
+    branches.append(Branch(name="master", user=repository.owner, date=repository.creation_date))
+    branches.extend(Branch.find_branches_by_repository(repo=repository.id))
+
+    context = {
+        "repository": repository,
+        "owner": owner,
+        "repository_view": "active",
+        "active_window": "branch",
+        "branches": branches,
+        "logged_user": logged_user
+    }
+
+    return render(request, 'my_git/repositories/repository_preview.html', context)

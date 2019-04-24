@@ -8,12 +8,19 @@
     <div class="card-deck">
 
         {% for repository in repositories %}
-            <div class="card border-secondary mb-3" style="max-width: 18rem; margin-left: 2%; margin-top:2%;">
-                <div class="card-header"><a href="/repositories/{{ repository.name }}">{{ repository.owner }} /
-                    <b>{{ repository.name }}</b></a></div>
+            <div class="card border-secondary mb-3"
+                 style="max-width: 19rem; height: 230px; margin-left: 2%; margin-top:2%;">
+                <div class="card-header"><a href="/repositories/{{ repository.name }}">
+                    {% if repository.type == "public" %}
+                        <i class="fa fa-users"></i>
+                    {% else %}
+                        <i class="fa fa-user-secret"></i>
+                    {% endif %}
+                    {{ repository.owner }} /
+                    <b>{{ repository.name|truncatechars:17 }}</b></a></div>
                 <div class="card-body text-dark">
                     <p class="card-text">
-                        {{ repository.description }}
+                        {{ repository.description|truncatechars:80 }}
                     </p>
                 </div>
                 <div class="card-footer">

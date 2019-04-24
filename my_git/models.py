@@ -1,7 +1,11 @@
+import random
+import string
+
 from django.db import models
 
 from datetime import datetime
 
+from django.utils import timezone
 
 # Create your models here.
 def upload_location(instance, filename):
@@ -10,8 +14,8 @@ def upload_location(instance, filename):
 
 class User(models.Model):
     id = models.AutoField(primary_key=True)
-    username = models.CharField(default='', max_length=100)
-    email = models.EmailField(default=1)
+    username = models.CharField(default='', max_length=100, unique=True)
+    email = models.EmailField(default=1, unique=True)
     password = models.CharField(max_length=30)
     image = models.ImageField(upload_to=upload_location, null=True, blank=True, default='')
 
@@ -21,15 +25,15 @@ class User(models.Model):
 
 class Repository(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.CharField(max_length=1000)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)  # cascade ili null
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     collaborators = models.ManyToManyField(User, related_name='collaborators')
     TYPE_OPTION = (
         ('public', 'public'),
         ('private', 'private'))
     type = models.CharField(choices=TYPE_OPTION, max_length=7, default='public')
-    creation_date = models.DateTimeField(default=datetime.now)
+    creation_date = models.DateTimeField(default=timezone.now)
     language = models.CharField(default='', max_length=150)
     star = models.BooleanField(default=False)
 
@@ -55,7 +59,6 @@ class Milestone(models.Model):
     closed_date = models.DateField(null=True)
     open = models.BooleanField(default=True)
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
-
 
     def __str__(self):
         return "{}".format(self.title)
@@ -91,7 +94,7 @@ class Label(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     color = models.CharField(max_length=15)
-    description = models.CharField(max_length=1000)
+    description = models.CharField(max_length=1000, default='description')
 
     def __str__(self):
         return "{}".format(self.name)
@@ -132,7 +135,7 @@ class Issue(models.Model):
 
     def save_new_issue(title, content, milestone, labels, logged_user, assignees, repository):
         issue = Issue()
-        issue.date = datetime.now()
+        issue.date = timezone.now()
         issue.open = True
         issue.title = title
         issue.content = content
@@ -149,6 +152,13 @@ class Issue(models.Model):
     def find_issues_by_repository(repo):
         try:
             return Issue.objects.filter(repository_id=repo)
+        except Issue.DoesNotExist:
+            return None
+
+    @staticmethod
+    def find_issues_by_milestone(milestone):
+        try:
+            return Issue.objects.filter(milestone_id=milestone)
         except Issue.DoesNotExist:
             return None
 
@@ -183,7 +193,7 @@ class Comment(models.Model):
     def save_comment(content, user, issue):
         comment = Comment()
         comment.content = content
-        comment.date = datetime.now()
+        comment.date = timezone.now()
         comment.author = User.objects.get(username=user)
         comment.issue = issue
         comment.save()
@@ -209,7 +219,63 @@ class HistoryItem(models.Model):
         history_item.old_value = old_value
         history_item.new_value = new_value
         history_item.attr_name = attr_name
-        history_item.date = datetime.now()
+        history_item.date = timezone.now()
         history_item.mode = mode
         history_item.author = author
         history_item.save()
+
+
+class Commit(models.Model):
+    id = models.AutoField(primary_key=True)
+    commit_id = models.CharField(max_length=100, default='')
+    message = models.CharField(max_length=100, default='')
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    date = models.DateField(null=True)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE,null=True)
+
+    def __str__(self):
+        return "{}".format(self.message)
+
+    @staticmethod
+    def create_new_commit(message, repository, user):
+        commit = Commit()
+        commit.message = message
+        commit.repository = repository
+        commit.user = user
+        commit.date = datetime.now()
+        commit.commit_id = ''.join(random.choices(string.ascii_letters + string.digits, k=7))
+        Commit.save(commit)
+
+    @staticmethod
+    def find_commits_by_repository(repo):
+        try:
+            return Commit.objects.filter(repository_id=repo)
+        except Commit.DoesNotExist:
+            return None
+
+
+class Branch(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, default='')
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    date = models.DateField(null=True)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE,null=True)
+
+    def __str__(self):
+        return "{}".format(self.name)
+
+    @staticmethod
+    def create_new_branch(name, repository, user):
+        branch = Branch()
+        branch.name = name
+        branch.repository = repository
+        branch.user = user
+        branch.date = datetime.now()
+        Branch.save(branch)
+
+    @staticmethod
+    def find_branches_by_repository(repo):
+        try:
+            return Branch.objects.filter(repository_id=repo)
+        except Branch.DoesNotExist:
+            return None

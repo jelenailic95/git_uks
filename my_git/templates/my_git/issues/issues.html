@@ -23,12 +23,12 @@
                         <a class="btn" data-toggle="tooltip"
                            onclick="changeValue('open_issue_sort', 'True');document.forms['form'].submit()"
                            data-placement="top" title="Open issues"><i
-                                class="fas fa-exclamation-circle"></i>{{ num_of_open }}</a>
+                                class="far fa-check-circle"></i>{{ num_of_open }}</a>
                         <input type="hidden" name="closed_issue_sort" id="closed_issue_sort">
                         <a class="btn" data-toggle="tooltip" data-placement="top"
                            onclick=" changeValue('closed_issue_sort', 'True');document.forms['form'].submit();"
                            title="Closed issues"><i
-                                class="far fa-check-circle"></i>{{ num_of_closed }}</a>
+                                class="fas fa-exclamation-circle"></i>{{ num_of_closed }}</a>
                     </th>
                     <th>
                         <input type="hidden" name="title_sort_up" id="title_sort_up">
@@ -62,7 +62,7 @@
                 <tbody>
                 {% for issue in issues %}
                     <tr>
-                        {% include 'my_git/issues/issue_table_item.html' with issue=issue %}
+                        {% include 'my_git/issues/issue_table_item.html' with issue=issue logged_user=logged_user %}
                     </tr>
                 {% endfor %}
 
