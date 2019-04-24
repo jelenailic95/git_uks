@@ -34,7 +34,7 @@ class Repository(models.Model):
         ('private', 'private'))
     type = models.CharField(choices=TYPE_OPTION, max_length=7, default='public')
     creation_date = models.DateTimeField(default=timezone.now)
-    language = models.CharField(default='', max_length=150)
+    language = models.CharField(default='python', max_length=150)
     star = models.BooleanField(default=False)
 
     def __str__(self):
