@@ -16,7 +16,7 @@ node{
         withEnv(['PATH+EXTRA=/usr/sbin:/usr/bin:/sbin:/bin']){
             def testsError = null
             try {
-                sh "docker-compose run web python manage.py test"
+                sh "bash test.sh"
             }
             catch(err) {
                 testsError = err
