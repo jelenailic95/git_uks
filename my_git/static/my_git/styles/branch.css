@@ -1,0 +1,70 @@
+
+
+.header_item{
+    color: #1d2124;
+    width: 50%;
+    margin-left: 25%;
+}
+
+.btn {
+    margin-left: 1%;
+}
+
+.button_header {
+    height: 6%;
+    border-radius: 3px;
+    color: #586069;
+    margin-left: 20%;
+    margin-right: 5%;
+    display: inline-block;
+    width: 60%;
+    padding-top: 0.5%;
+
+}
+
+
+.new-commit-inputs {
+    position: relative;
+    display: inline-block;
+}
+
+.first {
+    margin: 10px 10px 10px 10px;
+}
+
+
+.inline-div {
+    width: 100%;
+    display: inline-block;
+}
+
+
+.branch_view_block {
+    width: 60%;
+    margin-bottom: 1%;
+    margin-left: 20%;
+    height: 5%;
+    background-color: #fff;
+    border: 1px solid #d1d5da;
+    border-radius: 3px;
+    position: relative;
+}
+
+
+
+.inline-item{
+ margin-bottom: 0.5%;
+ margin-top: 0.5%;
+ margin-left: 0.5%;
+}
+
+.side{
+    width: 20%;
+}
+
+.date{
+    margin-right: 1%;
+    margin-top: 1%;
+    font-size: 12px;
+    color: green;
+}

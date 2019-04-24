@@ -2,7 +2,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/milestone.css' %}">
 <div class="milestone_view_block ">
     <div class="milestone_view_header milestone-title inline-div">
-        {% if milestone.open and now_date|date:"Y-m-d" < milestone.due_date|date:"Y-m-d" %}
+        {% if milestone.open and now_date|date:"Y-m-d" <= milestone.due_date|date:"Y-m-d" %}
             <i class="fa fa-calendar"></i><b> Due by</b> {{ milestone.due_date | date:'M d, Y' }}
         {% elif milestone.open and now_date|date:"Y-m-d" > milestone.due_date|date:"Y-m-d" %}
             <i class="fa fa-calendar"></i><b> Past due by</b> {{ milestone.due_date | date:'M d, Y' }}

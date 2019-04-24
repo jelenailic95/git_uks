@@ -557,6 +557,7 @@ def new_milestone(request, repo_name, type):
     elif "new" not in request.path:
         milestone = Milestone.objects.get(id=type)
         milestone.title = milestone.title
+        milestone.open = True
         milestone.due_date = milestone.due_date
         milestone.description = milestone.description
     context = {
@@ -597,3 +598,37 @@ def get_commits(request, repo_name):
 
     }
     return render(request, 'my_git/commit/commits.html', context)
+
+
+def new_branch(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+    print(request)
+    if request.method == HttpMethod.POST.name:
+        name = request.POST.get('branchInput')
+        user = get_logged_user(request.session['user'])
+        Branch.create_new_branch(name=name, repository=repository, user=user)
+        return redirect('branches', repo_name=repository.name)
+
+    context = {
+        "repository": repository,
+        "owner": repository.owner
+
+    }
+    return render(request, 'my_git/branch/new_branch.html', context)
+
+
+def branches(request, repo_name):
+    repository = Repository.objects.get(name=repo_name)
+    branches = []
+    branches.append(Branch(name="master", user=repository.owner, date=repository.creation_date))
+    branches.extend(Branch.find_branches_by_repository(repo=repository.id))
+
+    context = {
+        "repository": repository,
+        "owner": repository.owner,
+        "repository_view": "active",
+        "active_window": "branch",
+        "branches": branches,
+    }
+
+    return render(request, 'my_git/repositories/repository_preview.html', context)

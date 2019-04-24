@@ -221,9 +221,9 @@ class Commit(models.Model):
     id = models.AutoField(primary_key=True)
     commit_id = models.CharField(max_length=100, default='')
     message = models.CharField(max_length=100, default='')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    date = models.DateField()
-    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    date = models.DateField(null=True)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE,null=True)
 
     def __str__(self):
         return "{}".format(self.message)
@@ -243,4 +243,31 @@ class Commit(models.Model):
         try:
             return Commit.objects.filter(repository_id=repo)
         except Commit.DoesNotExist:
+            return None
+
+
+class Branch(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, default='')
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    date = models.DateField(null=True)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE,null=True)
+
+    def __str__(self):
+        return "{}".format(self.name)
+
+    @staticmethod
+    def create_new_branch(name, repository, user):
+        branch = Branch()
+        branch.name = name
+        branch.repository = repository
+        branch.user = user
+        branch.date = datetime.now()
+        Branch.save(branch)
+
+    @staticmethod
+    def find_branches_by_repository(repo):
+        try:
+            return Branch.objects.filter(repository_id=repo)
+        except Branch.DoesNotExist:
             return None

@@ -1,0 +1,15 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/branch.css' %}">
+<div class="branch_view_block ">
+
+
+    <div class="inline-div">
+
+        <span class="inline-item" style="background-color: green; color:white">{{ branch.name }}</span>
+        <label style="margin-left: 5%" class="inline-item"> Added by {{ branch.user.username }}</label>
+        <img class="inline-item" src="../../../../media/{{ branch.user.image }}" width="4%" height="4%" alt="profile picture"
+             id="profile-pic">
+        <label class="float-right date"><i class="fa fa-calendar"></i> {{ branch.date | date:'M d, Y' }}</label>
+    </div>
+</div>
+</div>
