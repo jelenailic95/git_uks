@@ -23,7 +23,6 @@ logger = logging.getLogger(__name__)
 
 
 def welcome(request):
-    # del request.session['user']
     return render(request, 'my_git/welcome.html')
 
 
@@ -203,12 +202,15 @@ def new_issue(request, repo_name):
     logged_user = get_logged_user(request.session['user'])
     owner = check_if_logged_user_is_repo_owner(repository, logged_user)
 
+    collaborators = list(repository.collaborators.all())
+    collaborators.append(logged_user)
+
     context = {
         "logged_user": logged_user,
         'user': logged_user,
         'repository': repository,
         'owner': owner,
-        'collaborators': repository.collaborators.all(),
+        'collaborators': collaborators,
         'labels': labels,
         'milestones': milestones,
         "issues_view": "active",
