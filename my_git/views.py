@@ -679,14 +679,16 @@ def new_milestone(request, repo_name, type):
     return render(request, 'my_git/milestones/new_milestone.html', context)
 
 
-def get_issuses_by_milestone(request, repo_name, id):
+def get_issues_by_milestone(request, repo_name, id):
     logged_user = get_logged_user(request.session['user'])
 
     repository = Repository.objects.get(name=repo_name)
     issues = Issue.find_issues_by_milestone(milestone=id)
     milestones = Milestone.find_milestones_by_repository(repo=repository.id)
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+
     labels = Label.objects.all()
-    print(request.GET.get('query'))
+
     if request.GET.get('open'):
         issues = issues.filter(open=True)
     elif request.GET.get('closed'):
@@ -701,7 +703,7 @@ def get_issuses_by_milestone(request, repo_name, id):
         "labels": labels,
         "milestones": milestones,
         "repository": repository,
-        "owner": repository.owner,
+        "owner": owner,
         "logged_user": logged_user
     }
 
@@ -760,7 +762,10 @@ def new_commit(request, repo_name):
 
 def new_branch(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
-    print(request)
+
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+
     if request.method == HttpMethod.POST.name:
         name = request.POST.get('branchInput')
         user = get_logged_user(request.session['user'])
@@ -769,7 +774,8 @@ def new_branch(request, repo_name):
 
     context = {
         "repository": repository,
-        "owner": repository.owner
+        "owner": owner,
+        "logged_user": logged_user
 
     }
     return render(request, 'my_git/branch/new_branch.html', context)
@@ -777,16 +783,20 @@ def new_branch(request, repo_name):
 
 def branches(request, repo_name):
     repository = Repository.objects.get(name=repo_name)
+    logged_user = get_logged_user(request.session['user'])
+    owner = check_if_logged_user_is_repo_owner(repository, logged_user)
+
     branches = []
     branches.append(Branch(name="master", user=repository.owner, date=repository.creation_date))
     branches.extend(Branch.find_branches_by_repository(repo=repository.id))
 
     context = {
         "repository": repository,
-        "owner": repository.owner,
+        "owner": owner,
         "repository_view": "active",
         "active_window": "branch",
         "branches": branches,
+        "logged_user": logged_user
     }
 
     return render(request, 'my_git/repositories/repository_preview.html', context)

@@ -22,13 +22,12 @@
 </td>
 <td>
     <div class="profile-image">
-
-       {% if logged_user.image == "" %}
-        <img alt="Profile photo" src="../../../static/my_git/images/default_user.png"
-             class="img-circle" style="height:40px; width: 40px;" id="profile-pic"/>
+    {% if logged_user.image == "" %}
+        <img alt="User photo" src="../../../static/my_git/images/default_user.png"
+             class="img-circle" style="height:40px; width: 40px; margin-left: 1%"/>
     {% else %}
-        <img alt="Profile photo" src="../../../../media/{{ logged_user.image }}"
-             class="rounded-circle" style="height:40px; width: 40px;" id="profile-pic"/>
+        <img alt="User photo" src="../../../../media/{{ logged_user.image }}"
+             class="rounded-circle" style="height:40px; width: 40px; margin-left: 1%"/>
     {% endif %}
 
     </div>

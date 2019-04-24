@@ -62,7 +62,7 @@
                 <tbody>
                 {% for issue in issues %}
                     <tr>
-                        {% include 'my_git/issues/issue_table_item.html' with issue=issue %}
+                        {% include 'my_git/issues/issue_table_item.html' with issue=issue logged_user=logged_user %}
                     </tr>
                 {% endfor %}
 

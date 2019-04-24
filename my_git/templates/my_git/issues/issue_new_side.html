@@ -13,7 +13,7 @@
     <p></p>
     <select name="assignee" id="assignee" class="selectpicker" multiple data-live-search="true" data-actions-box="true">
         {% for user in collaborators %}
-            {% if user == repository.owner %}
+            {% if user == logged_user %}
                 <option selected>{{ user.username }}</option>
             {% else %}
                 <option>{{ user.username }}</option>
