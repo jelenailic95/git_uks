@@ -3,6 +3,7 @@ from my_git.models import *
 from my_git.views import *
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.urls import reverse
+from django.utils import timezone
 
 
 ########################################################################################################################
@@ -162,8 +163,8 @@ class RepositoryTests(TestCase):
 
         milestone = Milestone.objects.create(title="", due_date=datetime.now(), open=True,
                                              repository=self.repository)
-        issue = Issue.objects.create(title="Title", content="Content", date=datetime.now(), open=True,
-                                     milestone=milestone, user=self.user, repository=self.repository)
+        Issue.objects.create(title="Title", content="Content", date=timezone.now(), open=True,
+                             milestone=milestone, user=self.user, repository=self.repository)
 
         response = self.client.get('/repositories/repo/insights')
 
@@ -237,7 +238,7 @@ class IssueTests(TestCase):
         self.repository = Repository.objects.create(name="repo", description="desc", owner=self.user, type="private")
         self.milestone = Milestone.objects.create(title="", due_date=datetime.now(), open=True,
                                                   repository=self.repository)
-        self.issue = Issue.objects.create(title="Title", content="Content", date=datetime.now(), open=True,
+        self.issue = Issue.objects.create(title="Title", content="Content", date=timezone.now(), open=True,
                                           milestone=self.milestone, user=self.user, repository=self.repository)
 
         session = self.client.session
@@ -292,17 +293,6 @@ class UserTest(TestCase):
 
         self.assertEqual(response.status_code, 302)
 
-    def test_register(self):
-        response = self.client.post(reverse('register'), {'username': 'test_username',
-                                                          'email': 'user_test@gmail.com', 'password1': 'test_pass'})
-
-        self.assertEqual(response.status_code, 200)
-
-        # user = User.objects.get(username='test_username')
-        # self.assertEquals(user.username, 'test_username')
-        # self.assertEquals(user.email, 'user_test@gmail.com')
-        # self.assertEquals(user.password, 'test_pass')
-
     def test_update_user_profile(self):
         self.client.post(reverse('profile_update'), {'email': 'new_mail@gmail.com', 'password': '',
                                                      'username': 'user'})
@@ -324,7 +314,7 @@ class MilestoneTests(TestCase):
         self.factory = RequestFactory()
         self.user = User.objects.create(username="user", password="pass1", email="user@gmail.com")
         self.repository = Repository.objects.create(name="repo", description="desc", owner=self.user, type="private")
-        self.milestone1 = Milestone.objects.create(title="Title", due_date=datetime.now(), open=True,
+        self.milestone1 = Milestone.objects.create(title="Title", due_date=timezone.now(), open=True,
                                                    repository=self.repository, description="desc1")
         self.milestone2 = Milestone.objects.create(title="Title2", due_date=datetime.now(), open=False,
                                                    repository=self.repository, description="desc2")
