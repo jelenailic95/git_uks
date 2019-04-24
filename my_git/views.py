@@ -174,7 +174,7 @@ def new_issue(request, repo_name):
     milestones = Milestone.find_milestones_by_repository(repo=repository.id)
 
     username = User.objects.get(username=request.session['user'])
-
+    print(repository.collaborators.all().__len__())
     context = {
         'user': username,
         'repository': repository,
@@ -570,6 +570,67 @@ def new_milestone(request, repo_name, type):
 
     }
     return render(request, 'my_git/milestones/new_milestone.html', context)
+
+
+def get_issuses_by_milestone(request, repo_name, id):
+    repository = Repository.objects.get(name=repo_name)
+    issues = Issue.find_issues_by_milestone(milestone=id)
+    milestones = Milestone.find_milestones_by_repository(repo=repository.id)
+    labels = Label.objects.all()
+    print(request.GET.get('query'))
+    if request.GET.get('open'):
+        issues = issues.filter(open=True)
+    elif request.GET.get('closed'):
+        issues = issues.filter(open=False)
+    elif request.GET.get('query'):
+        issues = issues.filter(title__contains=request.GET.get('query'))
+    context = {
+        "issues_view": "active",
+        "num_of_open": issues.filter(open=True).count(),
+        "num_of_closed": issues.filter(open=False).count(),
+        "issues": issues,
+        "labels": labels,
+        "milestones": milestones,
+        "repository": repository,
+        "owner": repository.owner,
+    }
+
+    if request.method == HttpMethod.POST.name:
+        open_issue_sort = request.POST.get('open_issue_sort')
+        closed_issue_sort = request.POST.get('closed_issue_sort')
+        title_sort_up = request.POST.get('title_sort_up')
+        title_sort_down = request.POST.get('title_sort_down')
+        milestones_sort_up = request.POST.get('milestones_sort_up')
+        milestones_sort_down = request.POST.get('milestones_sort_down')
+
+        open_issue_filter = request.POST.get('open_issues_filter')
+        closed_issue_filter = request.POST.get('closed_issues_filter')
+
+        '''
+        if open_issue_filter:
+            context['issues'] = issues.filter(open=True)
+            context['num_of_open'] = issues.filter(open=True).count()
+            context['num_of_closed'] = 0
+        elif closed_issue_filter:
+            context['issues'] = issues.filter(open=False)
+            context['num_of_open'] = 0
+            context['num_of_closed'] = issues.filter(open=False).count()
+        '''
+
+        if open_issue_sort:
+            context['issues'] = issues.order_by('-open')
+        elif closed_issue_sort:
+            context['issues'] = issues.order_by('open')
+        elif title_sort_up:
+            context['issues'] = issues.order_by('-title')
+        elif title_sort_down:
+            context['issues'] = issues.order_by('title')
+        elif milestones_sort_up:
+            context['issues'] = issues.order_by('milestone')
+        elif milestones_sort_down:
+            context['issues'] = issues.order_by('-milestone')
+
+    return render(request, 'my_git/issues/issues.html', context)
 
 
 def new_commit(request, repo_name):

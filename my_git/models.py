@@ -155,6 +155,13 @@ class Issue(models.Model):
             return None
 
     @staticmethod
+    def find_issues_by_milestone(milestone):
+        try:
+            return Issue.objects.filter(milestone_id=milestone)
+        except Issue.DoesNotExist:
+            return None
+
+    @staticmethod
     def update_issue(issue, assignees, labels, milestone, repository):
         issue_for_update = issue
         issue_for_update.milestone = Milestone.find_milestone_by_name_and_repo(repo=repository.id, name=milestone)

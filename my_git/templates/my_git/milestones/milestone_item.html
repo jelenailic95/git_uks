@@ -16,7 +16,8 @@
 
     <div class="inline-div">
         <div class="block-side">
-            <h3 class="inline">{{ milestone.title }}</h3>
+            <h3 onclick="location.href='{% url 'milestone_issues' repository.name milestone.id %}'" style="font-size: 25px"
+                class="inline btn btn-link">{{ milestone.title }}</h3>
         </div>
         <div class="block-side">
 
