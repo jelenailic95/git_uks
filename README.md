@@ -60,7 +60,7 @@ This project supports Ubuntu Linux, Windows and Mac OS.
 - [PostgreSQL 10.0+](http://www.postgresql.org/)
 
 
-### Installing
+### Installation
 
 1. Clone the repo
 ```
