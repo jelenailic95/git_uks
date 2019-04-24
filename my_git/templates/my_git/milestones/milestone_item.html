@@ -3,11 +3,11 @@
 <div class="milestone_view_block ">
     <div class="milestone_view_header milestone-title inline-div">
         {% if milestone.open and now_date|date:"Y-m-d" <= milestone.due_date|date:"Y-m-d" %}
-            <i class="fa fa-calendar"></i><b> Due by</b> {{ milestone.due_date | date:'M d, Y' }}
+            <i class="fa fa-calendar"></i><b>&nbsp; Due by</b> {{ milestone.due_date | date:'M d, Y' }}
         {% elif milestone.open and now_date|date:"Y-m-d" > milestone.due_date|date:"Y-m-d" %}
-            <i class="fa fa-calendar"></i><b> Past due by</b> {{ milestone.due_date | date:'M d, Y' }}
+            <i class="fa fa-calendar"></i><b>&nbsp; Past due by</b> {{ milestone.due_date | date:'M d, Y' }}
         {% else %}
-            <i class="fa fa-calendar"></i><b> Closed</b> {{ milestone.closed_date | date:'M d, Y' }}
+            <i class="fa fa-calendar"></i><b>&nbsp; Closed</b> {{ milestone.closed_date | date:'M d, Y' }}
         {% endif %}
                 <button onclick="location.href='{% url 'new-milestone' repository.name milestone.id %}'"
                         name="editBtn" class="btn btn-outline-dark btn-sm inline">Edit

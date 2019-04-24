@@ -15,7 +15,6 @@ from django.db.models import Q
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.db import IntegrityError
 
-
 ########################################################################################################################
 #                                              HOME & WELCOME PAGE                                                     #
 ########################################################################################################################
@@ -62,7 +61,7 @@ def login(request):
                 request.session['user'] = result.username
                 return redirect('home')
             except User.DoesNotExist:
-                logger.error('Invalid credentials for email')# + form.cleaned_data['email'])
+                logger.error('Invalid credentials for email')  # + form.cleaned_data['email'])
                 messages.warning(request, 'Bad credentials, try again!')
                 return redirect('login')
     else:
@@ -180,20 +179,6 @@ def issues_view(request, repo_name):
         title_sort_down = request.POST.get('title_sort_down')
         milestones_sort_up = request.POST.get('milestones_sort_up')
         milestones_sort_down = request.POST.get('milestones_sort_down')
-
-        open_issue_filter = request.POST.get('open_issues_filter')
-        closed_issue_filter = request.POST.get('closed_issues_filter')
-
-        '''
-        if open_issue_filter:
-            context['issues'] = issues.filter(open=True)
-            context['num_of_open'] = issues.filter(open=True).count()
-            context['num_of_closed'] = 0
-        elif closed_issue_filter:
-            context['issues'] = issues.filter(open=False)
-            context['num_of_open'] = 0
-            context['num_of_closed'] = issues.filter(open=False).count()
-        '''
 
         if open_issue_sort:
             context['issues'] = issues.order_by('-open')
@@ -362,21 +347,6 @@ def get_stars(request):
     }
 
     return render(request, 'my_git/stars.html', context)
-
-
-def get_repository(request, repo_name):
-    repository = Repository.objects.get(name=repo_name)
-    commits = Commit.find_commits_by_repository(repo=repository.id)
-
-    context = {
-        "repository": repository,
-        "owner": repository.owner,
-        "repository_view": "active",
-        "active_window": "commit",
-        "commits": commits
-    }
-
-    return render(request, 'my_git/repositories/repository_preview.html', context)
 
 
 def create_repository(request):
@@ -741,20 +711,6 @@ def get_issuses_by_milestone(request, repo_name, id):
         milestones_sort_up = request.POST.get('milestones_sort_up')
         milestones_sort_down = request.POST.get('milestones_sort_down')
 
-        open_issue_filter = request.POST.get('open_issues_filter')
-        closed_issue_filter = request.POST.get('closed_issues_filter')
-
-        '''
-        if open_issue_filter:
-            context['issues'] = issues.filter(open=True)
-            context['num_of_open'] = issues.filter(open=True).count()
-            context['num_of_closed'] = 0
-        elif closed_issue_filter:
-            context['issues'] = issues.filter(open=False)
-            context['num_of_open'] = 0
-            context['num_of_closed'] = issues.filter(open=False).count()
-        '''
-
         if open_issue_sort:
             context['issues'] = issues.order_by('-open')
         elif closed_issue_sort:
@@ -805,6 +761,11 @@ def get_commits(request, repo_name):
 
     }
     return render(request, 'my_git/commit/commits.html', context)
+
+
+########################################################################################################################
+#                                                   BRANCH                                                             #
+########################################################################################################################
 
 
 def new_branch(request, repo_name):

@@ -387,7 +387,7 @@ class MilestoneTests(TestCase):
     def test_update_milestone(self):
         response = self.client.post('/repositories/repo/milestones/' + str(self.milestone1.id),
                                     {'titleInput': 'Title updated', 'dateInput': '2019-10-10',
-                                     'descriptionInput': 'desc1'})
+                                     'descriptionInput': self.milestone1.description})
 
         milestone = Milestone.objects.get(id=self.milestone1.id)
 
@@ -397,3 +397,55 @@ class MilestoneTests(TestCase):
         self.assertEqual(milestone.description, self.milestone1.description)
         self.assertEqual(milestone.open, self.milestone1.open)
         self.assertEqual(milestone.repository, self.milestone1.repository)
+
+
+########################################################################################################################
+################################################## LABEL TESTS #########################################################
+########################################################################################################################
+
+
+class LabelTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create(username="user", password="pass1", email="user@gmail.com")
+        self.repository = Repository.objects.create(name="repo", description="desc", owner=self.user, type="private")
+        self.label = Label.objects.create(name="red", description="label1", color="#FFFFFF")
+
+        session = self.client.session
+        session['user'] = 'user'
+        session.save()
+
+    def test_get_labels(self):
+        response = self.client.get('/repositories/repo/labels')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['labels'].all()), 1)
+        self.assertEqual(response.context['labels'][0].name, self.label.name)
+        self.assertEqual(response.context['labels'][0].description, self.label.description)
+        self.assertEqual(response.context['labels'][0].color, self.label.color)
+
+    def test_update_label(self):
+        response = self.client.post('/repositories/repo/labels', {'labelId': self.label.id, 'updateBtn': '',
+                                                                  'editName': self.label.name,
+                                                                  'editDescription': 'New desc',
+                                                                  'editColor': self.label.color})
+        self.assertEqual(response.status_code, 200)
+
+        label = Label.objects.get(id=self.label.id)
+
+        self.assertIsInstance(label, Label)
+        self.assertEqual(label.name, self.label.name)
+        self.assertEqual(label.description, "New desc")
+        self.assertEqual(label.color, self.label.color)
+
+    def test_create_new_label(self):
+        response = self.client.post('/repositories/repo/labels/new', {'nameInput': "Test label name",
+                                                                      'descriptionInput': 'Test label desc',
+                                                                      'color': "#000000"})
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get('/repositories/repo/labels')
+        self.assertEqual(len(response.context['labels'].all()), 2)
+        self.assertEqual(response.context['labels'][1].name, "Test label name")
+        self.assertEqual(response.context['labels'][1].description, "Test label desc")
+        self.assertEqual(response.context['labels'][1].color, "#000000")
