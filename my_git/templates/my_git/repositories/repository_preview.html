@@ -8,7 +8,12 @@
     </div>
 
     <br>
-    <p style="margin-left: 10%">
-        <i> {{ repository.description }} </i>
-    </p>
+    <div>
+        {% include 'my_git/commit/commit_header.html' %}
+    </div>
+    {% if active_window == "commit" %}
+        {% include 'my_git/commit/commits.html' %}
+    {% else %}
+        {% include 'my_git/branch/branches.html'%}
+    {% endif %}
 {% endblock %}

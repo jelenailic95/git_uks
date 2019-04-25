@@ -38,10 +38,6 @@
                 <a class="nav-link" href="{% url 'home' %}">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'repositories' %}">Repositories</a>
-            </li>
-
-            <li class="nav-item">
                 <a class="nav-link" href="{% url 'explore' %}">Explore</a>
             </li>
             <li class="nav-item dropdown">
@@ -53,7 +49,7 @@
                     <a class="dropdown-item" href="{% url 'profile_preview' %}">Your profile</a>
                     <a class="dropdown-item" href="{% url 'repositories' %}">Your repositories</a>
                     <a class="dropdown-item" href="{% url 'stars' %}">Your stars</a>
-                    <a class="dropdown-item" href="{% url 'welcome' %}">Log out</a>
+                    <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
                 </div>
             </li>
         </ul>
@@ -66,8 +62,32 @@
     });
 </script>
 
-{% block  content %}
 
+{% block  content %}
+    <h4 style="margin-left: 2%;margin-top:2%">Repositories</h4>
+    <div class="card-deck">
+        {% for repository in repositories %}
+            <div class="card border-danger mb-3"
+                 style="max-width: 19rem; height: 230px; margin-left: 2%; margin-top:2%;">
+                <div class="card-header"><a href="/repositories/{{ repository.name }}" style="color:#ae0000">
+                    {% if repository.type == "public" %}
+                        <i class="fa fa-users"></i>
+                    {% else %}
+                        <i class="fa fa-user-secret"></i>
+                    {% endif %}
+                    {{ repository.owner }} /
+                    <b>{{ repository.name|truncatechars:17 }}</b></a></div>
+                <div class="card-body text-dark">
+                    <p class="card-text">
+                        {{ repository.description|truncatechars:80 }}
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">{{ repository.creation_date }}</small>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock content %}
 </body>
 </html>

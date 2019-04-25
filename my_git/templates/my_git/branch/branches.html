@@ -1,0 +1,18 @@
+{% load static %}
+
+
+{% block content %}
+
+
+    <div class="all-labels" style="    margin-top: 2%; margin-bottom: 2%">
+
+        {% for branch in branches %}
+            <div>
+                {% include 'my_git/branch/branch_item.html' with branch=branch %}
+            </div>
+        {% endfor %}
+
+
+    </div>
+{% endblock %}
+

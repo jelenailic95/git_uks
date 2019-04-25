@@ -1,10 +1,10 @@
 {% load static %}
 <html lang="en">
 <header>
-    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/issues_header.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'my_git/styles/label_header.css' %}">
 </header>
 <body>
-<div class="my-row">
+<div class="my-row" style="margin-left: 20%">
     <div class="input-group">
         <span class="labels-btn">
                     <button onclick="location.href='{% url 'repository_labels' repository.name %}'"

@@ -7,9 +7,9 @@
 <body>
 <td>
     {% if issue.open == True %}
-        <i style="margin-left: 3em; color:green" id="open" class="fas fa-exclamation-circle"></i>
+        <i style="margin-left: 3em; color:green" id="open" class="far fa-check-circle"></i>
     {% else %}
-        <i style="margin-left: 3em; color:red" id="closed" class="far fa-check-circle"></i>
+        <i style="margin-left: 3em; color:red" id="closed" class="fas fa-exclamation-circle"></i>
     {% endif %}
 
 
@@ -22,8 +22,14 @@
 </td>
 <td>
     <div class="profile-image">
-        <img src="../../../static/my_git/images/profile.png" width="40" height="40" alt="profile picture"
-             id="profile-pic">
+    {% if logged_user.image == "" %}
+        <img alt="User photo" src="../../../static/my_git/images/default_user.png"
+             class="img-circle" style="height:40px; width: 40px; margin-left: 1%"/>
+    {% else %}
+        <img alt="User photo" src="../../../../media/{{ logged_user.image }}"
+             class="rounded-circle" style="height:40px; width: 40px; margin-left: 1%"/>
+    {% endif %}
+
     </div>
 </td>
 <td>
