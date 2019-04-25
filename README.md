@@ -77,27 +77,29 @@ This project supports Ubuntu Linux, Windows and Mac OS.
 ```
 git clone https://github.com/jelenailic95/git_uks
 ```
-2.
+2. Build 
 ```
+docker-compose build
+```
+3. Run
+```
+docker-compose up -d
+```
+4. Open you browser
+```
+http://localhost:8000
+```
+5. Have fun !
 
-```
-3.
-```
-
-```
-4.
-```
-
-```
 
 ## Running the tests
 
+You can run test manually:
+```
+docker-compose run web python manage.py test
 
-
-### And coding style tests
-
-Tests are run in the 3rd Jenkins stage.
-
+```
+Or you can run Jenkins and check 3rd stage.
 ```
   def test_create_repository(self):
       repository = Repository.objects.get(name="repo")
