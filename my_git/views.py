@@ -211,10 +211,11 @@ def new_issue(request, repo_name):
         'user': logged_user,
         'repository': repository,
         'owner': owner,
-        'collaborators': collaborators,
+        'assignes': collaborators,
         'labels': labels,
         'milestones': milestones,
         "issues_view": "active",
+        'new_issue': True
     }
 
     if request.method == HttpMethod.POST.name:
@@ -282,7 +283,8 @@ def issue_view(request, repo_name, id):
         "milestones": milestones,
         "assignes": issue.assignees.all(),
         'collaborators': repository.collaborators.all(),
-        'all_labels': Label.objects.all()
+        'all_labels': Label.objects.all(),
+        'new_issue': False
     }
     return render(request, 'my_git/issues/issue_view.html', context)
 

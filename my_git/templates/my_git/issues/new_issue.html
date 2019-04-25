@@ -32,7 +32,7 @@
             <button type="submit" class="btn btn-success first float-lg-right">Submit new issue</button>
         </div>
         <div class="new-issue-side">
-            {% include 'my_git/issues/issue_new_side.html' with labels=labels milestones=milestones contributors=contributors %}
+            {% include 'my_git/issues/issue_new_side.html' with labels=labels milestones=milestones assignes=assignes new_issue=new_issue %}
         </div>
 
     </form>

@@ -11,15 +11,23 @@
     <label id="assigneeLabel" for="assignee"><em
             style="color: #6c757d;font-weight: bold">Assignees</em></label>
     <p></p>
-    <select name="assignee" id="assignee" class="selectpicker" multiple data-live-search="true" data-actions-box="true">
-        {% for user in collaborators %}
-            {% if user == logged_user %}
-                <option selected>{{ user.username }}</option>
-            {% else %}
-                <option>{{ user.username }}</option>
-            {% endif %}
+    {% if new_issue == False %}
+          {% for user in assignes.all %}
+               <p>{{ user }}</p>
         {% endfor %}
-    </select>
+    {% else %}
+            <p>Drugo</p>
+        <select name="assignee" id="assignee" class="selectpicker" multiple data-live-search="true" data-actions-box="true">
+            {% for user in assignes %}
+                {% if user == logged_user %}
+                    <option selected>{{ user.username }}</option>
+                {% else %}
+                    <option>{{ user.username }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    {% endif %}
+
 </div>
 <hr>
 <div class="form-group">
