@@ -58,6 +58,7 @@ This project supports Ubuntu Linux, Windows and Mac OS.
 
 - [Django 2.0+](https://www.djangoproject.com/)
 - [PostgreSQL 10.0+](http://www.postgresql.org/)
+- [Docker](https://www.docker.com/)
 
 #### Dependencies
 
