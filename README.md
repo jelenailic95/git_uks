@@ -34,10 +34,10 @@
   * [Project Title](#project-title)
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
+    * [Dependencies](#dependencies)
   * [Installation](#installation)
 * [Running the tests](#running-the-tests)
 * [Deployment](#deployment)
-* [Built With](#build-with)
 * [Versioning](#versioning)
 * [Authors](#authors)
 
@@ -59,6 +59,17 @@ This project supports Ubuntu Linux, Windows and Mac OS.
 - [Django 2.0+](https://www.djangoproject.com/)
 - [PostgreSQL 10.0+](http://www.postgresql.org/)
 
+#### Dependencies
+
+- django  >= 2.0, < 3.0
+
+- Pillow Pillow 5.4.1
+
+- psycopg2 >= 2.7, < 3.0
+
+- python-json-logger 0.1.8
+
+- python-logstash 0.4.6
 
 ### Installation
 
@@ -102,11 +113,6 @@ Tests are run in the 3rd Jenkins stage.
 
 
 
-## Built With
-
-* 
-* 
-* 
 
 ## Versioning
 
