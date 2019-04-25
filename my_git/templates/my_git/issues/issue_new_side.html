@@ -16,7 +16,6 @@
                <p>{{ user }}</p>
         {% endfor %}
     {% else %}
-            <p>Drugo</p>
         <select name="assignee" id="assignee" class="selectpicker" multiple data-live-search="true" data-actions-box="true">
             {% for user in assignes %}
                 {% if user == logged_user %}
